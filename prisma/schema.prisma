@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CartItem {
+  customerId Int
+  productId  Int
+  quantity   Int?
+  price      Decimal? @db.Money
+  customers  Customer @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products   Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([customerId, productId])
+}
+
+model Category {
+  id          Int       @default(autoincrement())
+  name        String    @id @db.VarChar(50)
+  description String?   @db.VarChar(100)
+  thumbnail   String?   @db.VarChar(250)
+  products    Product[]
+}
+
+model Customer {
+  id         Int        @id @default(autoincrement())
+  name       String?    @db.VarChar(50)
+  username   String?    @unique @db.VarChar(50)
+  password   String?    @db.VarChar(50)
+  email      String?    @unique @db.VarChar(50)
+  join_date  DateTime?  @default(now()) @db.Timestamp(6)
+  cart_items CartItem[]
+  orders     Order[]
+}
+
+model OrderItem {
+  orderId   Int
+  productId Int
+  quantity  Int?
+  price     Decimal? @db.Money
+  orders    Order    @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products  Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([orderId, productId])
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  customerId      Int?
+  shippingAddress String?     @db.VarChar(100)
+  status          String?     @db.VarChar(20)
+  created_at      DateTime?   @default(now()) @db.Timestamp(6)
+  orderItems      OrderItem[]
+  customers       Customer?   @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String?     @db.VarChar(50)
+  description String?     @db.VarChar(100)
+  price       Decimal?    @db.Money
+  stock       Int?
+  category    String?     @db.VarChar(50)
+  supplier    String?     @db.VarChar(50)
+  cart_items  CartItem[]
+  order_items OrderItem[]
+  categories  Category?   @relation(fields: [category], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  suppliers   Supplier?   @relation(fields: [supplier], references: [name], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Supplier {
+  id            Int       @default(autoincrement())
+  name          String    @id @db.VarChar(50)
+  location      String?   @db.VarChar(40)
+  establishYear Int?
+  thumbnail     String?   @db.VarChar(250)
+  products      Product[]
+}
