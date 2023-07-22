@@ -29,27 +29,30 @@ model CartItem {
 model Category {
   id          Int       @default(autoincrement())
   name        String    @id @db.VarChar(50)
-  description String?   @db.VarChar(100)
-  thumbnail   String?   @db.VarChar(250)
+  description String   @db.VarChar(100)
+  thumbnail   String?
   products    Product[]
 }
 
 model Customer {
-  id         Int        @id @default(autoincrement())
-  name       String?    @db.VarChar(50)
-  username   String     @unique @db.VarChar(50)
-  password   String    
-  email      String     @unique @db.VarChar(50)
-  join_date  DateTime?  @default(now()) @db.Timestamp(6)
-  cart_items CartItem[]
-  orders     Order[]
+  id              Int        @id @default(autoincrement())
+  name            String    @db.VarChar(50)
+  username        String     @unique @db.VarChar(50)
+  password        String    
+  email           String     @unique @db.VarChar(50)
+  joinDate        DateTime?  @default(now()) @db.Timestamp(6)
+  billingAddress  String?
+  shippingAddress String?
+  avatar          String?
+  cart_items      CartItem[]
+  orders          Order[]
 }
 
 model OrderItem {
   orderId   Int
   productId Int
-  quantity  Int?
-  price     Decimal? @db.Money
+  quantity  Int
+  price     Decimal  @db.Money
   orders    Order    @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   products  Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -68,14 +71,15 @@ model Order {
 
 model Product {
   id          Int         @id @default(autoincrement())
-  name        String?     @db.VarChar(50)
-  description String?     @db.VarChar(100)
+  name        String?     
+  description String?     
   price       Decimal?    @db.Money
   stock       Int?
-  category    String?     @db.VarChar(50)
-  supplier    String?     @db.VarChar(50)
-  cart_items  CartItem[]
-  order_items OrderItem[]
+  category    String?     
+  supplier    String?     
+  thumbnail   String?
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
   categories  Category?   @relation(fields: [category], references: [name], onDelete: NoAction, onUpdate: NoAction)
   suppliers   Supplier?   @relation(fields: [supplier], references: [name], onDelete: NoAction, onUpdate: NoAction)
 }
