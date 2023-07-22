@@ -7,6 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Session {
+  sid     String    @unique
+  sess    Json
+  expire  DateTime  @db.Timestamp(6)
+
+  @@map("session")
+}
+
 model CartItem {
   customerId Int
   productId  Int
@@ -29,9 +37,9 @@ model Category {
 model Customer {
   id         Int        @id @default(autoincrement())
   name       String?    @db.VarChar(50)
-  username   String?    @unique @db.VarChar(50)
-  password   String?    @db.VarChar(50)
-  email      String?    @unique @db.VarChar(50)
+  username   String     @unique @db.VarChar(50)
+  password   String    
+  email      String     @unique @db.VarChar(50)
   join_date  DateTime?  @default(now()) @db.Timestamp(6)
   cart_items CartItem[]
   orders     Order[]
