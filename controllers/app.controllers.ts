@@ -3,11 +3,6 @@ import prisma from '../prisma/prisma';
 import bcrypt from 'bcrypt';
 import type { User } from '../types/types';
 
-export const getCustomers = async (req: Request, res: Response) => {
-  const customers = await prisma.customer.findMany();
-  res.send(customers);
-}
-
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -36,5 +31,39 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
-  const products = await prisma.product.findMany();
-}   
+  const { limit = 25, page = 1 } = req.query;
+  const products = await prisma.product.findMany({
+    orderBy: {
+      id: 'asc',
+    },
+    skip: (Number(page) - 1) * Number(limit),
+    take: Number(limit)
+  })
+  res.send({products});
+}
+
+export const getCustomerById = async (req: Request, res: Response) => {
+  const customer = await prisma.customer.findUnique({
+    where: { id: Number(req.params.customerId) }
+  });
+  res.status(200).send(customer);
+}
+
+export const getCartItems = async (req: Request, res: Response) => {
+  const customerId = Number(req.params.customerId);
+  const cartItems = await prisma.customer.findUnique({
+    where: {
+      id: customerId
+    },
+    select: {
+      id: true,
+      name: true, username: true,
+        cartItems: {
+          include: {
+            product: {}
+          }
+        }
+    }
+  });
+  res.send(cartItems);
+}
