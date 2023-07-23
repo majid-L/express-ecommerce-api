@@ -19,9 +19,8 @@ model CartItem {
   customerId Int
   productId  Int
   quantity   Int?
-  price      Decimal? @db.Money
-  customers  Customer @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  products   Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([customerId, productId])
 }
@@ -29,14 +28,14 @@ model CartItem {
 model Category {
   id          Int       @default(autoincrement())
   name        String    @id @db.VarChar(50)
-  description String   @db.VarChar(100)
+  description String    @db.VarChar(100)
   thumbnail   String?
   products    Product[]
 }
 
 model Customer {
   id              Int        @id @default(autoincrement())
-  name            String    @db.VarChar(50)
+  name            String     @db.VarChar(50)
   username        String     @unique @db.VarChar(50)
   password        String    
   email           String     @unique @db.VarChar(50)
@@ -44,7 +43,7 @@ model Customer {
   billingAddress  String?
   shippingAddress String?
   avatar          String?
-  cart_items      CartItem[]
+  cartItems       CartItem[]
   orders          Order[]
 }
 
@@ -52,43 +51,42 @@ model OrderItem {
   orderId   Int
   productId Int
   quantity  Int
-  price     Decimal  @db.Money
-  orders    Order    @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  products  Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([orderId, productId])
 }
 
 model Order {
   id              Int         @id @default(autoincrement())
-  customerId      Int?
+  customerId      Int
   shippingAddress String?     @db.VarChar(100)
   status          String?     @db.VarChar(20)
   created_at      DateTime?   @default(now()) @db.Timestamp(6)
   orderItems      OrderItem[]
-  customers       Customer?   @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  customer        Customer?   @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
-  name        String?     
-  description String?     
-  price       Decimal?    @db.Money
-  stock       Int?
-  category    String?     
-  supplier    String?     
-  thumbnail   String?
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
-  categories  Category?   @relation(fields: [category], references: [name], onDelete: NoAction, onUpdate: NoAction)
-  suppliers   Supplier?   @relation(fields: [supplier], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  id           Int         @id @default(autoincrement())
+  name         String?     
+  description  String?     
+  price        Decimal?    @db.Money
+  stock        Int?
+  categoryName String?     
+  supplierName String?     
+  thumbnail    String?
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+  category     Category?   @relation(fields: [categoryName], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  supplier     Supplier?   @relation(fields: [supplierName], references: [name], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Supplier {
   id            Int       @default(autoincrement())
-  name          String    @id @db.VarChar(50)
-  location      String?   @db.VarChar(40)
+  name          String    @id
+  location      String? 
   establishYear Int?
-  thumbnail     String?   @db.VarChar(250)
+  thumbnail     String?
   products      Product[]
 }
