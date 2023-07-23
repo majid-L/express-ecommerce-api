@@ -1,19 +1,21 @@
 export type User = {
-  id: number,
+  id?: number,
   name: string,
   username: string,
   password: string,
   email: string,
-  join_date: Date | string
+  join_date?: Date | string
 }
 
 export type Product = {
+  id?: number,
   name: string,
   description: string,
   price: number,
   stock: number,
-  category: string,
-  supplier: string
+  categoryName: string,
+  supplierName: string,
+  thumbnail?: string
 }
 
 export type Category = {
@@ -27,4 +29,16 @@ export type Supplier = {
   location: string,
   establishYear: number,
   thumbnail?: string
+}
+
+export type Customer = User & {
+  billingAddress?: string,
+  shippingAddress?: string,
+  avatar?: string
+}
+
+export type CartItem = {
+  customerId: number,
+  productId: number,
+  quantity: number
 }
