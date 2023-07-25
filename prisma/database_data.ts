@@ -39,6 +39,10 @@ for (let i = 0; i < 60; i++) {
   });
 }
 
+for (let i = 0; i < 6; i++) {
+  products[i].stock = 300
+}
+
 export const customers: Customer[] = [{
   name: "Alex Nes",
   username: "alexnes",
@@ -78,7 +82,7 @@ const populateCarts = () => {
       quantity: faker.number.int({ min: 1, max: 7 })
     });
   }
-  return items;
+  return items.filter(item => item.customerId !== 1);
 }
 
 export const cartItems: CartItem[] = populateCarts();
@@ -99,6 +103,31 @@ for (let i = 0; i < 2; i++) {
     status: 'completed'
   });
 }
+
+cartItems.push({
+  customerId: 1,
+  productId: 1,
+  quantity: 4
+});
+
+cartItems.push({
+  customerId: 1,
+  productId: 2,
+  quantity: 4
+});
+
+cartItems.push({
+  customerId: 1,
+  productId: 3,
+  quantity: 4
+});
+
+customers.push({
+  name: "Ryo Ishida",
+  username: "four",
+  password: "$2b$10$3GyH.r/44whUPlyf0tTi/ejA2JFm2ERzS6guIONKB9FkfyEANiNbS",
+  email: "ry_ishida@zairon.law"
+});
 
 export const orderItems: OrderItem[] = [];
 orders.forEach((order, index) => {
