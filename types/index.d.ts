@@ -26,7 +26,7 @@ declare global {
     }
   }
 
-  // Global custom types
+  // Global custom types - used to type variables in controllers
   type User = {
     id?: number,
     name: string,
@@ -87,5 +87,45 @@ declare global {
   type MiddlewareError = Error & {
     code?: string,
     status?: number
+  }
+
+  // Types for API JSON responses - used to type variables in testing suite
+  type OrdersResponse = {
+    id: number,
+    name: string,
+    username: string,
+    orders: {
+        id: number,
+        customerId: number,
+        shippingAddress: string | null,
+        status: string,
+        created_at: string,
+        orderItems: {
+            quantity: number,
+            product: Product
+        }[]
+    }[]
+  }
+
+  type NewOrderResponse = {
+    id: number,
+    customerId: number,
+    shippingAddress: string | null,
+    status: string,
+    created_at: string,
+    orderItems: {
+        quantity: number,
+        product: Product
+    }[]
+  }
+
+  type CartItemsResponse = {
+    id: number,
+    name: string,
+    username: string,
+    cartItems: {
+      quantity: number,
+      product: Product
+    }[]
   }
 }
