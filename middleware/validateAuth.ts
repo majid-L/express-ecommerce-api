@@ -29,8 +29,3 @@ export const userIsAuthenticated = async (req: Request, res: Response, next: Nex
     res.status(401).json({msg: 'Request lacks valid authentication credentials for the requested resource.'});
   }
 }
-
-// Protect routes from unauthorised users
-export const userIsAuthorised = async (req: Request, res: Response, next: NextFunction) => {
-  const id: number = req.session.passport!.user.id;
-}

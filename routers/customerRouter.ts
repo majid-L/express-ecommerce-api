@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { getCustomerById, updateAccount, deleteAccount } from '../controllers/customer.controllers';
+import { getCustomerById, deleteAccount } from '../controllers/customer.controllers';
+import validateUpdatedCustomer from '../middleware/validateUpdatedCustomer';
 import cartRouter from './cartRouter';
 import ordersRouter from './ordersRouter';
 
@@ -10,7 +11,7 @@ customerRouter.use('/orders', ordersRouter);
 customerRouter
 .route('/')
 .get(getCustomerById)
-.put(updateAccount)
+.put(validateUpdatedCustomer, getCustomerById)
 .delete(deleteAccount);
 
 export default customerRouter;

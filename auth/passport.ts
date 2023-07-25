@@ -1,7 +1,6 @@
 import passport from 'passport';
 import localStrategyConfig from './localStrategy';
 import { Application } from 'express';
-import type { User } from '../types/types';
 
 const formatUserData = (user: User) => {
   return {

@@ -4,7 +4,7 @@ import { expect } from "chai";
 import bcrypt from 'bcrypt';
 
 const authTests = () => {
-  describe('/login', () => {
+  describe('/api/login', () => {
     it('Login response contains Set-Cookie header with session id.', async () => {
       type Customer = { 
         name: string,

@@ -4,6 +4,7 @@ import authTests from './auth.spec';
 import productTests from './product.spec';
 import ordersTests from './orders.spec';
 import cartTests from './cart.spec';
+import customerTests from "./customer.spec";
 import reseedDatabase from '../prisma/seed';
 
 export let cookie: [string];
@@ -13,15 +14,13 @@ describe('API tests', () => {
     await reseedDatabase();
   });
 
-  before(done => {
-    request(app)
+  before(async () => {
+    await reseedDatabase();
+    const authResponse = await request(app)
       .post('/api/login')
-      .send({username: 'alexnes', password: 'password'})
-      .end(function(err, res) {
-        if (err) throw err;
-        cookie = res.headers['set-cookie'];
-        done();
-      });
+      .send({username: 'alexnes', password: 'password'});
+    
+    cookie = authResponse.headers['set-cookie'];
   });
   
   after(async () => {
@@ -32,4 +31,5 @@ describe('API tests', () => {
   productTests();
   ordersTests();
   cartTests();
+  customerTests();
 });

@@ -1,5 +1,5 @@
 import prisma from './prisma';
-import * as data from './database_data';
+import * as data from './dev_data';
 
 const main = async () => {
   try {
@@ -22,6 +22,8 @@ const main = async () => {
   }
 }
 
-main();
+if (process.env.NODE_ENV !== 'test') {
+  main();
+}
 
 export default main;

@@ -8,9 +8,9 @@ datasource db {
 }
 
 model Session {
-  sid     String    @unique
-  sess    Json
-  expire  DateTime  @db.Timestamp(6)
+  sid    String   @unique
+  sess   Json
+  expire DateTime @db.Timestamp(6)
 
   @@map("session")
 }
@@ -19,8 +19,8 @@ model CartItem {
   customerId Int
   productId  Int
   quantity   Int?
-  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([customerId, productId])
 }
@@ -37,7 +37,7 @@ model Customer {
   id              Int        @id @default(autoincrement())
   name            String     @db.VarChar(50)
   username        String     @unique @db.VarChar(50)
-  password        String    
+  password        String
   email           String     @unique @db.VarChar(50)
   joinDate        DateTime?  @default(now()) @db.Timestamp(6)
   billingAddress  String?
@@ -51,8 +51,8 @@ model OrderItem {
   orderId   Int
   productId Int
   quantity  Int
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([orderId, productId])
 }
@@ -63,29 +63,29 @@ model Order {
   shippingAddress String?     @db.VarChar(100)
   status          String?     @db.VarChar(20)
   created_at      DateTime?   @default(now()) @db.Timestamp(6)
+  customer        Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
   orderItems      OrderItem[]
-  customer        Customer?   @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Product {
   id           Int         @id @default(autoincrement())
-  name         String     
-  description  String     
-  price        Decimal    @db.Decimal(6, 2)
+  name         String
+  description  String
+  price        Decimal     @db.Decimal(6, 2)
   stock        Int
-  categoryName String     
-  supplierName String    
+  categoryName String
+  supplierName String
   thumbnail    String?
   cartItems    CartItem[]
   orderItems   OrderItem[]
-  category     Category?   @relation(fields: [categoryName], references: [name], onDelete: NoAction, onUpdate: NoAction)
-  supplier     Supplier?   @relation(fields: [supplierName], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  category     Category    @relation(fields: [categoryName], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  supplier     Supplier    @relation(fields: [supplierName], references: [name], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Supplier {
   id            Int       @default(autoincrement())
   name          String    @id
-  location      String? 
+  location      String?
   establishYear Int?
   thumbnail     String?
   products      Product[]

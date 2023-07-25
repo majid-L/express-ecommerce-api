@@ -84,8 +84,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         await prisma.$executeRaw`
         UPDATE "Product" 
         SET stock = stock - ${item.quantity}
-        WHERE id = ${item.productId}
-        `;
+        WHERE id = ${item.productId}`;
       }
     });
 
@@ -104,7 +103,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         }
       }
     });
-    res.status(200).send(completedOrder);
+    res.status(201).send(completedOrder);
   } catch (err) {
     next(err);
   }

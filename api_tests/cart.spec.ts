@@ -106,7 +106,7 @@ const cartTests = () => {
       expect(updatedCartItems).to.deep.equal([]);
     });
 
-    it('A new customer should have no cart items.', async () => {
+    it('A new customer should have an empty cart.', async () => {
       const loginResponse = await request(app)
         .post('/api/login')
         .send({username: 'four', password: 'password'});
