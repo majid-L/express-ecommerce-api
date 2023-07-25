@@ -35,7 +35,14 @@ declare global {
     email: string,
     join_date?: Date | string
   }
-  
+
+  type ProductCount = {
+    _count?: {
+      products: number
+    },
+    products?: number
+  }
+
   type Product = {
     id?: number,
     name: string,
@@ -46,14 +53,14 @@ declare global {
     supplierName: string,
     thumbnail?: string
   }
-  
-  type Category = {
+
+  type Category = ProductCount & {
     name: string,
     description: string,
     thumbnail?: string
   }
   
-  type Supplier = {
+  type Supplier = ProductCount & {
     name: string,
     location: string,
     establishYear: number,
@@ -88,6 +95,37 @@ declare global {
     code?: string,
     status?: number
   }
+
+  // The next two types are used for the query builder payloads in product.controllers.ts
+  type NumberOfOrders = {
+    include?: {
+      _count: {
+        select: { orderItems: true }
+      }
+    }
+  }
+   
+  type ProductWithOrderCount = Prisma.ProductGetPayload<NumberOfOrders> & { 
+    numOfTimesOrdered?: number, 
+    _count?: { 
+      orderItems: number 
+    } 
+  }
+
+  // The next two types are used for the query builder payloads in categories.controllers.ts
+  type QueryOptions = {
+    include: {
+      _count?: {
+        select: { products: true }
+      }
+    }
+  };
+
+  type CategoriesOrSuppliers = {
+    categories: Category[]
+  } | {
+    suppliers: Supplier[]
+  };
 
   // Types for API JSON responses - used to type variables in testing suite
   type OrdersResponse = {
