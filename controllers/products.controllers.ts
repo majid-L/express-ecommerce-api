@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
+import { Product } from '@prisma/client';
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,6 +16,7 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
       order = 'asc'
     } = req.query;
 
+    // Define the sort/filter/aggregate options to be applied to the query
     const numberOfOrders = {
       include: { _count: { select: { orderItems: true } } }
     }
@@ -38,6 +40,7 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
       }
     };
 
+    // Conditionally attach filters to query options
     if (hideOutOfStock) queryOptions.where.AND[0].NOT = { stock: 0 };
     if (category) queryOptions.where.AND[2].categoryName = { 
       contains: category,
@@ -48,6 +51,7 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
       mode: 'insensitive'
     };
 
+    // Get the list of filtered/sorted products
     const resultSet = await prisma.$transaction([
       prisma.product.count(queryOptions),
       prisma.product.findMany({
@@ -58,6 +62,7 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
         })
     ]);
 
+    // format the properties on the JSON response
     res.send({
       page: Number(page),
       count: resultSet[1].length,
@@ -76,28 +81,38 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
 export const getBestSellers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { limit = 25, page = 1 } = req.query;
-    const bestSellers = await prisma.$queryRaw`
-      SELECT 
-        p."id", 
-        COUNT(oi."orderId")::INTEGER AS "numOfTimesOrdered",
-        SUM(oi."quantity")::INTEGER AS "totalUnitsOrdered",
-        p."name",
-        p."description", 
-        p."price",
-        p."stock", 
-        p."categoryName", 
-        p."supplierName", 
-        p."thumbnail"
-      FROM "Product" p
-      JOIN "OrderItem" oi
-      ON p."id" = oi."productId"
-      GROUP BY 1
-      ORDER BY 2 DESC
-      LIMIT ${limit}
-      OFFSET ${(Number(page) - 1) * Number(limit)}
-    `;
-    res.send({bestSellers});
+    const [ totalResults, bestSellers ] = await prisma.$transaction([
+      prisma.product.count(),
+      prisma.$queryRaw<(Product & ProductExtended)[]>`
+        SELECT 
+          p."id", 
+          COUNT(oi."orderId")::INTEGER AS "numOfTimesOrdered",
+          SUM(oi."quantity")::INTEGER AS "totalUnitsOrdered",
+          p."name",
+          p."description", 
+          p."price",
+          p."stock", 
+          p."categoryName", 
+          p."supplierName", 
+          p."thumbnail"
+        FROM "Product" p
+        JOIN "OrderItem" oi
+        ON p."id" = oi."productId"
+        GROUP BY 1
+        ORDER BY 2 DESC
+        LIMIT ${Number(limit)}
+        OFFSET ${(Number(page) - 1) * Number(limit)}
+      `
+    ]);
+ 
+    res.send({ 
+      page: Number(page),
+      count: bestSellers.length,
+      totalResults,
+      bestSellers
+    });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 }

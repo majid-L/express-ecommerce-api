@@ -43,6 +43,11 @@ declare global {
     products?: number
   }
 
+  type ProductExtended = {
+    numOfTimesOrdered: number,
+    totalUnitsOrdered: number
+  }
+
   type Product = {
     id?: number,
     name: string,
@@ -128,6 +133,13 @@ declare global {
   };
 
   // Types for API JSON responses - used to type variables in testing suite
+  type ProductsResponse = {
+    products: Product[],
+    page: number,
+    count: number,
+    totalResults: number
+  }
+  
   type OrdersResponse = {
     id: number,
     name: string,
@@ -165,5 +177,11 @@ declare global {
       quantity: number,
       product: Product
     }[]
+  }
+
+  type BestSellers = { 
+    body: { 
+      bestSellers: (Product & ProductExtended)[] 
+    } 
   }
 }
