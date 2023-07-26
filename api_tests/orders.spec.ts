@@ -48,12 +48,13 @@ const ordersTests = () => {
         .post('/api/login')
         .send({username: 'four', password: 'password'});
 
-      const errorResponse = await request(app)
+      const { body: errorResponse }
+      : { body: { msg: string } } = await request(app)
         .post('/api/customers/12/orders')
         .set('Cookie', loginResponse.headers['set-cookie'])
         .expect(400);
     
-      expect(errorResponse.body.msg).to.equal('Unable to place order because cart is empty.');
+      expect(errorResponse.msg).to.equal('Unable to place order because cart is empty.');
     });
 
     it('A new customer should have no orders.', async () => {

@@ -12,17 +12,13 @@ export let cookie: [string];
 describe('API tests', () => {
   beforeEach(async () => {
     await reseedDatabase();
-  });
-
-  before(async () => {
-    await reseedDatabase();
     const authResponse = await request(app)
       .post('/api/login')
       .send({username: 'alexnes', password: 'password'});
     
     cookie = authResponse.headers['set-cookie'];
   });
-  
+
   after(async () => {
     setTimeout(() => process.exit(), 1000);
   });
