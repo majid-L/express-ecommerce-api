@@ -121,24 +121,26 @@ const cartTests = () => {
 
     it('Returns 400 response if request body contains invalid customer id.', async () => {
       requestBody[0].customerId = 2;
-      const errorResponse = await request(app)
+      const { body: errorResponse }
+      : { body: { msg: string } } = await request(app)
         .put('/api/customers/1/cart')
         .set('Cookie', cookie)
         .send(requestBody)
         .expect(400);
       
-      expect(errorResponse.body.msg).to.equal('Invalid customer id on cart item.');
+      expect(errorResponse.msg).to.equal('Invalid customer id on cart item.');
     });
 
     it('Returns 400 response if cart item quantity exceeds product stock.', async () => {
       requestBody[0].quantity = 301;
-      const errorResponse = await request(app)
+      const { body: errorResponse }
+      : { body: { msg: string } } = await request(app)
         .put('/api/customers/1/cart')
         .set('Cookie', cookie)
         .send(requestBody)
         .expect(400);
       
-      expect(errorResponse.body.msg).to.equal('Insufficient stock.');
+      expect(errorResponse.msg).to.equal('Insufficient stock.');
     });
 
     it('Returns 404 response for non-existent customer.', async () => {
