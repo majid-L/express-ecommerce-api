@@ -1,5 +1,10 @@
 import prisma from './prisma';
-import * as data from './dev_data';
+import devData from './dev_data';
+import testData from './test_data';
+
+const data = process.env.NODE_ENV !== 'test' || process.argv[2]
+  ? testData 
+  : devData;
 
 const main = async () => {
   try {
@@ -14,6 +19,7 @@ const main = async () => {
     await prisma.cartItem.createMany({ data: data.cartItems });
     await prisma.order.createMany({ data: data.orders });
     await prisma.orderItem.createMany({ data: data.orderItems });
+    await prisma.review.createMany({ data: data.reviews });
   } catch (err) {
     console.log(err);
     process.exit(1);

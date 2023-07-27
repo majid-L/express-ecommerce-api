@@ -45,6 +45,7 @@ model Customer {
   avatar          String?
   cartItems       CartItem[]
   orders          Order[]
+  reviews         Review[]
 }
 
 model OrderItem {
@@ -62,7 +63,7 @@ model Order {
   customerId      Int
   shippingAddress String?     @db.VarChar(100)
   status          String?     @db.VarChar(20)
-  created_at      DateTime?   @default(now()) @db.Timestamp(6)
+  createdAt       DateTime?   @default(now()) @db.Timestamp(6)
   customer        Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
   orderItems      OrderItem[]
 }
@@ -80,6 +81,22 @@ model Product {
   orderItems   OrderItem[]
   category     Category    @relation(fields: [categoryName], references: [name], onDelete: NoAction, onUpdate: NoAction)
   supplier     Supplier    @relation(fields: [supplierName], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  reviews      Review[]
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  customerId Int
+  productId  Int
+  title      String
+  body       String
+  recommend  Boolean?
+  rating     Int
+  createdAt  DateTime @default(now()) @db.Timestamp(6)
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, productId])
 }
 
 model Supplier {
