@@ -8,6 +8,8 @@ ordersRouter
 .get(getOrders)
 .post(createOrder);
 
-ordersRouter.route('/:orderId').get(getOrderById);
+ordersRouter
+.route('/:orderId')
+.get(getOrderById);
 
 export default ordersRouter;
