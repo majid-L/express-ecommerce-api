@@ -31,7 +31,7 @@ const validateUpdatedCart = async (req: Request, res: Response, next: NextFuncti
         return next(err);
       }
       if (!customerId || !productId || !quantity) {
-        err.message = 'Request body is missing required fields.';
+        err.message = 'Request body is missing required field(s).';
         return next(err);
       }
       if (customerId !== req.customerDetails.id) {

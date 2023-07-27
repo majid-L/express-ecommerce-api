@@ -11,14 +11,15 @@ import validateRequestMethod from './middleware/validateRequestMethod';
 const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
+
 generateSession(app);
 passportConfig(app);
 
 app.use(validateRequestMethod);
-app.use([
-    '/api/customers/:customerId',
-    '/api/logout'
-], userIsAuthenticated);
+
+app.use('/api/customers/:customerId', userIsAuthenticated);
+//app.put('/api/reviews/:reviewId', userIsAuthenticated);
+//app.delete('/api/reviews/:reviewId', userIsAuthenticated);
 
 app.use('/api', apiRouter);
 app.use(handleError);
