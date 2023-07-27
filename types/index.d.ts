@@ -14,15 +14,15 @@ type CartItemsPayload = Prisma.CustomerGetPayload<{
   }
 }>;
 
-type CustomerPayload = Prisma.CustomerGetPayload<{}>;
-
 export {}
 
 declare global {
   namespace Express {
     export interface Request {
       cartItems: CartItemsPayload,
-      customerDetails: CustomerPayload
+      customerDetails: Prisma.CustomerGetPayload<{}>,
+      productDetails: Prisma.ProductGetPayload<{}>,
+      reviewDetails: Prisma.ReviewGetPayload<{}>
     }
   }
 
@@ -33,7 +33,13 @@ declare global {
     username: string,
     password: string,
     email: string,
-    join_date?: Date | string
+    joinDate?: Date | string
+  }
+
+  type Customer = User & {
+    billingAddress?: string,
+    shippingAddress?: string,
+    avatar?: string
   }
 
   type ProductCount = {
@@ -72,12 +78,6 @@ declare global {
     thumbnail?: string
   }
   
-  type Customer = User & {
-    billingAddress?: string,
-    shippingAddress?: string,
-    avatar?: string
-  }
-  
   type CartItem = {
     customerId: number,
     productId: number,
@@ -96,10 +96,24 @@ declare global {
     status?: string
   }
 
+  type Review = {
+    customerId: number,
+    productId: number,
+    title: string,
+    body: string,
+    rating: number,
+    recommend?: boolean
+  }
+
   type MiddlewareError = Error & {
     code?: string,
     status?: number
   }
+
+  type ModelObject = 
+    Prisma.CustomerGetPayload<{}> | 
+    Prisma.ProductGetPayload<{}> | 
+    Prisma.ReviewGetPayload<{}>;
 
   // The next two types are used for the query builder payloads in product.controllers.ts
   type NumberOfOrders = {
