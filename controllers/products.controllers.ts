@@ -81,8 +81,13 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
 export const getBestSellers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { limit = 25, page = 1 } = req.query;
-    const [ totalResults, bestSellers ] = await prisma.$transaction([
-      prisma.product.count(),
+    const [ rowCount, bestSellers ] = await prisma.$transaction([
+      prisma.$queryRaw<[{ count: number }]>`
+        SELECT COUNT(*)::INTEGER 
+        FROM (
+          SELECT DISTINCT "productId" FROM "OrderItem"
+        ) AS temp
+      `,
       prisma.$queryRaw<(Product & ProductExtended)[]>`
         SELECT 
           p."id", 
@@ -108,7 +113,7 @@ export const getBestSellers = async (req: Request, res: Response, next: NextFunc
     res.send({ 
       page: Number(page),
       count: bestSellers.length,
-      totalResults,
+      totalResults: rowCount[0].count,
       bestSellers
     });
   } catch (err) {
@@ -117,19 +122,6 @@ export const getBestSellers = async (req: Request, res: Response, next: NextFunc
   }
 }
 
-export const getProductById = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const productOrNull = await prisma.product.findUnique({
-      where: { id: Number(req.params.productId) }
-    });
-    if (productOrNull) {
-      res.status(200).send(productOrNull);
-    } else {
-      const err: Error = new Error ('Not found.');
-      (err as Error & { status: number }).status = 400;
-      next(err);
-    }
-  } catch (err) {
-    next(err);
-  }
+export const getProductById = (req: Request, res: Response) => {
+  res.status(200).send(req.productDetails);
 }
