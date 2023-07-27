@@ -1,73 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
-import { Product } from '@prisma/client';
+import { selectBestsellers, selectProducts } from '../models/products.models';
 
-export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
+export const getProducts = async (
+  req: Request<{}, {}, {}, ProductsUrlParams>, 
+  res: Response, 
+  next: NextFunction) => {
+
   try {
-    const { 
-      limit = 25, 
-      page = 1,
-      minPrice = 0,
-      maxPrice = 1e5,
-      category,
-      supplier,
-      hideOutOfStock = false,
-      sortBy = 'id',
-      order = 'asc'
-    } = req.query;
-
-    // Define the sort/filter/aggregate options to be applied to the query
-    const numberOfOrders = {
-      include: { _count: { select: { orderItems: true } } }
-    }
-
-    const queryOptions = {
-      where: {
-        AND: [ 
-          { NOT: {} },
-          {
-            price: { 
-              gte: Number(minPrice),
-              lte: Number(maxPrice)
-            }
-          },
-          { categoryName: {} },
-          { supplierName: {} }
-        ]
-      },
-      orderBy: {
-        [sortBy as string]: order,
-      }
-    };
-
-    // Conditionally attach filters to query options
-    if (hideOutOfStock) queryOptions.where.AND[0].NOT = { stock: 0 };
-    if (category) queryOptions.where.AND[2].categoryName = { 
-      contains: category,
-      mode: 'insensitive'
-     };
-    if (supplier) queryOptions.where.AND[3].supplierName = { 
-      contains: supplier,
-      mode: 'insensitive'
-    };
-
-    // Get the list of filtered/sorted products
-    const resultSet = await prisma.$transaction([
-      prisma.product.count(queryOptions),
-      prisma.product.findMany({
-        ...queryOptions,
-        ...numberOfOrders,
-        skip: (Number(page) - 1) * Number(limit),
-        take: Number(limit),
-        })
-    ]);
-
-    // format the properties on the JSON response
+    const [ totalResults, resultSet ] = await selectProducts(req.query);
     res.send({
-      page: Number(page),
-      count: resultSet[1].length,
-      totalResults: resultSet[0],
-      products: resultSet[1].map((product: ProductWithOrderCount) => {
+      page: Number(req.query.page || 1),
+      count: resultSet.length,
+      totalResults,
+      products: resultSet.map((product: ProductWithOrderCount) => {
         product.numOfTimesOrdered = product._count!.orderItems;
         delete product._count;
         return product;
@@ -80,35 +26,9 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
 
 export const getBestSellers = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { limit = 25, page = 1 } = req.query;
-    const [ rowCount, bestSellers ] = await prisma.$transaction([
-      prisma.$queryRaw<[{ count: number }]>`
-        SELECT COUNT(*)::INTEGER 
-        FROM (
-          SELECT DISTINCT "productId" FROM "OrderItem"
-        ) AS temp
-      `,
-      prisma.$queryRaw<(Product & ProductExtended)[]>`
-        SELECT 
-          p."id", 
-          COUNT(oi."orderId")::INTEGER AS "numOfTimesOrdered",
-          SUM(oi."quantity")::INTEGER AS "totalUnitsOrdered",
-          p."name",
-          p."description", 
-          p."price",
-          p."stock", 
-          p."categoryName", 
-          p."supplierName", 
-          p."thumbnail"
-        FROM "Product" p
-        JOIN "OrderItem" oi
-        ON p."id" = oi."productId"
-        GROUP BY 1
-        ORDER BY 2 DESC
-        LIMIT ${Number(limit)}
-        OFFSET ${(Number(page) - 1) * Number(limit)}
-      `
-    ]);
+    const { limit = 25, page = 1, category = '', supplier = '' } = req.query;
+    const [ rowCount, bestSellers ] = 
+      await selectBestsellers(<string>category, <string>supplier, <string>page, <string>limit);
  
     res.send({ 
       page: Number(page),
@@ -117,11 +37,19 @@ export const getBestSellers = async (req: Request, res: Response, next: NextFunc
       bestSellers
     });
   } catch (err) {
-    console.log(err);
     next(err);
   }
 }
 
-export const getProductById = (req: Request, res: Response) => {
-  res.status(200).send(req.productDetails);
+export const getProductById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { _avg: { rating: averageRating } } = 
+      await prisma.review.aggregate({
+        _avg: { rating: true },
+        where: { productId: req.productDetails.id }
+      });
+    res.status(200).send({ ...req.productDetails, averageRating });
+  } catch (err) {
+    next(err);
+  }
 }

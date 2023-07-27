@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import formatNewReview from '../helpers/formatNewReview';
+import { selectReviews } from '../models/reviews.models';
 import prisma from "../prisma/prisma";
 
 export const getReviews = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,15 +13,9 @@ export const getReviews = async (req: Request, res: Response, next: NextFunction
     } else if (req.originalUrl.includes('customers')) {
       queryOptions.where = { customerId: req.customerDetails.id }
     }
-
-    const [ totalResults, reviews ] = await prisma.$transaction([
-      prisma.review.count(queryOptions),
-      prisma.review.findMany({
-        ...queryOptions,
-        skip: (Number(page) - 1) * Number(limit),
-        take: Number(limit)
-      })
-    ]);
+    
+    const [ totalResults, reviews ] = 
+      await selectReviews(queryOptions, page as number, limit as number);
 
     res.status(200).send({
       page: Number(page),
@@ -46,13 +41,13 @@ export const createReview = async (req: Request, res: Response, next: NextFuncti
   }
 }
 
-export const updateReview = (req: Request, res: Response, next: NextFunction) => {
+export const updateReview = (req: Request, res: Response) => {
   res.status(200).send({ updatedReview: req.reviewDetails });
 };
 
 export const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const deletedReview = await prisma.review.delete({ where: { id: req.reviewDetails.id } });
+    const deletedReview = await deleteReview(req.reviewDetails.id);
     res.status(200).send({deletedReview});
   } catch (err) {
     next(err);
