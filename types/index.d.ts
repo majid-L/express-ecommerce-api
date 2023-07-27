@@ -26,6 +26,8 @@ declare global {
     }
   }
 
+  type StrOrNum = string | number;
+
   // Global custom types - used to type variables in controllers
   type User = {
     id?: number,
@@ -51,7 +53,8 @@ declare global {
 
   type ProductExtended = {
     numOfTimesOrdered: number,
-    totalUnitsOrdered: number
+    totalUnitsOrdered: number,
+    averageRating: string
   }
 
   type Product = {
@@ -102,7 +105,25 @@ declare global {
     title: string,
     body: string,
     rating: number,
-    recommend?: boolean
+    recommend?: boolean,
+    createdAt?: Date
+  }
+
+  type ProductQueryParam = { 
+    contains: string, 
+    mode: 'insensitive' 
+  }
+
+  type ProductsUrlParams = {
+    limit: StrOrNum,
+    page: StrOrNum,
+    minPrice: StrOrNum,
+    maxPrice: StrOrNum,
+    category: string,
+    supplier: string,
+    hideOutOfStock: boolean,
+    sortBy: string,
+    order: string
   }
 
   type MiddlewareError = Error & {
@@ -197,5 +218,12 @@ declare global {
     body: { 
       bestSellers: (Product & ProductExtended)[] 
     } 
+  }
+
+  type ReviewsResponse = {
+    page: number,
+    count: number,
+    totalResults: number,
+    reviews: (Review & { id: number, createdAt: string })[]
   }
 }

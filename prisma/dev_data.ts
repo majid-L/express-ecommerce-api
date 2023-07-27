@@ -3,24 +3,27 @@ import { UniqueEnforcer } from 'enforce-unique';
 
 faker.seed(123);
 
-const randomIndex = (range: number) => {
+const randomIndex = (range: number): number => {
   return Math.floor(Math.random() * range);
 }
 
-const uniqueEnforcer = new UniqueEnforcer();
+const uniqueEnforcer: UniqueEnforcer = new UniqueEnforcer();
 
-const generateRandomData = () => {
+const generateCategories = (): Category[] => {
   const categories: Category[] = [];
-    for (let i = 0; i < 10; i++) {
-      categories.push({
-        name: uniqueEnforcer.enforce(() => faker.commerce.department()),
-        description: faker.commerce.productAdjective(),
-       thumbnail: faker.image.urlLoremFlickr({ category: 'commerce' }) 
-     });
-   }
-   
+  for (let i = 0; i < 4; i++) {
+    categories.push({
+      name: uniqueEnforcer.enforce(() => faker.commerce.department()),
+      description: faker.commerce.productAdjective(),
+      thumbnail: faker.image.urlLoremFlickr({ category: 'commerce' }) 
+    });
+  }
+  return categories;
+}
+
+const generateSuppliers = (): Supplier[] => {
   const suppliers: Supplier[] = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 4; i++) {
     suppliers.push({
       name: uniqueEnforcer.enforce(() => faker.company.name()),
       location: faker.location.country(),
@@ -28,9 +31,12 @@ const generateRandomData = () => {
       thumbnail: faker.image.urlLoremFlickr({ category: 'commerce' }) 
     });
   }
+  return suppliers;
+}
 
+const generateProducts = (categories: Category[], suppliers: Supplier[]) => {
   const products: Product[] = [];
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 50; i++) {
     products.push({
       name: faker.commerce.productName(),
       description: faker.commerce.productDescription(),
@@ -46,6 +52,10 @@ const generateRandomData = () => {
     products[i].stock = 300
   }
 
+  return products;
+}
+
+const generateCustomers = (): Customer[] => {
   const customers: Customer[] = [{
     name: "Alex Nes",
     username: "alexnes",
@@ -53,7 +63,7 @@ const generateRandomData = () => {
     email: "alex-nes@nexus.pk"
   }];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 4; i++) {
     const address = faker.location.streetAddress({ useFullAddress: true });
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
@@ -69,29 +79,31 @@ const generateRandomData = () => {
     });
   }
 
-  const populateCarts = () => {
-    const items: CartItem[] = [];
-    for (let i = 0; i < 100; i++) {
-    // generate a unique customerId-productId combination
-      const uniqueIdPair = uniqueEnforcer.enforce(() => {
-        return [
-          randomIndex(customers.length) + 1,
-          randomIndex(products.length) + 1
-        ];
-      });
-      items.push({
-        customerId: uniqueIdPair[0],
-        productId: uniqueIdPair[1],
-        quantity: faker.number.int({ min: 1, max: 7 })
-      });
-    }
-    return items.filter(item => item.customerId !== 1);
+  return customers;
+}
+
+const generateCartItems = (customers: Customer[], products: Product[]): CartItem[] => {
+  const items: CartItem[] = [];
+  for (let i = 0; i < 50; i++) {
+  // generate a unique customerId-productId combination
+    const uniqueIdPair = uniqueEnforcer.enforce(() => {
+      return [
+        randomIndex(customers.length) + 1,
+        randomIndex(products.length) + 1
+      ];
+    });
+    items.push({
+      customerId: uniqueIdPair[0],
+      productId: uniqueIdPair[1],
+      quantity: faker.number.int({ min: 1, max: 7 })
+    });
   }
+  return items.filter(item => item.customerId !== 1);
+}
 
-  const cartItems: CartItem[] = populateCarts();
-
+const generateOrders = (customers: Customer[]): Order[] => {
   const orders: Order[] = [];
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 20; i++) {
     const randIndex = randomIndex(customers.length);
     orders.push({
       customerId: randIndex ? randIndex + 1 : 2,
@@ -107,32 +119,12 @@ const generateRandomData = () => {
     });
   }
 
-  cartItems.push({
-    customerId: 1,
-    productId: 1,
-    quantity: 4
-  });
+  return orders;
+}
 
-  cartItems.push({
-    customerId: 1,
-    productId: 2,
-    quantity: 4
-  });
-
-  cartItems.push({
-    customerId: 1,
-    productId: 3,
-    quantity: 4
-  });
-
-  customers.push({
-    name: "Ryo Ishida",
-    username: "four",
-    password: "$2b$10$3GyH.r/44whUPlyf0tTi/ejA2JFm2ERzS6guIONKB9FkfyEANiNbS",
-    email: "ry_ishida@zairon.law"
-  });
-
+const generateOrderItems = (orders: Order[], products: Product[]): OrderItem[] => {
   const orderItems: OrderItem[] = [];
+
   orders.forEach((order, index) => {
     const uniqueItems = Math.ceil(Math.random() * 6);
     const uniqueEnforcer = new UniqueEnforcer();
@@ -148,16 +140,10 @@ const generateRandomData = () => {
     }
   });
 
+  return orderItems;
+}
 
-  type Review = {
-    customerId: number,
-    productId: number,
-    title: string,
-    body: string,
-    recommend: boolean,
-    rating: number
-  }
-
+const generateReviews = (orders: Order[], orderItems: OrderItem[]) => {
   const reviews: Review[] = [];
   orderItems.forEach(orderItem => {
     reviews.push({
@@ -166,7 +152,8 @@ const generateRandomData = () => {
       title: faker.company.catchPhrase(),
       body: faker.lorem.paragraph({ min: 1, max: 3 }),
       recommend: faker.datatype.boolean({ probability: 0.6 }),
-      rating: faker.number.int({ min: 0, max: 5 })
+      rating: faker.number.int({ min: 0, max: 5 }),
+      createdAt: faker.date.between({ from: '2016-01-01T00:00:00.000Z', to: Date.now() })
     });
   });
 
@@ -178,7 +165,20 @@ const generateRandomData = () => {
         uniqueCustomerReviews.push(reviews[index]);
       }
     });
-    
+  
+  return uniqueCustomerReviews;
+}
+
+const generateRandomData = () => {
+  const categories: Category[] = generateCategories();
+  const suppliers: Supplier[] = generateSuppliers();
+  const products: Product[] = generateProducts(categories, suppliers);
+  const customers: Customer[] = generateCustomers();
+  const cartItems: CartItem[] = generateCartItems(customers, products);
+  const orders: Order[] = generateOrders(customers);
+  const orderItems: OrderItem[] = generateOrderItems(orders, products);
+  const reviews = generateReviews(orders, orderItems);
+
   return {
     categories,
     suppliers,
@@ -187,7 +187,7 @@ const generateRandomData = () => {
     cartItems,
     orders,
     orderItems,
-    reviews: uniqueCustomerReviews
+    reviews
   };
 }
 

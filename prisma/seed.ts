@@ -2,7 +2,7 @@ import prisma from './prisma';
 import devData from './dev_data';
 import testData from './test_data';
 
-const data = process.env.NODE_ENV !== 'test' || process.argv[2]
+const data = process.env.NODE_ENV === 'test' || process.argv[2]
   ? testData 
   : devData;
 
