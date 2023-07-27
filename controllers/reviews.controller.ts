@@ -13,7 +13,7 @@ export const getReviews = async (req: Request, res: Response, next: NextFunction
     } else if (req.originalUrl.includes('customers')) {
       queryOptions.where = { customerId: req.customerDetails.id }
     }
-    
+
     const [ totalResults, reviews ] = 
       await selectReviews(queryOptions, page as number, limit as number);
 
@@ -47,7 +47,7 @@ export const updateReview = (req: Request, res: Response) => {
 
 export const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const deletedReview = await deleteReview(req.reviewDetails.id);
+    const deletedReview = await prisma.review.delete({ where: { id: req.reviewDetails.id } });
     res.status(200).send({deletedReview});
   } catch (err) {
     next(err);
