@@ -14,7 +14,7 @@ const ordersTests = () => {
 
       expect(ordersResponse).to.have.all.keys(['id', 'name', 'username', 'orders']);
       expect(ordersResponse.orders).to.have.lengthOf(2);
-      expect(ordersResponse.orders[0]).to.have.all.keys(['id', 'customerId', 'shippingAddress', 'status', 'created_at', 'orderItems']);
+      expect(ordersResponse.orders[0]).to.have.all.keys(['id', 'customerId', 'shippingAddress', 'status', 'createdAt', 'orderItems']);
       expect(ordersResponse.orders[0].orderItems[0]).to.have.all.keys(['quantity', 'product']);
       expect(ordersResponse.orders[0].orderItems[0].product).to.have.all.keys(['id', 'name', 'description', 'price', 'stock', 'categoryName', 'supplierName', 'thumbnail']);
     });
@@ -25,7 +25,7 @@ const ordersTests = () => {
         .set('Cookie', cookie)
         .expect(201);
     
-      expect(body.id).to.equal(63);
+      expect(body.id).to.equal(23);
       expect(body.customerId).to.equal(1);
       body.orderItems.forEach((item, index) => {
         expect(item.quantity).to.equal(4);
@@ -50,7 +50,7 @@ const ordersTests = () => {
 
       const { body: errorResponse }
       : { body: { msg: string } } = await request(app)
-        .post('/api/customers/12/orders')
+        .post('/api/customers/4/orders')
         .set('Cookie', loginResponse.headers['set-cookie'])
         .expect(400);
     
@@ -63,7 +63,7 @@ const ordersTests = () => {
         .send({username: 'four', password: 'password'});
         
       const { body }: { body: OrdersResponse } = await request(app)
-        .get('/api/customers/12/orders')
+        .get('/api/customers/4/orders')
         .set('Cookie', loginResponse.headers['set-cookie'])
         .expect(200);
 

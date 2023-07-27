@@ -5,7 +5,7 @@ import { cookie } from "./index.spec";
 import prisma from "../prisma/prisma";
 
 const customerTests = () => {
-  describe('/api/customers/:customerId', () => {
+  describe.only('/api/customers/:customerId', () => {
     it('Returns customer account information.', async () => {
       const { body: customer }: { body: Customer } = await request(app)
         .get('/api/customers/1')
@@ -133,7 +133,7 @@ const customerTests = () => {
         .set('Cookie', cookie)
         .expect(400);
 
-      expect(errorResponse).to.include({ msg: 'Field cannot be empty or blank.' });
+      expect(errorResponse).to.include({ msg: 'Field(s) cannot be empty or blank.' });
     });
 
     it('Returns 404 response in the case of invalid request body structure.', async () => {

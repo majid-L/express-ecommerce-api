@@ -112,7 +112,7 @@ const cartTests = () => {
         .send({username: 'four', password: 'password'});
           
       const { body }: { body: CartItemsResponse } = await request(app)
-        .get('/api/customers/12/cart')
+        .get('/api/customers/4/cart')
         .set('Cookie', loginResponse.headers['set-cookie'])
         .expect(200);
   

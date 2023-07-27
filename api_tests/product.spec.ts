@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from '../index';
 import { expect } from "chai";
+import prisma from "../prisma/prisma";
 
 const productTests = () => {
   describe('api/products', () => {
@@ -28,7 +29,7 @@ const productTests = () => {
       });
     });
 
-    it('Accepts page number and limit as query parameters.', async () => {
+    it('Accepts \'page\' number and \'limit\' as query parameters.', async () => {
       const { body: { products } }: 
       { body: { products: Product[] } } = await request(app)
         .get('/api/products?page=2&limit=20')
@@ -37,6 +38,18 @@ const productTests = () => {
       expect(products).to.be.an('array').that.has.lengthOf(20);
       expect(products[0]).to.haveOwnProperty('id').to.eql(21);
       expect(products[19]).to.haveOwnProperty('id').to.eql(40);
+    });
+
+    it('Accepts \'category\' as a query parameter.', async () => {
+      const category = await prisma.category.findFirst();
+      const { body: { products } }: 
+      { body: { products: Product[] } } = await request(app)
+        .get(`/api/products?category=${category!.name}`)
+        .expect(200);
+
+      products.forEach(({ categoryName }) => {
+        expect(categoryName).to.equal(category!.name);
+      });
     });
   });
 
@@ -59,11 +72,11 @@ const productTests = () => {
 
       // Request the second page and verify the outcome
       const secondPage = await request(app)
-        .get('/api/products/bestsellers?page=2&limit=30')
+        .get('/api/products/bestsellers?page=2&limit=10')
         .expect(200);
       
       const secondPageResults = (secondPage as BestSellers).body.bestSellers;
-      expect(secondPageResults).to.be.an('array').that.has.lengthOf(30);
+      expect(secondPageResults).to.be.an('array').that.has.lengthOf(10);
       expect(secondPageResults[0].id).to.not.equal(bestSellers[0].id);
     });
   });
