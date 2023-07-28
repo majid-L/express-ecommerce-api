@@ -12,7 +12,7 @@ export const selectProducts = async (query: ProductsUrlParams) => {
         sortBy = 'id',
         order = 'asc'
       } = query;
-
+    
     const numberOfOrders = {
       include: { _count: { select: { orderItems: true } } } 
     };
@@ -89,4 +89,18 @@ export const selectBestsellers = async (
         OFFSET ${(Number(page) - 1) * Number(limit)}
       `
     ]);
+}
+
+export const selectProductById = async (productId: number) => {
+  return await prisma.$transaction([
+    prisma.review.aggregate({
+      _avg: { rating: true },
+      _count: { rating: true },
+      where: { productId }
+    }),
+    prisma.product.findUnique({
+      select: { _count: { select: { orderItems: true } } },
+      where: { id: productId }
+    })
+  ]);
 }
