@@ -54,7 +54,7 @@ CREATE TABLE "Order" (
     "customerId" INTEGER NOT NULL,
     "shippingAddress" VARCHAR(100),
     "status" VARCHAR(20),
-    "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -71,6 +71,20 @@ CREATE TABLE "Product" (
     "thumbnail" TEXT,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Review" (
+    "id" SERIAL NOT NULL,
+    "customerId" INTEGER NOT NULL,
+    "productId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "recommend" BOOLEAN,
+    "rating" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -93,6 +107,9 @@ CREATE UNIQUE INDEX "Customer_username_key" ON "Customer"("username");
 -- CreateIndex
 CREATE UNIQUE INDEX "Customer_email_key" ON "Customer"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Review_customerId_productId_key" ON "Review"("customerId", "productId");
+
 -- AddForeignKey
 ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -114,8 +131,20 @@ ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryName_fkey" FOREIGN KEY ("c
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_supplierName_fkey" FOREIGN KEY ("supplierName") REFERENCES "Supplier"("name") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+-- AddForeignKey
+ALTER TABLE "Review" ADD CONSTRAINT "Review_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Review" ADD CONSTRAINT "Review_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AlterTable
+ALTER TABLE "Review" ALTER COLUMN "recommend" DROP NOT NULL;
+
+-- AddCheck
+ALTER TABLE "Review" ADD CONSTRAINT "Review_accepted_rating_values" CHECK (rating IN(0, 1, 2, 3, 4, 5));
+
 -- AddCheck
 ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_min_quantity" CHECK (quantity > 0); 
 
 -- AddCheck
-ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_min_quantity" CHECK (quantity > 0); 
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_min_quantity" CHECK (quantity > 0);
