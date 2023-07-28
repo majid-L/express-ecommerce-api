@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon app.listen.ts",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/app.listen.js\"",
-    "test": "tsc && NODE_ENV=test mocha build/api_tests/index.spec.js"
+    "test": "tsc && NODE_ENV=test mocha build/api_tests/index.spec.js",
+    "testcov": "tsc && NODE_ENV=test nyc mocha build/api_tests/index.spec.js",
+    "print": "node build/prisma/dev_data.js > test_data.ts 2>&1"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -14,29 +16,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "prisma": "^5.0.0",
     "@prisma/client": "^5.0.0",
-    "connect-pg-simple": "^9.0.0",
-    "express-session": "^1.17.3",
-    "passport": "^0.6.0",
-    "passport-local": "^1.0.0",
     "bcrypt": "^5.1.0",
+    "connect-pg-simple": "^9.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "nodemon": "^3.0.1",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "prisma": "^5.0.0",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "typescript": "^5.1.6",
-    "supertest": "^6.3.3",
-    "mocha": "^10.2.0",
-    "chai": "^4.3.7",
     "@faker-js/faker": "^8.0.2",
-    "concurrently": "^8.2.0",
-    "enforce-unique": "^1.1.1",
     "@types/bcrypt": "^5.0.0",
     "@types/chai": "^4.3.5",
+    "@types/chai-sorted": "^0.2.0",
     "@types/connect-pg-simple": "^7.0.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
@@ -45,6 +42,14 @@
     "@types/node": "^20.4.2",
     "@types/passport": "^1.0.12",
     "@types/passport-local": "^1.0.35",
-    "@types/supertest": "^2.0.12"
+    "@types/supertest": "^2.0.12",
+    "chai": "^4.3.7",
+    "chai-sorted": "^0.2.0",
+    "concurrently": "^8.2.0",
+    "enforce-unique": "^1.1.1",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "supertest": "^6.3.3",
+    "typescript": "^5.1.6"
   }
 }
