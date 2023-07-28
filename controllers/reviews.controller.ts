@@ -15,7 +15,7 @@ export const getReviews = async (req: Request, res: Response, next: NextFunction
     }
 
     const [ totalResults, reviews ] = 
-      await selectReviews(queryOptions, page as number, limit as number);
+      await selectReviews(queryOptions, Number(page), Number(limit));
 
     res.status(200).send({
       page: Number(page),

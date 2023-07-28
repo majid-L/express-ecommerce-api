@@ -1,20 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
+import createError from '../helpers/createError';
 import prisma from '../prisma/prisma';
 
 const validateUpdatedCart = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.body.length === 0) return next();
 
-    const err: MiddlewareError = new Error();
-    err.status = 400;
-
     const cartHasDuplicateItems = (req.body as CartItem[])
       .map(({ productId }) => productId)
       .some((productId, index, array) => array.indexOf(productId) !== index);
   
     if (cartHasDuplicateItems) {
-      err.message = 'Cart items must be unique.';
-      return next(err);
+      return next(createError('Cart items must be unique.', 400));
     }
 
     const products = await prisma.product.findMany({
@@ -27,21 +24,17 @@ const validateUpdatedCart = async (req: Request, res: Response, next: NextFuncti
     for (const cartItem of (req.body as CartItem[])) {
       const { customerId, productId, quantity } = cartItem;
       if (quantity < 1) {
-        err.message = 'Quantity must be at least 1.';
-        return next(err);
+        return next(createError('Quantity must be at least 1.', 400));
       }
       if (!customerId || !productId || !quantity) {
-        err.message = 'Request body is missing required field(s).';
-        return next(err);
+        return next(createError('Request body is missing required field(s).', 400));
       }
       if (customerId !== req.customerDetails.id) {
-        err.message = 'Invalid customer id on cart item.';
-        return next(err);
+        return next(createError('Invalid customer id on cart item.', 400));
       }
       const productFromDatabase = products.find(product => product.id === productId);
       if (quantity > productFromDatabase!.stock) {
-        err.message = 'Insufficient stock.';
-        return next(err);
+        return next(createError('Insufficient stock.', 400));
       }
     }
     next();

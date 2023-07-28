@@ -39,7 +39,7 @@ export const validateAuthInput = (req: Request, res: Response, next: NextFunctio
 
 // Protect routes from unauthenticated users
 export const userIsAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.session.passport) {
+  if (!req.session.passport && !/\/customers\/\d+\/reviews.*$/i.test(req.originalUrl)) {
     res.status(401).json({ msg: 'Unauthenticated.' });
   } else {
     next();

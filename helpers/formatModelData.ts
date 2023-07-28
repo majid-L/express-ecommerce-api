@@ -14,14 +14,19 @@ const formatModelData = async <ModelType>(
       const valueIsDifferent = requestBody[field] !== existingModel[field];
       if (acceptedFields.includes(field) && valueIsDifferent) {
         if (/^\s*$/.test(requestBody[field] as string)) {
-          return null;
+          return 'Field(s) cannot be empty or blank.';
         }
         updatedModelData[field] = requestBody[field];
       }
-      if (field === 'password') {
+      if (field === 'password' && resource === 'customer') {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash((requestBody as unknown as Customer).password, salt);
         (updatedModelData as Partial<Customer>).password = hashedPassword;
+      }
+      if (field === 'rating') {
+        if (![0, 1, 2, 3, 4, 5].includes((requestBody as unknown as Review).rating)) {
+          return 'Rating must be a whole number between 0 and 5.';
+        }
       }
     }
     return updatedModelData;
