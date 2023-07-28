@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
-import { selectBestsellers, selectProducts } from '../models/products.models';
+import { selectBestsellers, selectProductById, selectProducts } from '../models/products.models';
 
 export const getProducts = async (
   req: Request<{}, {}, {}, ProductsUrlParams>, 
@@ -43,12 +43,23 @@ export const getBestSellers = async (req: Request, res: Response, next: NextFunc
 
 export const getProductById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { _avg: { rating: averageRating } } = 
-      await prisma.review.aggregate({
-        _avg: { rating: true },
-        where: { productId: req.productDetails.id }
-      });
-    res.status(200).send({ ...req.productDetails, averageRating });
+    const [
+      { 
+        _avg: { rating: averageRating },
+        _count: { rating: totalRatings }
+      },
+      { 
+        _count: { orderItems: numOfTimesOrdered }
+      }
+    ] = await selectProductById(req.productDetails.id) as PrismaAggregateTransaction;
+    
+    res.status(200).send({ 
+      ...req.productDetails, 
+      averageRating: averageRating?.toFixed(1),
+      totalRatings,
+      numOfTimesOrdered
+    });
+    
   } catch (err) {
     next(err);
   }
