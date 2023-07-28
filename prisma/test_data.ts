@@ -497,7 +497,34 @@ export default {
       categoryName: 'Grocery',
       supplierName: 'Heathcote - Murazik',
       thumbnail: 'https://loremflickr.com/640/480/commerce?lock=6020267373494272'
-    }
+    },
+    {
+      name: 'Ultra rare jade figurine',
+      description: 'A one-of-a-kind small figurine rumoured to have originated in Tsuwano in the early part of the Edo period.',
+      price: 1988.16,
+      stock: 0,
+      categoryName: 'Grocery',
+      supplierName: 'Heathcote - Murazik',
+      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=6020267373494272'
+    },
+    {
+      name: 'Potted plants',
+      description: 'A set of homemade plants and flowers. Will be out of stock for the foreseeable future..',
+      price: 45.37,
+      stock: 0,
+      categoryName: 'Grocery',
+      supplierName: 'Heathcote - Murazik',
+      thumbnail: 'https://loremflickr.com/640/480/statue?lock=1995754384130048'
+    },
+    {
+      name: 'Old lab equipment',
+      description: 'A bunch of old equipment obtained from a now defunct forensics lab..',
+      price: 236.00,
+      stock: 0,
+      categoryName: 'Health',
+      supplierName: 'Heathcote - Murazik',
+      thumbnail: 'https://loremflickr.com/640/480/computerparts?lock=2070832880812032'
+    },
   ],
   customers: [
     {
