@@ -167,6 +167,23 @@ declare global {
     suppliers: Supplier[]
   };
 
+  // This is used to type the Prisma transaction for the selectProductById function
+  type PrismaAggregateTransaction = [
+    {
+      _avg: {
+         rating: number
+      },
+      _count: {
+        rating: number
+      }
+    },
+    {
+      _count: {
+        orderItems: number
+      }
+    }
+  ]
+
   // Types for API JSON responses - used to type variables in testing suite
   type ProductsResponse = {
     products: Product[],
@@ -215,9 +232,10 @@ declare global {
   }
 
   type BestSellers = { 
-    body: { 
-      bestSellers: (Product & ProductExtended)[] 
-    } 
+    bestSellers: (Product & ProductExtended)[],
+    page: number,
+    count: number,
+    totalResults: number
   }
 
   type ReviewsResponse = {
@@ -225,5 +243,11 @@ declare global {
     count: number,
     totalResults: number,
     reviews: (Review & { id: number, createdAt: string })[]
+  }
+
+  type ApiErrorResponse = {
+    body: {
+      msg: string
+    }
   }
 }
