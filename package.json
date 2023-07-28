@@ -8,7 +8,9 @@
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/app.listen.js\"",
     "test": "tsc && NODE_ENV=test mocha build/api_tests/index.spec.js",
     "testcov": "tsc && NODE_ENV=test nyc mocha build/api_tests/index.spec.js",
-    "print": "node build/prisma/dev_data.js > test_data.ts 2>&1"
+    "print": "node build/prisma/dev_data.js > test_data.ts 2>&1",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
