@@ -5,6 +5,7 @@ import productTests from './product.spec';
 import ordersTests from './orders.spec';
 import cartTests from './cart.spec';
 import customerTests from "./customer.spec";
+import reviewsTests from "./reviews.spec";
 import reseedDatabase from '../prisma/seed';
 
 export let cookie: [string];
@@ -19,7 +20,7 @@ describe('API tests', () => {
     cookie = authResponse.headers['set-cookie'];
   });
 
-  after(async () => {
+  after(() => {
     setTimeout(() => process.exit(), 1000);
   });
   
@@ -28,4 +29,5 @@ describe('API tests', () => {
   ordersTests();
   cartTests();
   customerTests();
+  reviewsTests();
 });

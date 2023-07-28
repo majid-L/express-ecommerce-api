@@ -48,9 +48,8 @@ const ordersTests = () => {
         .post('/api/login')
         .send({username: 'four', password: 'password'});
 
-      const { body: errorResponse }
-      : { body: { msg: string } } = await request(app)
-        .post('/api/customers/4/orders')
+      const { body: errorResponse }: ApiErrorResponse = await request(app)
+        .post('/api/customers/6/orders')
         .set('Cookie', loginResponse.headers['set-cookie'])
         .expect(400);
     
@@ -63,7 +62,7 @@ const ordersTests = () => {
         .send({username: 'four', password: 'password'});
         
       const { body }: { body: OrdersResponse } = await request(app)
-        .get('/api/customers/4/orders')
+        .get('/api/customers/6/orders')
         .set('Cookie', loginResponse.headers['set-cookie'])
         .expect(200);
 
@@ -71,12 +70,12 @@ const ordersTests = () => {
     });
 
     it('Returns 404 response for non-existent customer.', async () => {
-      const response = await request(app)
+      const { body: { msg } }: ApiErrorResponse = await request(app)
         .get('/api/customers/15/orders')
         .set('Cookie', cookie)
         .expect(404);
        
-      expect(response.body.msg).to.equal('Not found.');
+      expect(msg).to.equal('Not found.');
     });
   });
 }

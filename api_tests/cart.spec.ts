@@ -24,37 +24,38 @@ const initialCart = [
 
 // Updated cart sent to PUT /api/customers/1/cart
 let requestBody: CartItem[];
+const updatedCart = [
+  {
+    "customerId": 1,
+    "productId": 1,
+    "quantity": 120
+  },
+  {
+    "customerId": 1,
+    "productId": 2,
+    "quantity": 1
+  },
+  {
+    "customerId": 1,
+    "productId": 4,
+    "quantity": 23
+  },
+  {
+    "customerId": 1,
+    "productId": 5,
+    "quantity": 299
+  },
+  {
+    "customerId": 1,
+    "productId": 6,
+    "quantity": 23
+  }
+];
 
 const cartTests = () => {
   describe('/api/customers/:customerId/cart', () => {
     beforeEach(() => {
-      requestBody = [
-        {
-          "customerId": 1,
-          "productId": 1,
-          "quantity": 120
-        },
-        {
-          "customerId": 1,
-          "productId": 2,
-          "quantity": 1
-        },
-        {
-          "customerId": 1,
-          "productId": 4,
-          "quantity": 23
-        },
-        {
-          "customerId": 1,
-          "productId": 5,
-          "quantity": 299
-        },
-        {
-          "customerId": 1,
-          "productId": 6,
-          "quantity": 23
-        }
-      ]
+      requestBody = updatedCart.map(cartItem => ({...cartItem}));
     });
 
     it('Customer can view all cart items.', async () => {
@@ -110,9 +111,9 @@ const cartTests = () => {
       const loginResponse = await request(app)
         .post('/api/login')
         .send({username: 'four', password: 'password'});
-          
+      
       const { body }: { body: CartItemsResponse } = await request(app)
-        .get('/api/customers/4/cart')
+        .get('/api/customers/6/cart')
         .set('Cookie', loginResponse.headers['set-cookie'])
         .expect(200);
   
@@ -121,35 +122,33 @@ const cartTests = () => {
 
     it('Returns 400 response if request body contains invalid customer id.', async () => {
       requestBody[0].customerId = 2;
-      const { body: errorResponse }
-      : { body: { msg: string } } = await request(app)
+      const { body: { msg } }: ApiErrorResponse = await request(app)
         .put('/api/customers/1/cart')
         .set('Cookie', cookie)
         .send(requestBody)
         .expect(400);
       
-      expect(errorResponse.msg).to.equal('Invalid customer id on cart item.');
+      expect(msg).to.equal('Invalid customer id on cart item.');
     });
 
     it('Returns 400 response if cart item quantity exceeds product stock.', async () => {
       requestBody[0].quantity = 301;
-      const { body: errorResponse }
-      : { body: { msg: string } } = await request(app)
+      const { body:  { msg } }: ApiErrorResponse = await request(app)
         .put('/api/customers/1/cart')
         .set('Cookie', cookie)
         .send(requestBody)
         .expect(400);
       
-      expect(errorResponse.msg).to.equal('Insufficient stock.');
+      expect(msg).to.equal('Insufficient stock.');
     });
 
     it('Returns 404 response for non-existent customer.', async () => {
-      const response = await request(app)
+      const { body: { msg } }: ApiErrorResponse = await request(app)
         .get('/api/customers/15/cart')
         .set('Cookie', cookie)
         .expect(404);
        
-      expect(response.body.msg).to.equal('Not found.');
+      expect(msg).to.equal('Not found.');
     });
   });
 }

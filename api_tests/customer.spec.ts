@@ -5,7 +5,7 @@ import { cookie } from "./index.spec";
 import prisma from "../prisma/prisma";
 
 const customerTests = () => {
-  describe.only('/api/customers/:customerId', () => {
+  describe('/api/customers/:customerId', () => {
     it('Returns customer account information.', async () => {
       const { body: customer }: { body: Customer } = await request(app)
         .get('/api/customers/1')
@@ -53,12 +53,14 @@ const customerTests = () => {
         password: "new-password-abc-123" 
       };
 
-      await request(app).put('/api/customers/1')
+      await request(app)
+        .put('/api/customers/1')
         .send(requestBody)
         .set('Cookie', cookie)
         .expect(200);
 
-      await request(app).post('/api/logout')
+      await request(app)
+        .post('/api/logout')
         .set('Cookie', cookie)
         .expect(200);
       
@@ -70,7 +72,17 @@ const customerTests = () => {
     });
 
     it('User can delete account, triggering a cascade delete of all related data.', async () => {
-      const { body: deleteResponse }: { body: any} = await request(app)
+      const { body: deleteResponse }: { 
+        body: { 
+          msg: string, 
+          deletedUser: { 
+            id: number, 
+            name: string,
+            username: string,
+            email: string
+          } 
+        } 
+      } = await request(app)
         .delete('/api/customers/1')
         .set('Cookie', cookie)
         .expect(200);
@@ -116,8 +128,7 @@ const customerTests = () => {
     });
       
     it('Returns 404 response for non-existent customer.', async () => {
-      const { body: errorResponse }
-      : { body: { msg: string } } = await request(app)
+      const { body: errorResponse }: ApiErrorResponse = await request(app)
         .get('/api/customers/13')
         .set('Cookie', cookie)
         .expect(404);
@@ -125,9 +136,8 @@ const customerTests = () => {
       expect(errorResponse).to.include({ msg: 'Not found.' });
     });
 
-    it('Returns 404 response in the case of empty or blank fields.', async () => {
-      const { body: errorResponse }
-      : { body: { msg: string } } = await request(app)
+    it('Returns 400 response in the case of empty or blank fields.', async () => {
+      const { body: errorResponse }: ApiErrorResponse = await request(app)
         .put('/api/customers/1')
         .send({ username: '', email: ' ' })
         .set('Cookie', cookie)
@@ -136,9 +146,8 @@ const customerTests = () => {
       expect(errorResponse).to.include({ msg: 'Field(s) cannot be empty or blank.' });
     });
 
-    it('Returns 404 response in the case of invalid request body structure.', async () => {
-      const { body: errorResponse }
-      : { body: { msg: string } } = await request(app)
+    it('Returns 400 response in the case of invalid request body structure.', async () => {
+      const { body: errorResponse }: ApiErrorResponse = await request(app)
         .put('/api/customers/1')
         .send({ username: { user: 'alexm813' } })
         .set('Cookie', cookie)
@@ -147,15 +156,16 @@ const customerTests = () => {
       expect(errorResponse.msg).to.include('Unknown argument `user`.');
     });
 
-    it('Returns 404 response in the case of invalid data types.', async () => {
-      const { body: errorResponse }
-      : { body: { msg: string } } = await request(app)
+    it('Returns 400 response in the case of invalid data types.', async () => {
+      const { body: errorResponse }: ApiErrorResponse = await request(app)
         .put('/api/customers/1')
         .send({ email: 123 })
         .set('Cookie', cookie)
         .expect(400);
 
-      expect(errorResponse).to.include({ msg: "Invalid value provided. Argument: `email`." });
+      expect(errorResponse).to.include({ 
+        msg: 'Argument `email`: Invalid value provided. Expected String or StringFieldUpdateOperationsInput, provided Int.' 
+      });
     });
   });
 }
