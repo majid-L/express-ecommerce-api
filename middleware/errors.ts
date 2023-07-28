@@ -9,17 +9,40 @@ const handleError = (err: MiddlewareError, req: Request, res: Response, next: Ne
       err.status = 400;
       break;
 
+    /* Deal with invalid data types, e.g. in PUT request body for /customers/:id */
     case err.message.includes("Invalid value provided"):
-      const invalidArgument: string = err.message
-        .match(/Argument\s([^:]+)/i)?.[1] || 'unknown';
-      msg = `Invalid value provided. Argument: ${invalidArgument}.`;
+      msg = err.message
+        .match(/Argument\s[^:]+[^.]+\.[^.]+\./i)?.[0] || 'Invalid value provided.';
+      err.status = 400;
+      break;
+
+    /* Deal with invalid data types for named columns in query string, e.g sortBy */
+    case err.message.includes("Invalid value"):
+      msg = err.message
+        .match(/Invalid\svalue\sfor\sargument\s`[^`]+`\.\sExpected\s[^.]+\./i)?.[0] 
+        || 'Invalid value provided.';
+      err.status = 400;
+      break;
+
+    /* Deal with null values */
+    case err.message.includes("must not be null"):
+      msg = err.message
+        .match(/Argument[^.]+\./i)?.[0] 
+        || 'Invalid query.';
       err.status = 400;
       break;
 
     case err.message.includes("Unknown argument"):
       msg = err.message
-        .match(/Unknown\sargument\s[^.]+./i)?.[0] 
+        .match(/Unknown\sargument\s[^.]+.\s[^?]+\?/i)?.[0] 
         || 'Invalid query.';
+      err.status = 400;
+      break;
+
+    case /Argument\s`[^`]+`\sis\smissing/i.test(err.message):
+      const missingArgument = err.message
+        .match(/Argument\s`[^`]+`\sis\smissing\./i)?.[0] || null;
+      msg = missingArgument ? `Invalid query. ${missingArgument}` : 'Invalid query.';
       err.status = 400;
       break;
 

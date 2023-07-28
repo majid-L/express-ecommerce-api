@@ -16,10 +16,7 @@ generateSession(app);
 passportConfig(app);
 
 app.use(validateRequestMethod);
-
 app.use('/api/customers/:customerId', userIsAuthenticated);
-//app.put('/api/reviews/:reviewId', userIsAuthenticated);
-//app.delete('/api/reviews/:reviewId', userIsAuthenticated);
 
 app.use('/api', apiRouter);
 app.use(handleError);
