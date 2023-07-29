@@ -1,0 +1,156 @@
+{
+    "info": "Summary of all endpoints and resources served by this API.",
+    "endpoints": {
+        "/api/products": {
+            "GET": {
+                "summary": "returns listing of all products",
+                "queryParams": {
+                    "sortBy": "Sort by any column, e.g. name, description, price, stock, etc.",
+                    "order": "asc or desc",
+                    "page": "the number of the page you want to view",
+                    "limit": "the number of results per single page",
+                    "minPrice": "specify minimum price, e.g. minPrice=20.50",
+                    "maxPrice": "specify maximum price, e.g. maxPrice=95.80",
+                    "hideOutOfStock": "hideOutOfStock=true hides all items with 0 stock",
+                    "category": "filter by category name",
+                    "supplier": "filter by supplier name"
+                }
+            }
+        },
+        "/api/products/:id": {
+            "GET": {
+                "summary": "returns a single product object",
+                "routeParam": "product id (number)"
+            }
+        },
+        "/api/products/:id/reviews": {
+            "routeParam": "product id (number)",
+            "GET": {
+                "summary": "returns all reviews for a specific product",
+                "queryParams": {
+                    "page": "the number of the page you want to view",
+                    "limit": "the number of results per single page"
+                }
+            }
+        },
+        "/api/customers/:id": {
+            "routeParam": "customer id (number)",
+            "GET": {
+                "summary": "returns a specific customer object"
+            },
+            "PUT": {
+                "summary": "allows customer to update own account details",
+                "exampleRequest": {
+                    "name": "<string>",
+                    "username": "<string>",
+                    "password": "<string>",
+                    "email": "<string>",
+                    "billingAddress": "<string>",
+                    "shippingAddress": "<string>",
+                    "avatar": "<string>"
+                }
+            },
+            "DELETE": {
+                "summary": "allows customer to delete own account, order history and cart items"
+            }
+        },
+        "/api/customers/:id/cart": {
+            "routeParam": "customer id (number)",
+            "GET": {
+                "summary": "allows customer to view own cart items",
+                "queryParams": {
+                    "format": "format=basic returns a simplified representation of the cart items"
+                }
+            },
+            "PUT": {
+                "summary": "allows customer to update/clear own cart",
+                "exampleRequest": 
+                    [
+                        {
+                            "customerId": 1,
+                            "productId": 1,
+                            "quantity": 4
+                        },
+                        {
+                            "customerId": 1,
+                            "productId": 2,
+                            "quantity": 4
+                        }
+                    ]
+            }
+        },
+        "/api/customers/:id/orders": {
+            "routeParams": "customer id (number)",
+            "GET": {
+                "summary": "returns all orders for a specific customer."
+            },
+            "POST": {
+                "summary": "allows customer to create a new order composed of all existing cart items. No request body is required."
+            }
+        },
+        "/api/customers/:id/orders/:id": {
+            "routeParams": "customer id (number) and order id (number)",
+            "GET": {
+                "summary": "returns a specific order if it exists."
+            }
+        },
+        "/api/customers/:id/reviews": {
+            "routeParams": "customer id (number)",
+            "GET": {
+                "summary": "returns all reviews for a specific customer.",
+                "queryParams": {
+                    "page": "the number of the page you want to view",
+                    "limit": "the number of results per single page"
+                }
+            }
+        },
+        "/api/categories": {
+            "GET": {
+                "summary": "returns a listing of all categories"
+            }
+        },
+        "/api/suppliers": {
+            "GET": {
+                "summary": "returns a listing of all suppliers"
+            }
+        },
+        "/api/reviews": {
+            "GET": {
+                "summary": "returns a listing of all reviews",
+                "queryParams": {
+                    "page": "the number of the page you want to view",
+                    "limit": "the number of results per single page"
+                }
+            },
+            "POST": {
+                "summary": "allows customer to create a new review",
+                "exampleRequest": 	{
+                    "customerId": 1,
+                    "productId": 4,
+                    "title": "Fully-configurable cohesive infrastructure",
+                    "body": "Facilis beatae maxime mollitia pariatur nostrum autem. Molestiae maxime aliquid ab.",
+                    "recommend": true,
+                    "rating": 3
+                }
+            }
+        },
+        "/api/reviews/id": {
+            "routeParams": "customer id (number)",
+            "GET": {
+                "summary": "returns a specific review"
+            },
+            "PUT": {
+                "summary": "allows customer to update own review",
+                "exampleRequest": 	{
+                    "title": "High quality product",
+                    "body": "This is a great product.",
+                    "recommend": true,
+                    "rating": 5
+                }
+            },
+            "DELETE": {
+                "summary": "allows customer to delete own review."
+            }
+        }
+    }
+}
