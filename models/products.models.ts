@@ -32,7 +32,7 @@ export const selectProducts = async (query: ProductsUrlParams) => {
         ]
       },
       orderBy: {
-        [sortBy as string]: order,
+        [sortBy as string]: order.toLowerCase()
       }
     };
 
