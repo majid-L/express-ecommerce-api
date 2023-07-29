@@ -58,7 +58,7 @@ const cartTests = () => {
       requestBody = updatedCart.map(cartItem => ({...cartItem}));
     });
 
-    it('Customer can view all cart items.', async () => {
+    it('GET customer can view all cart items.', async () => {
       const { body: cart }: { body: CartItemsResponse } = await request(app)
         .get('/api/customers/1/cart')
         .set('Cookie', cookie)
@@ -75,7 +75,7 @@ const cartTests = () => {
       });
     });
 
-    it('Customer can view cart items in a basic/minimal JSON format.', async () => {
+    it('GET customer can view cart items in a basic/minimal JSON format.', async () => {
       const { body: cart }: { body: CartItemsResponse } = await request(app)
         .get('/api/customers/1/cart?format=basic')
         .set('Cookie', cookie)
@@ -84,7 +84,7 @@ const cartTests = () => {
       expect(cart).to.deep.equal(initialCart);
     });
 
-    it('Customer can add/remove cart items and modify quantities.', async () => {
+    it('PUT customer can add/remove cart items and modify quantities.', async () => {
       const { body: { updatedCartItems } }: 
         { body: { updatedCartItems : CartItem[] } } = await request(app)
         .put('/api/customers/1/cart')
@@ -96,7 +96,7 @@ const cartTests = () => {
       expect(updatedCartItems).to.deep.equal(requestBody);
     });
 
-    it('Customer can clear the entire cart at once.', async () => {
+    it('PUT customer can clear the entire cart at once.', async () => {
       const { body: { updatedCartItems } }: 
         { body: { updatedCartItems : CartItem[] } } = await request(app)
         .put('/api/customers/1/cart')
@@ -107,7 +107,7 @@ const cartTests = () => {
       expect(updatedCartItems).to.deep.equal([]);
     });
 
-    it('A new customer should have an empty cart.', async () => {
+    it('GET a new customer should have an empty cart.', async () => {
       const loginResponse = await request(app)
         .post('/api/login')
         .send({username: 'four', password: 'password'});
@@ -120,7 +120,32 @@ const cartTests = () => {
       expect(body.cartItems).to.have.lengthOf(0);
     });
 
-    it('Returns 400 response if request body contains invalid customer id.', async () => {
+    it('PUT returns 400 response if request body has an invalid format.', async () => {
+      const { body: { msg: firstResponse } }: ApiErrorResponse = await request(app)
+      .put('/api/customers/1/cart')
+      .set('Cookie', cookie)
+      .send({
+        "customerId": 1,
+        "productId": 1,
+        "quantity": 4
+        })
+      .expect(400);
+
+      const { body: { msg: secondResponse } }: ApiErrorResponse = await request(app)
+      .put('/api/customers/1/cart')
+      .set('Cookie', cookie)
+      .send([{
+        "customerid": 1,
+        "productId": 1,
+        "quantity": 4
+      }])
+      .expect(400);
+    
+    expect(firstResponse).to.equal('Invalid request body format.');
+    expect(secondResponse).to.equal('Invalid request body format.');
+    });
+
+    it('PUT returns 400 response if request body contains invalid customer id.', async () => {
       requestBody[0].customerId = 2;
       const { body: { msg } }: ApiErrorResponse = await request(app)
         .put('/api/customers/1/cart')
@@ -131,7 +156,7 @@ const cartTests = () => {
       expect(msg).to.equal('Invalid customer id on cart item.');
     });
 
-    it('Returns 400 response if cart item quantity exceeds product stock.', async () => {
+    it('PUT returns 400 response if cart item quantity exceeds product stock.', async () => {
       requestBody[0].quantity = 301;
       const { body:  { msg } }: ApiErrorResponse = await request(app)
         .put('/api/customers/1/cart')
@@ -142,7 +167,7 @@ const cartTests = () => {
       expect(msg).to.equal('Insufficient stock.');
     });
 
-    it('Returns 404 response for non-existent customer.', async () => {
+    it('GET returns 404 response for non-existent customer.', async () => {
       const { body: { msg } }: ApiErrorResponse = await request(app)
         .get('/api/customers/15/cart')
         .set('Cookie', cookie)
