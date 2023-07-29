@@ -5,7 +5,7 @@ const validateRequestMethod = (req: Request, res: Response, next: NextFunction) 
   
   switch(true) {
     case req.url.startsWith('/api/products'):
-    case /^\/api\/customers\/\d+\/reviews$/.test(req.url):
+    case /^\/api\/customers\/\d+\/reviews/.test(req.url):
     case /^\/api\/customers\/\d+\/orders\/\d+$/.test(req.url):
       if (req.method !== 'GET') {
         res.set('Allow', 'GET');

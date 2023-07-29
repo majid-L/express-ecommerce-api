@@ -4,12 +4,17 @@ import prisma from '../prisma/prisma';
 
 const validateUpdatedCart = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (req.body.length === 0) return next();
+    if (Array.isArray(req.body) && req.body.length === 0) return next();
+    if (!Array.isArray(req.body) 
+    || req.body.some(item => {
+      return !item.customerId || !item.productId || !item.quantity;
+    })) {
+      return next(createError('Invalid request body format.', 400));
+    }
 
     const cartHasDuplicateItems = (req.body as CartItem[])
       .map(({ productId }) => productId)
       .some((productId, index, array) => array.indexOf(productId) !== index);
-  
     if (cartHasDuplicateItems) {
       return next(createError('Cart items must be unique.', 400));
     }

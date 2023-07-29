@@ -3,7 +3,6 @@ import prisma from '../prisma/prisma';
 import createError from '../helpers/createError';
 import formatModelData from '../helpers/formatModelData';
 
-
 const validateUpdatedModel = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const urlIncludesCustomer = req.originalUrl.includes('customer');
