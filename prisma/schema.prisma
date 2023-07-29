@@ -33,39 +33,60 @@ model Category {
   products    Product[]
 }
 
+model Address {
+  id               Int        @id @default(autoincrement())
+  addressLine1     String
+  addressLine2     String?
+  city             String
+  county           String?
+  postcode         String
+  orderBilling     Order[]    @relation("billingAddress")
+  orderShipping    Order[]    @relation("shippingAddress")
+  customerBilling  Customer[] @relation("billingAddress")
+  customerShipping Customer[] @relation("shippingAddress")
+
+  @@unique([addressLine1, addressLine2, city, postcode])
+}
+
 model Customer {
-  id              Int        @id @default(autoincrement())
-  name            String     @db.VarChar(50)
-  username        String     @unique @db.VarChar(50)
-  password        String
-  email           String     @unique @db.VarChar(50)
-  joinDate        DateTime?  @default(now()) @db.Timestamp(6)
-  billingAddress  String?
-  shippingAddress String?
-  avatar          String?
-  cartItems       CartItem[]
-  orders          Order[]
-  reviews         Review[]
+  id                Int        @id @default(autoincrement())
+  name              String     @db.VarChar(50)
+  username          String     @unique @db.VarChar(50)
+  password          String
+  email             String     @unique @db.VarChar(50)
+  joinDate          DateTime?  @default(now()) @db.Timestamp(6)
+  phone             String?
+  billingAddressId  Int?
+  shippingAddressId Int?
+  avatar            String?
+  cartItems         CartItem[]
+  orders            Order[]
+  reviews           Review[]
+  billingAddress    Address?   @relation("billingAddress", fields: [billingAddressId], references: [id])
+  shippingAddress   Address?   @relation("shippingAddress", fields: [shippingAddressId], references: [id])
 }
 
 model OrderItem {
   orderId   Int
   productId Int
   quantity  Int
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 
   @@id([orderId, productId])
 }
 
 model Order {
-  id              Int         @id @default(autoincrement())
-  customerId      Int
-  shippingAddress String?     @db.VarChar(100)
-  status          String?     @db.VarChar(20)
-  createdAt       DateTime?   @default(now()) @db.Timestamp(6)
-  customer        Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  orderItems      OrderItem[]
+  id                Int         @id @default(autoincrement())
+  customerId        Int
+  billingAddressId  Int
+  shippingAddressId Int
+  status            String?     @db.VarChar(20)
+  createdAt         DateTime    @default(now()) @db.Timestamp(6)
+  orderItems        OrderItem[]
+  customer          Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  billingAddress    Address     @relation("billingAddress", fields: [billingAddressId], references: [id])
+  shippingAddress   Address     @relation("shippingAddress", fields: [shippingAddressId], references: [id])
 }
 
 model Product {
@@ -79,9 +100,9 @@ model Product {
   thumbnail    String?
   cartItems    CartItem[]
   orderItems   OrderItem[]
+  reviews      Review[]
   category     Category    @relation(fields: [categoryName], references: [name], onDelete: NoAction, onUpdate: NoAction)
   supplier     Supplier    @relation(fields: [supplierName], references: [name], onDelete: NoAction, onUpdate: NoAction)
-  reviews      Review[]
 }
 
 model Review {
