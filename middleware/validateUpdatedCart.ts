@@ -20,10 +20,7 @@ const validateUpdatedCart = async (req: Request, res: Response, next: NextFuncti
     }
 
     const products = await prisma.product.findMany({
-      select: {
-        id: true,
-        stock: true
-      }
+      select: { id: true, stock: true }
     });
 
     for (const cartItem of (req.body as CartItem[])) {

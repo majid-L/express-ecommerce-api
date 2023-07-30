@@ -64,9 +64,6 @@ export const validateAddressFieldValues = (
 export const getOrCreateAddresses = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { billingAddress, shippingAddress } = req.addresses;
-    if (req.originalUrl.endsWith('addresses')) {
-      if (!billingAddress || !shippingAddress) return next();
-    }
     const resultSet = await prisma.$transaction([
       prisma.address.findFirst({ where: billingAddress }),
       prisma.address.findFirst({ where: shippingAddress }),

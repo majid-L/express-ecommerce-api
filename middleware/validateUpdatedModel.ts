@@ -21,15 +21,15 @@ const validateUpdatedModel = async (req: Request, res: Response, next: NextFunct
     }
     if (Object.keys(updatedModelData).length === 0) return next();
 
-    const queryOptions = {
+    const queryOptions = <T>() => ({
       where: { id : req[modelData].id },
-      data: updatedModelData
-    };
+      data: updatedModelData as T
+    });
 
     if (urlIncludesCustomer) {
-      req.customerDetails = await prisma.customer.update(queryOptions);
+      req.customerDetails = await prisma.customer.update(queryOptions<Customer>());
     } else {
-      req.reviewDetails = await prisma.review.update(queryOptions);
+      req.reviewDetails = await prisma.review.update(queryOptions<Review>());
     }
     next();
   } catch (err) {
