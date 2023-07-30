@@ -106,6 +106,11 @@ declare global {
     productId: number,
     quantity: number
   }
+
+  type WishlistItem = {
+    customerId: number,
+    productId: number
+  }
   
   type OrderItem = {
     orderId: number,
@@ -233,9 +238,12 @@ declare global {
   type NewOrderResponse = {
     id: number,
     customerId: number,
-    shippingAddress: string | null,
+    shippingAddressId: number,
+    billingAddressId: number,
     status: string,
     created_at: string,
+    billingAddress: { id: number } & Address,
+    shippingAddress: { id: number } & Address,
     orderItems: {
         quantity: number,
         product: Product
@@ -268,7 +276,10 @@ declare global {
 
   type ApiErrorResponse = {
     body: {
-      msg: string
+      error: {
+        status: number,
+        info: string
+      }
     }
   }
 }
