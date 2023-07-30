@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { createAddress } from '../controllers/addresses.controllers';
+import { deleteAddress, getOrCreateSingleAddress } from '../controllers/addresses.controllers';
 import { getCustomerById, deleteAccount } from '../controllers/customer.controllers';
 import { getReviews } from '../controllers/reviews.controller';
-import { getOrCreateAddresses, validateAddressFields, validateAddressFieldValues, validateAddressTypes } from '../middleware/validateNewOrder';
+import { addressIsRegisteredToCustomer } from '../middleware/deleteAddressMiddleware';
+import { validateAddressFields, validateAddressFieldValues, validateAddressTypes } from '../middleware/validateNewOrder';
 import validateUpdatedModel from '../middleware/validateUpdatedModel';
 import cartRouter from './cartRouter';
 import ordersRouter from './ordersRouter';
@@ -26,9 +27,15 @@ customerRouter
 .post(
     validateAddressTypes,
     validateAddressFields, 
-    validateAddressFieldValues, 
-    getOrCreateAddresses, 
-    createAddress
+    validateAddressFieldValues,
+    getOrCreateSingleAddress
+);
+
+customerRouter
+.route('/addresses/:addressId')
+.delete(
+    addressIsRegisteredToCustomer,
+    deleteAddress
 );
 
 export default customerRouter;
