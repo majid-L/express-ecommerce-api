@@ -144,6 +144,9 @@ ALTER TABLE "Review" ALTER COLUMN "recommend" DROP NOT NULL;
 ALTER TABLE "Review" ADD CONSTRAINT "Review_accepted_rating_values" CHECK (rating IN(0, 1, 2, 3, 4, 5));
 
 -- AddCheck
+ALTER TABLE "Product" ADD CONSTRAINT "Product_min_stock" CHECK (stock >= 0);
+
+-- AddCheck
 ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_min_quantity" CHECK (quantity > 0); 
 
 -- AddCheck
