@@ -25,6 +25,15 @@ model CartItem {
   @@id([customerId, productId])
 }
 
+model WishlistItem {
+  customerId Int
+  productId  Int
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([customerId, productId])
+}
+
 model Category {
   id          Int       @default(autoincrement())
   name        String    @id @db.VarChar(50)
@@ -60,6 +69,7 @@ model Customer {
   shippingAddressId Int?
   avatar            String?
   cartItems         CartItem[]
+  wishlistItems     WishlistItem[]
   orders            Order[]
   reviews           Review[]
   billingAddress    Address?   @relation("billingAddress", fields: [billingAddressId], references: [id])
@@ -70,7 +80,7 @@ model OrderItem {
   orderId   Int
   productId Int
   quantity  Int
-  order     Order   @relation(fields: [orderId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id])
 
   @@id([orderId, productId])
@@ -90,19 +100,20 @@ model Order {
 }
 
 model Product {
-  id           Int         @id @default(autoincrement())
-  name         String
-  description  String
-  price        Decimal     @db.Decimal(6, 2)
-  stock        Int
-  categoryName String
-  supplierName String
-  thumbnail    String?
-  cartItems    CartItem[]
-  orderItems   OrderItem[]
-  reviews      Review[]
-  category     Category    @relation(fields: [categoryName], references: [name], onDelete: NoAction, onUpdate: NoAction)
-  supplier     Supplier    @relation(fields: [supplierName], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  id            Int            @id @default(autoincrement())
+  name          String
+  description   String
+  price         Decimal        @db.Decimal(6, 2)
+  stock         Int
+  categoryName  String
+  supplierName  String
+  thumbnail     String?
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+  wishlistItems WishlistItem[]
+  reviews       Review[]
+  category      Category       @relation(fields: [categoryName], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  supplier      Supplier       @relation(fields: [supplierName], references: [name], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Review {
