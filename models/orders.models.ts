@@ -10,6 +10,7 @@ export const selectOrders = async (id: number) => {
       username: true,
       orders: {
         include: {
+          shippingAddress: {},
           orderItems: {
             select: {
               quantity: true,
@@ -26,6 +27,8 @@ export const selectOrderById = async (id: number) => {
   return await prisma.order.findUnique({
     where: { id },
     include: {
+      billingAddress: {},
+      shippingAddress: {},
       orderItems: {
         select: {
           quantity: true,
@@ -36,11 +39,16 @@ export const selectOrderById = async (id: number) => {
   });
 }
 
-export const insertOrder = async (customerDetails: Prisma.CustomerGetPayload<{}>) => {
+export const insertOrder = async (
+  customerDetails: Prisma.CustomerGetPayload<{}>,
+  shippingAddressId: number,
+  billingAddressId: number
+  ) => {
   return await prisma.order.create({
     data: {
       customerId: customerDetails.id,
-      shippingAddress: customerDetails.shippingAddress,
+      shippingAddressId,
+      billingAddressId,
       status: 'completed'
     }
   });
