@@ -3,7 +3,7 @@
 This project features a RESTful API that processes data for an ecommerce application.
 
 ## Key product features
-- PSQL database server for managing customer data. Configured for [session persistence](./auth/session.ts).
+- PSQL database server for managing application data. Configured for [session persistence](./auth/session.ts).
 - [Session and cookie-based authentication](./auth/) enabling persistent logins.
 - [Middleware functions](./middleware) for data validation and user authentication
 - [Data modelling](./prisma/schema.prisma) and [database migrations](./prisma/migrations/20230728105408_/migration.sql) with Prisma ORM.
@@ -34,7 +34,7 @@ GET | /products
 GET | /products/:id
 GET | /products/:id/reviws
 GET, PUT, DELETE | /customers/:id
-GET, POST, PUT | /customers/:id/cart
+GET, PUT | /customers/:id/cart
 GET, POST | /customers/:id/orders
 GET | /customers/:id/orders/:orderId
 GET | /customers/:id/reviews
@@ -44,7 +44,7 @@ GET, POST | /reviews
 GET, PUT, DELETE | /reviews/:id
 
 ## Data model
-This is a simplified view of the entity relationships that exist within this ecommerce database. For a more complete picture, consult the **[schema configuration](/prisma/schema.prisma)** and **[migration](/prisma//migrations/20230728105408_/migration.sql)** files. 
+This is a simplified view of the entity relationships that exist within the database. For a more complete picture, consult the **[schema configuration](/prisma/schema.prisma)** and **[migration](/prisma//migrations/20230728105408_/migration.sql)** files.
 
 <img src="./icons/erd-dark.svg" width="900" /> 
 
@@ -73,7 +73,7 @@ PORT=3000
 ```
 4) Replace ```<USER>``` with the name of your local database user (e.g. *postgres*) and replace ```<PASSWORD>``` with whatever password you used to set up the local user.
 
-You can now run the scripts below to run the project.
+You can now run the scripts below and begin to explore the project.
 
 ### Run the Express server in development mode.
 ```sh
