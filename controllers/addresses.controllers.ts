@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { deleteUnusedAddress, selectAddressHolders } from '../models/addresses.models';
+import { deleteUnusedAddress, selectModelsWithAddress } from '../models/addresses.models';
 import { updateCustomer } from '../models/customer.models';
 import prisma from '../prisma/prisma';
 
@@ -17,6 +17,11 @@ export const getOrCreateSingleAddress = async (req: Request, res: Response, next
     } else {
       const newAddress = await prisma.address.create({ data: billingAddress || shippingAddress });
       const customer = await updateCustomer(newAddress.id, req, addressIdType);
+      
+      /* Delete old address if it is not referenced by another other customers or orders */ 
+      const addressId = req.customerDetails[addressIdType];
+      if (addressId) await deleteUnusedAddress(addressId);
+
       res.status(201).send({ newAddress, customer });
     }
     } catch (err) {
@@ -26,20 +31,35 @@ export const getOrCreateSingleAddress = async (req: Request, res: Response, next
 
 export const deleteAddress = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { billingAddressId } = req.customerDetails;
     const addressId = Number(req.params.addressId);
-   
-    const customersWithSameAddress = await selectAddressHolders(addressId);
 
-    if (customersWithSameAddress.length > 1) {
-      const addressIdType = billingAddressId === addressId ? 'billingAddressId' : 'shippingAddressId';
-      const customer = await updateCustomer(null, req, addressIdType);
-      return res.status(200).send(customer);
+    /* Delete the unused address */
+    const deletedAddress = await deleteUnusedAddress(addressId);
+    if (deletedAddress) {
+      return res.status(200).send({ deletedAddress });
     }
 
-    const deletedAddress = await deleteUnusedAddress(addressId);
-    res.status(200).send({ deletedAddress });
+    /* Cannot delete primary key while it's being referenced by other orders/customers, 
+    but we can set the foreign id to null in the customer table */
+    const addressIdType = req.customerDetails.billingAddressId === addressId ? 
+      'billingAddressId' 
+      : 'shippingAddressId';
+    const customer = await updateCustomer(null, req, addressIdType);
+    res.status(200).send(customer);
   } catch (err) {
     next(err);
   }
 }
+
+/* *** Notes on deleteAddress controller ***
+*****************************************************************************
+> selectModelsWithAddress(addressId) has a return signature of
+    [ orders, customers ]: [ Customer[], Order[] ] .
+    It returns all orders and customers (if any) with a foreign key that
+    reference the address, or [ [], [] ]
+-----------------------------------------------------------------------------
+> In the second half, we set the address id to null in the customer
+    table but do not attempt to delete the address from the address
+    table becasue it is still being referenced by other customers or orders.
+*****************************************************************************
+*/
