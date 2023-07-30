@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 
-// Prisma client query payloads
+// Prisma client query payload
 type CartItemsPayload = Prisma.CustomerGetPayload<{
   select: {
     id: true,
@@ -22,8 +22,14 @@ declare global {
       cartItems: CartItemsPayload,
       customerDetails: Prisma.CustomerGetPayload<{}>,
       productDetails: Prisma.ProductGetPayload<{}>,
-      reviewDetails: Prisma.ReviewGetPayload<{}>
+      reviewDetails: Prisma.ReviewGetPayload<{}>,
+      addresses: AddressPayloadGroup | AddressGroup
     }
+  }
+
+  type AddressPayloadGroup = {
+    billingAddress: Prisma.AddressGetPayload<{}>,
+    shippingAddress: Prisma.AddressGetPayload<{}>
   }
 
   type StrOrNum = string | number;
@@ -39,9 +45,23 @@ declare global {
   }
 
   type Customer = User & {
-    billingAddress?: string,
-    shippingAddress?: string,
+    phone?: string,
+    billingAddressId?: number,
+    shippingAddressId?: number,
     avatar?: string
+  }
+
+  type Address = {
+    addressLine1: string,
+    addressLine2?: string,
+    city: string,
+    county?: string,
+    postcode: string
+  }
+
+  type AddressGroup = {
+    billingAddress: Address
+    shippingAddress: Address
   }
 
   type ProductCount = {
@@ -95,7 +115,8 @@ declare global {
   
   type Order = {
     customerId: number,
-    shippingAddress?: string,
+    shippingAddressId: number,
+    billingAddressId: number,
     status?: string
   }
 
