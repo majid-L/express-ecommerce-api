@@ -8,7 +8,7 @@ chai.use(chaiSorted);
 const productTests = () => {
   describe('Products tests', () => {
     describe('api/products', () => {
-      it('Returns array of all products.', async () => {
+      it('GET returns array of all products.', async () => {
         const { body: { products, page, count, totalResults } }: 
           { body: ProductsResponse } = await request(app)
           .get('/api/products')
@@ -32,7 +32,7 @@ const productTests = () => {
         });
       });
   
-      it('Accepts \'page\' number and \'limit\' as query parameters.', async () => {
+      it('GET accepts \'page\' number and \'limit\' as query parameters.', async () => {
         const { body: { products } }: 
         { body: { products: Product[] } } = await request(app)
           .get('/api/products?page=2&limit=20')
@@ -43,31 +43,31 @@ const productTests = () => {
         expect(products[19]).to.haveOwnProperty('id').to.eql(40);
       });
   
-      it('Accepts \'category\' as a query parameter.', async () => {
+      it('GET accepts \'category\' as a query parameter.', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
           .get('/api/products?category=toy')
           .expect(200);
   
-        expect(products).to.be.an('array').that.has.length(10);
+        expect(products).to.be.an('array').that.has.length(8);
         expect(page).to.equal(1);
-        expect(count).to.equal(10);
-        expect(totalResults).to.equal(10);
+        expect(count).to.equal(8);
+        expect(totalResults).to.equal(8);
         products.forEach(({ categoryName }) => {
           expect(categoryName).to.equal('Toys');
         });
       });
   
-      it('Accepts \'supplier\' as a query parameter.', async () => {
+      it('GET accepts \'supplier\' as a query parameter.', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
           .get('/api/products?supplier=ie')
           .expect(200);
   
-        expect(products).to.be.an('array').that.has.length(24);
+        expect(products).to.be.an('array').that.has.length(25);
         expect(page).to.equal(1);
-        expect(count).to.equal(24);
-        expect(totalResults).to.equal(24);
+        expect(count).to.equal(25);
+        expect(totalResults).to.equal(26);
         products.forEach(({ supplierName }) => {
           expect(supplierName).to.satisfy((string: string): boolean => {
             return string === 'Deckow - Kiehn' || string === 'Beier LLC';
@@ -75,7 +75,7 @@ const productTests = () => {
         });
       });
   
-      it('Accepts \'sortBy\' as query parameter (column: product name).', async () => {
+      it('GET accepts \'sortBy\' as query parameter (column: product name).', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
           .get('/api/products?sortBy=name')
@@ -90,7 +90,7 @@ const productTests = () => {
         expect(formattedArray).to.be.sortedBy("name");
       });
   
-      it('Accepts \'sortBy\' and \'order\' as query parameters (column: price).', async () => {
+      it('GET accepts \'sortBy\' and \'order\' as query parameters (column: price).', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
           .get('/api/products?sortBy=price&order=desc')
@@ -105,7 +105,7 @@ const productTests = () => {
         expect(formattedArray).to.be.sortedBy("price", { descending: true });
       });
   
-      it('Accepts \'hideOutOfStock\' as query parameter.', async () => {
+      it('GET accepts \'hideOutOfStock\' as query parameter.', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
           .get('/api/products?hideOutOfStock=true&sortBy=stock&order=desc&limit=100')
@@ -121,7 +121,7 @@ const productTests = () => {
         })
       });
   
-      it('Accepts \'minPrice\' and \'maxPrice\' as query parameters.', async () => {
+      it('GET accepts \'minPrice\' and \'maxPrice\' as query parameters.', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
           .get('/api/products?minPrice=30.31&maxPrice=130.36&limit=100&sortBy=price')
@@ -139,30 +139,30 @@ const productTests = () => {
         });
       });
   
-      it('Respondes with 400 status code if query parameter features an invalid column name.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+      it('GET respondes with 400 status code if query parameter features an invalid column name.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .get('/api/products?sortBy=namee&order=desc')
           .expect(400);
   
-        expect(msg).to.equal('Unknown argument `namee`. Did you mean `name`?')
+        expect(errorResponse.error.info).to.equal('Unknown argument `namee`. Did you mean `name`?')
       });
 
-      it('Respondes with 400 status code if pagination query features non-numeric data types.', async () => {
-        const { body: { msg: invalidPage } }: ApiErrorResponse = await request(app)
+      it('GET respondes with 400 status code if pagination query features non-numeric data types.', async () => {
+        const { body: invalidPageError }: ApiErrorResponse = await request(app)
           .get('/api/products?page=xxx&limit=10')
           .expect(400);
 
-        const { body: { msg: invalidLimit } }: ApiErrorResponse = await request(app)
+        const { body: invalidLimitError }: ApiErrorResponse = await request(app)
           .get('/api/products?page=2&limit=xxx')
           .expect(400);
   
-        expect(invalidPage).to.equal('Invalid query. Argument `skip` is missing.');
-        expect(invalidLimit).to.equal('Invalid query. Argument `take` is missing.');
+        expect(invalidPageError.error.info).to.equal('Invalid query. Argument `skip` is missing.');
+        expect(invalidLimitError.error.info).to.equal('Invalid query. Argument `take` is missing.');
       });
     });
 
     describe('/api/products/bestsellers', () => {
-      it('Returns best selling items in descending order of popularity, and allows pagination.', async () => {
+      it('GET returns best selling items in descending order of popularity, and allows pagination.', async () => {
         const { body: { bestSellers } }:
           { body: BestSellers } = await request(app)
           .get('/api/products/bestsellers')
@@ -171,7 +171,7 @@ const productTests = () => {
         expect(bestSellers).to.be.an('array').that.has.lengthOf(25);
         expect(bestSellers).to.be.sortedBy("numOfTimesOrdered", { descending: true });
   
-        bestSellers.forEach((product, index: number) => {
+        bestSellers.forEach(product => {
           expect(product).to.have.property('numOfTimesOrdered').that.is.a('number');
           expect(product).to.have.property('totalUnitsOrdered').that.is.a('number');
           expect(product).to.have.property('averageRating').that.is.a('string');
@@ -188,32 +188,32 @@ const productTests = () => {
         expect(secondPageResults[0].id).to.not.equal(bestSellers[0].id);
       });
   
-      it('Accepts \'category\' as query parameter.', async () => {
+      it('GET accepts \'category\' as query parameter.', async () => {
         const { body: { bestSellers, page, count, totalResults } }: 
           { body: BestSellers } = await request(app)
           .get('/api/products/bestsellers?category=cloth')
-          .expect(200);
-  
-        expect(bestSellers).to.be.an('array').that.has.length(13);
-        expect(page).to.equal(1);
-        expect(count).to.equal(13);
-        expect(totalResults).to.equal(13);
-        expect(bestSellers).to.be.sortedBy("numOfTimesOrdered", { descending: true });
-        bestSellers.forEach(({ categoryName }) => {
-          expect(categoryName).to.equal('Clothing');
-        });
-      });
-  
-      it('Accepts \'supplier\' as query parameter.', async () => {
-        const { body: { bestSellers, page, count, totalResults } }: 
-          { body: BestSellers } = await request(app)
-          .get('/api/products/bestsellers?supplier=bei')
           .expect(200);
   
         expect(bestSellers).to.be.an('array').that.has.length(6);
         expect(page).to.equal(1);
         expect(count).to.equal(6);
         expect(totalResults).to.equal(6);
+        expect(bestSellers).to.be.sortedBy("numOfTimesOrdered", { descending: true });
+        bestSellers.forEach(({ categoryName }) => {
+          expect(categoryName).to.equal('Clothing');
+        });
+      });
+  
+      it('GET accepts \'supplier\' as query parameter.', async () => {
+        const { body: { bestSellers, page, count, totalResults } }: 
+          { body: BestSellers } = await request(app)
+          .get('/api/products/bestsellers?supplier=bei')
+          .expect(200);
+  
+        expect(bestSellers).to.be.an('array').that.has.length(10);
+        expect(page).to.equal(1);
+        expect(count).to.equal(10);
+        expect(totalResults).to.equal(10);
         expect(bestSellers).to.be.sortedBy("numOfTimesOrdered", { descending: true });
         bestSellers.forEach(({ supplierName }) => {
           expect(supplierName).to.equal('Beier LLC');
@@ -233,40 +233,40 @@ const productTests = () => {
           "description": "Carbonite web goalkeeper gloves are ergonomically designed to give easy fit",
           "price": "40.94",
           "stock": 138,
-          "categoryName": "Clothing",
-          "supplierName": "Beier LLC",
-          "thumbnail": "https://loremflickr.com/640/480/commerce?lock=4774374158630912",
-          "averageRating": "3.7",
-          "totalRatings": 3,
-          "numOfTimesOrdered": 4
+          "categoryName": "Health",
+          "supplierName": "Heathcote - Murazik",
+          "thumbnail": "https://loremflickr.com/640/480/Health?lock=4774374158630912",
+          "averageRating": "3.0",
+          "totalRatings": 1,
+          "numOfTimesOrdered": 1
         });
       });
 
       it('GET returns correctly structured response for a product with 0 orders.', async () => {
         const { body: product }: { body: Product } = await request(app)
-          .get('/api/products/20')
+          .get('/api/products/35')
           .expect(200);
 
         expect(product).to.deep.equal({
-          "id": 20,
-          "name": "Luxurious Metal Pants",
-          "description": "The Apollotech B340 is an affordable wireless mouse with reliable connectivity, 12 months battery life and modern design",
-          "price": "7.01",
-          "stock": 54,
-          "categoryName": "Toys",
-          "supplierName": "Beier LLC",
-          "thumbnail": "https://loremflickr.com/640/480/commerce?lock=2745106763350016",
+          "id": 35,
+          "name": "Refined Cotton Salad",
+          "description": "The Football Is Good For Training And Recreational Purposes",
+          "price": "30.31",
+          "stock": 27,
+          "categoryName": "Health",
+          "supplierName": "Deckow - Kiehn",
+          "thumbnail": "https://loremflickr.com/640/480/Health?lock=248160802832384",
           "totalRatings": 0,
           "numOfTimesOrdered": 0
         });
       });
 
       it('GET returns 404 for non-existent product.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .get('/api/products/54')
           .expect(404);
 
-        expect(msg).to.equal('Not found.');
+        expect(errorResponse.error.info).to.equal('Not found.');
       });
     });
   });

@@ -3,13 +3,15 @@ import app from '../index';
 import chai, { expect } from "chai";
 import chaiSorted from 'chai-sorted';
 import prisma from "../prisma/prisma";
-import { cookie } from "./index.spec";
+import { cookie, setupFunction } from "./index.spec";
 
 chai.use(chaiSorted);
 
 const reviewsTests = () => {
   describe('Reviews tests', () => {
     describe('/api/reviews', () => {
+      beforeEach(setupFunction);
+
       it('GET returns list of all reviews.', async () => {
         const { body: { page, count, totalResults, reviews } }:
         { body: ReviewsResponse } = await request(app)
@@ -18,7 +20,7 @@ const reviewsTests = () => {
 
         expect(page).to.equal(1);
         expect(count).to.equal(25);
-        expect(totalResults).to.equal(58);
+        expect(totalResults).to.equal(62);
         expect(reviews).to.be.an('array').that.has.length(25);
         expect(reviews).to.be.sortedBy("createdAt", { descending: true });
         reviews.forEach(review => {
@@ -41,15 +43,15 @@ const reviewsTests = () => {
           .expect(200);
         
         expect(page).to.equal(3);
-        expect(count).to.equal(18);
-        expect(totalResults).to.equal(58);
-        expect(reviews).to.be.an('array').that.has.length(18);
+        expect(count).to.equal(20);
+        expect(totalResults).to.equal(62);
+        expect(reviews).to.be.an('array').that.has.length(20);
         expect(reviews).to.be.sortedBy("createdAt", { descending: true });
       });
 
       const requestBody = {
         "customerId": 1,
-        "productId": 1,
+        "productId": 2,
         "title": "Fundamental systemic encryption",
         "body": "Magnam recusandae tenetur fugit facere dolorum. Maxime reiciendis pariatur doloribus et.",
         "recommend": true,
@@ -65,98 +67,99 @@ const reviewsTests = () => {
           .expect(201);
 
         expect(newReview).to.include(requestBody);
-        expect(newReview.id).to.equal(59);
+        expect(newReview.id).to.equal(63);
       });
 
       it('POST does not allow customer to post a review for a product they have not ordered.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send({...requestBody, productId: 49})
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(msg).to.equal('Cannot post a review for an item that has not been purchased by this customer.');
+        expect(errorResponse.error.info).to.equal('Cannot post a review for an item that has not been purchased by this customer.');
       });
 
       it('POST does not allow customer to post a review for another customer.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send({...requestBody, customerId: 3})
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(msg).to.equal('Customer id must match current authenticated user.');
+        expect(errorResponse.error.info).to.equal('Customer id must match current authenticated user.');
       });
 
       it('POST does not allow customer to post multiple reviews for the same product.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send({...requestBody, productId: 40})
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(msg).to.equal('Cannot post multiple reviews for the same product.');
+        expect(errorResponse.error.info).to.equal('Cannot post multiple reviews for the same product.');
       });
 
       it('POST rejects invalid data types.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send({...requestBody, title: 123})
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(msg).to.equal('Argument `title`: Invalid value provided. Expected String, provided Int.');
+        expect(errorResponse.error.info).to.equal('Argument `title`: Invalid value provided. Expected String, provided Int.');
       });
 
       it('POST rejects incomplete request body.', async () => {
         const partialRequestBody = ({ title, ...object }: Review) => object;
 
-        const { body: { msg } }:
-        { body: { msg: string } } = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send(partialRequestBody(requestBody))
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(msg).to.equal('Request body is missing required field(s).');
+        expect(errorResponse.error.info).to.equal('Request body is missing required field(s).');
       });
 
       it('POST rejects blank/empty fields.', async () => {
-        const { body: { msg: emptyFieldMsg } }: ApiErrorResponse = await request(app)
+        const { body: firstErrorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send({...requestBody, body: ""})
           .set('Cookie', cookie)
           .expect(400);
 
-        const { body: { msg: blankFieldMsg } }: ApiErrorResponse = await request(app)
+        const { body: secondErrorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send({...requestBody, body: " "})
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(emptyFieldMsg).to.equal('Field(s) cannot be empty or blank.');
-        expect(blankFieldMsg).to.equal('Field(s) cannot be empty or blank.');
+        expect(firstErrorResponse.error.info).to.equal('Field(s) cannot be empty or blank.');
+        expect(secondErrorResponse.error.info).to.equal('Field(s) cannot be empty or blank.');
       });
 
       it('POST rejects ratings over 5 or under 0.', async () => {
-        const { body: { msg: firstMessage } }: ApiErrorResponse = await request(app)
+        const { body: firstErrorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send({...requestBody, rating: -1})
           .set('Cookie', cookie)
           .expect(400);
 
-        const { body: { msg: secondMessage } }: ApiErrorResponse = await request(app)
+        const { body: secondErrorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
           .send({...requestBody, rating: 6})
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(firstMessage).to.equal('Rating must be a whole number between 0 and 5.');
-        expect(secondMessage).to.equal(firstMessage);
+        expect(firstErrorResponse.error.info).to.equal('Rating must be a whole number between 0 and 5.');
+        expect(secondErrorResponse.error.info).to.equal('Rating must be a whole number between 0 and 5.');
       });
     });
 
     describe('/api/reviews/:reviewId', () => {
+      beforeEach(setupFunction);
+      
       it('GET returns a single review.', async () => {
         const { body }: { body: Review } = await request(app)
           .get('/api/reviews/12')
@@ -164,22 +167,22 @@ const reviewsTests = () => {
         
         expect(body).to.deep.equal({
           "id": 12,
-          "customerId": 3,
-          "productId": 13,
-          "title": "Fundamental systemic encryption",
-          "body": "Magnam recusandae tenetur fugit facere dolorum. Maxime reiciendis pariatur doloribus et.",
+          "customerId": 2,
+          "productId": 44,
+          "title": "Implemented exuding emulation",
+          "body": "Molestias aut libero voluptatem laborum eaque non vitae.",
           "recommend": true,
           "rating": 4,
-          "createdAt": "2020-12-18T09:34:00.448Z"
+          "createdAt": "2020-01-27T23:15:16.134Z"
         });
       });
 
       it('GET returns 404 for nonexistent review.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
-          .get('/api/reviews/59')
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+          .get('/api/reviews/64')
           .expect(404);
         
-        expect(msg).to.equal('Not found.')
+        expect(errorResponse.error.info).to.equal('Not found.')
       });
       
       it('PUT allows customer to modify his/her own review and ignores all extra fields.', async () => {
@@ -187,7 +190,7 @@ const reviewsTests = () => {
         { body: { updatedReview: Review } } = await request(app)
           .put('/api/reviews/58')
           .send({ 
-            productId: 42,
+            productId: 1,
             title: 'yaya', 
             body: 'Put on the black-on-black-on-slate-black blazer.',
             someRandomField: 'This should be ignored by the request handler.'
@@ -198,12 +201,12 @@ const reviewsTests = () => {
         expect(updatedReview).to.deep.equal({
           "id": 58,
           "customerId": 1,
-          "productId": 37,
+          "productId": 40,
           "title": "yaya",
           "body": "Put on the black-on-black-on-slate-black blazer.",
-          "recommend": true,
-          "rating": 5,
-          "createdAt": "2018-02-07T02:09:21.275Z"
+          "recommend": false,
+          "rating": 0,
+          "createdAt": "2021-07-09T16:16:09.953Z"
         });
       });
 
@@ -218,50 +221,50 @@ const reviewsTests = () => {
         expect(updatedReview).to.deep.equal({
           "id": 58,
           "customerId": 1,
-          "productId": 37,
-          "title": "Fully-configurable cohesive infrastructure",
-          "body": "Facilis beatae maxime mollitia pariatur nostrum autem. Molestiae maxime aliquid ab.",
-          "recommend": true,
-          "rating": 5,
-          "createdAt": "2018-02-07T02:09:21.275Z"
+          "productId": 40,
+          "title": "Balanced upward-trending analyzer",
+          "body": "In ipsa temporibus totam ex modi culpa ratione. Sint quibusdam dolore neque esse iure odit.",
+          "recommend": false,
+          "rating": 0,
+          "createdAt": "2021-07-09T16:16:09.953Z"
         });
       });
 
       it('PUT rejects request bodies containing empty field values.', async () => {
-        const { body: { msg: emptyFieldMsg } }: ApiErrorResponse = await request(app)
+        const { body: firstErrorResponse }: ApiErrorResponse = await request(app)
           .put('/api/reviews/56')
           .send({ title: "" })
           .set('Cookie', cookie)
           .expect(400);
     
-        const { body: { msg: blankFieldMsg } }: ApiErrorResponse = await request(app)
+        const { body: secondErrorResponse }: ApiErrorResponse = await request(app)
           .put('/api/reviews/56')
           .send({ title: " " })
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(emptyFieldMsg).to.equal('Field(s) cannot be empty or blank.');
-        expect(blankFieldMsg).to.equal('Field(s) cannot be empty or blank.');
+        expect(firstErrorResponse.error.info).to.equal('Field(s) cannot be empty or blank.');
+        expect(secondErrorResponse.error.info).to.equal('Field(s) cannot be empty or blank.');
       });
 
       it('PUT rejects request body containing a required field with a null value.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .put('/api/reviews/58')
           .send({ title: null })
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(msg).to.equal('Argument `title` must not be null.');
+        expect(errorResponse.error.info).to.equal('Argument `title` must not be null.');
       });
 
       it('PUT rejects request body containing an invalid data type', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .put('/api/reviews/58')
           .send({ recommend: 'yes' })
           .set('Cookie', cookie)
           .expect(400);
 
-        expect(msg).to.include('Argument `recommend`: Invalid value provided. Expected Boolean');
+        expect(errorResponse.error.info).to.include('Argument `recommend`: Invalid value provided. Expected Boolean');
       });
 
       it('DELETE allows user to delete own review.', async () => {
@@ -274,12 +277,12 @@ const reviewsTests = () => {
         expect(deletedReview).to.deep.equal({
           "id": 57,
           "customerId": 1,
-          "productId": 2,
-          "title": "Reactive needs-based portal",
-          "body": "Alias ab dolore quibusdam inventore corrupti. Error labore animi officia molestias ducimus.",
-          "recommend": true,
-          "rating": 0,
-          "createdAt": "2017-09-04T09:41:47.982Z"
+          "productId": 29,
+          "title": "Synergistic zero tolerance secured line",
+          "body": "Magni commodi qui. Dolorum rem inventore expedita cupiditate asperiores ab dolor dolor recusandae. Dolorum ducimus ea sint dolore tempora repellendus reprehenderit sequi aspernatur.",
+          "recommend": false,
+          "rating": 3,
+          "createdAt": "2019-02-26T23:49:11.609Z"
         });
 
         await request(app)
@@ -302,9 +305,9 @@ const reviewsTests = () => {
           .expect(200);
 
         expect(page).to.equal(1);
-        expect(count).to.equal(14);
-        expect(totalResults).to.equal(14);
-        expect(reviews).to.be.an('array').that.has.length(14);
+        expect(count).to.equal(8);
+        expect(totalResults).to.equal(8);
+        expect(reviews).to.be.an('array').that.has.length(8);
         reviews.forEach(review => {
           expect(review.customerId).to.equal(5);
         });
@@ -323,11 +326,11 @@ const reviewsTests = () => {
       });
 
       it('GET responds with 404 status code for non-existent customer.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .get('/api/customers/7/reviews')
           .expect(404);
 
-        expect(msg).to.equal('Not found.');
+        expect(errorResponse.error.info).to.equal('Not found.');
       });
     });
 
@@ -335,7 +338,7 @@ const reviewsTests = () => {
       it('GET returns reviews for a specific product.', async () => {
         const { body: { page, count, totalResults, reviews } }:
         { body: ReviewsResponse } = await request(app)
-          .get('/api/products/17/reviews')
+          .get('/api/products/21/reviews')
           .expect(200);
 
         expect(page).to.equal(1);
@@ -343,7 +346,7 @@ const reviewsTests = () => {
         expect(totalResults).to.equal(3);
         expect(reviews).to.be.an('array').that.has.length(3);
         reviews.forEach(review => {
-          expect(review.productId).to.equal(17);
+          expect(review.productId).to.equal(21);
         });
       });
 
@@ -361,11 +364,11 @@ const reviewsTests = () => {
       });
 
       it('GET responds with 404 status code for non-existent product.', async () => {
-        const { body: { msg } }: ApiErrorResponse = await request(app)
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
           .get('/api/products/70/reviews')
           .expect(404);
 
-        expect(msg).to.equal('Not found.');
+        expect(errorResponse.error.info).to.equal('Not found.');
       });
     });
   });
