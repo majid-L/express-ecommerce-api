@@ -5,7 +5,7 @@ import validateUpdatedModel from '../middleware/validateUpdatedModel';
 import cartWishlistRouter from './cartWishlistRouter';
 import ordersRouter from './ordersRouter';
 import addressesRouter from './addressesRouter';
-import getFavorites from '../controllers/favorites.controllers';
+import { getFavorites } from '../controllers/products.controllers';
 
 const customerRouter = Router();
 customerRouter.use(['/cart', '/wishlist'], cartWishlistRouter);
