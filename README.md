@@ -7,7 +7,7 @@ This project features a RESTful API that processes data for an ecommerce applica
 - [Session and cookie-based authentication](./auth/) enabling persistent logins.
 - [Middleware functions](./middleware) for data validation and user authentication
 - [Data modelling](./prisma/schema.prisma) and [database migrations](./prisma/migrations/20230728105408_/migration.sql) with Prisma ORM.
-- Comprehensive [integration testing](./api_tests/), achieving 90% test coverage as reported by Istanbul's *nyc* CLI.
+- Comprehensive [integration testing](./api_tests/), achieving over **90% test coverage** as reported by Istanbul's *nyc* CLI.
 - Programmatic [database reseeding](/prisma/seed.ts) using [dummy data](/prisma/dev_data.ts).
 
 <p float="left">
@@ -25,6 +25,8 @@ This project features a RESTful API that processes data for an ecommerce applica
 </p>
 
 ## Endpoints
+For more information on available query parameters and request body requirements, visit the **[API base url](https://taliphus.vercel.app/api)**.
+
 | HTTP method(s) | URL
 |---|---|
 POST | /signup
