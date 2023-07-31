@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
 import createError from '../helpers/createError';
-import stockIsInsufficient from '../helpers/checkProductStock';
 
 const requiredFields = ['addressLine1', 'city', 'postcode'];
 const acceptedFields = [...requiredFields, 'addressLine2', 'county'];
@@ -100,13 +99,15 @@ export const validateSingleOrderItem = async (req: Request, res: Response, next:
       return next(createError('Order item must contain a valid quantity value (greater than 0).', 400));
     }
 
-    if (!await prisma.product.findUnique({ where: { 
-      id: req.body.item.productId } 
-    })) {
+    const productFromDatabase = await prisma.product.findUnique({ 
+      where: { id: req.body.item.productId } 
+    });
+
+    if (!productFromDatabase) {
       return next(createError('Product id is invalid. Item does not exist.', 404));
     }
 
-    if (await stockIsInsufficient(req.body.item)) {
+    if (req.body.item.quantity > productFromDatabase.stock) {
       return next(createError('Insufficient stock.', 400));
     }
 
