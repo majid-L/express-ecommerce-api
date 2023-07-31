@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { deleteUnusedAddress, selectModelsWithAddress } from '../models/addresses.models';
+import { deleteUnusedAddress } from '../models/addresses.models';
 import { updateCustomer } from '../models/customer.models';
 import prisma from '../prisma/prisma';
 
@@ -10,7 +10,7 @@ export const getOrCreateSingleAddress = async (req: Request, res: Response, next
     const addressOrNull = await prisma.address.findFirst({ 
       where: billingAddress || shippingAddress 
     });
-    
+
     if (addressOrNull) {
       const customer = await updateCustomer(addressOrNull.id, req, addressIdType);
       res.status(200).send(customer);
@@ -20,7 +20,7 @@ export const getOrCreateSingleAddress = async (req: Request, res: Response, next
       
       /* Delete old address if it is not referenced by another other customers or orders */ 
       const addressId = req.customerDetails[addressIdType];
-      if (addressId) await deleteUnusedAddress(addressId);
+      if (addressId) await deleteUnusedAddress(addressId, req.customerDetails.id);
 
       res.status(201).send({ newAddress, customer });
     }
@@ -34,11 +34,11 @@ export const deleteAddress = async (req: Request, res: Response, next: NextFunct
     const addressId = Number(req.params.addressId);
 
     /* Delete the unused address */
-    const deletedAddress = await deleteUnusedAddress(addressId);
+    const deletedAddress = await deleteUnusedAddress(addressId, req.customerDetails.id);
     if (deletedAddress) {
       return res.status(200).send({ deletedAddress });
     }
-
+    
     /* Cannot delete primary key while it's being referenced by other orders/customers, 
     but we can set the foreign id to null in the customer table */
     const addressIdType = req.customerDetails.billingAddressId === addressId ? 

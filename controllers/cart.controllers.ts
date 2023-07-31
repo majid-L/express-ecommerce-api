@@ -1,27 +1,44 @@
 import { Request, Response, NextFunction } from 'express';
-import { emptyCart, insertCartItems, selectCartItems, selectCustomerCartItems } from '../models/cart.models';
+import { 
+  emptyCartOrWishlist, 
+  insertCartOrWishlistItems, 
+  selectCartOrWishlistItems 
+} from '../models/cart.models';
 
-export const getCartItems = async (req: Request, res: Response, next: NextFunction) => {
+export const getCartOrWishlistItems = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction) => {
   try {
-    const cartItems = req.query.format === 'basic' ? 
-      await selectCartItems(req.customerDetails.id)
-      : await selectCustomerCartItems(req.customerDetails.id);
+    const modelType = req.originalUrl.includes('cart') ? 'cartItems' : 'wishlistItems';
+    const items = await selectCartOrWishlistItems(
+      req.customerDetails.id,
+      req.query.format as string,
+      modelType
+    );
 
-    res.status(200).send(cartItems);
+    res.status(200).send({ [modelType.slice(0, -5)]: items});
   } catch (err) {
+    console.log(err)
     next(err);
   }
 }
 
-export const modifyCart = async (req: Request, res: Response, next: NextFunction) => {
+export const modifyCartOrWishlist = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await emptyCart(req.customerDetails.id);
+    const modelType = req.originalUrl.includes('cart') ? 'cartItem' : 'wishlistItem';
+    await emptyCartOrWishlist(req.customerDetails.id);
     if (req.body.length > 0) {
-      await insertCartItems(req.body);
-      const updatedCartItems = await selectCartItems(req.customerDetails.id);
-      res.status(200).send({updatedCartItems});
+      await insertCartOrWishlistItems(req.body, modelType);
+      const updatedItems = 
+        await selectCartOrWishlistItems(
+          req.customerDetails.id, 
+          req.query.format as string, 
+          modelType + 's' as 'cartItems' | 'wishlistItems'
+        );
+      res.status(200).send({ [modelType.slice(0, -4)] : updatedItems });
     } else {
-      res.status(200).send({updatedCartItems: []});
+      res.status(200).send({ [modelType.slice(0, -4)]: []});
     }
   } catch(err) {
     next(err);
