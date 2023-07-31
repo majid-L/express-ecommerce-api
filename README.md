@@ -1,6 +1,6 @@
 # Express, TypeScript and [Prisma ORM](https://www.prisma.io/) project
 
-This project features a RESTful API that processes data for an ecommerce application.
+This project features a **[RESTful CRUD API](https://taliphus.vercel.app/api)** that processes data for an ecommerce application.
 
 ## Key product features
 - PSQL database server for managing application data. Configured for [session persistence](./auth/session.ts).
@@ -33,11 +33,14 @@ POST | /signup
 POST | /login
 POST | /logout
 GET | /products
+GET | /products/bestsellers
 GET | /products/:id
 GET | /products/:id/reviws
 GET, PUT, DELETE | /customers/:id
 GET, PUT | /customers/:id/cart
+GET, PUT | /customers/:id/wishlist
 GET, POST | /customers/:id/orders
+GET | /customers/:id/favorites
 GET | /customers/:id/orders/:orderId
 GET | /customers/:id/reviews
 GET | /categories
