@@ -251,13 +251,15 @@ declare global {
   }
 
   type CartItemsResponse = {
-    id: number,
-    name: string,
-    username: string,
-    cartItems: {
-      quantity: number,
-      product: Product
-    }[]
+    cart: {
+      id: number,
+      name: string,
+      username: string,
+      cartItems: {
+        quantity: number,
+        product: Product
+      }[]
+    }
   }
 
   type BestSellers = { 
@@ -272,6 +274,13 @@ declare global {
     count: number,
     totalResults: number,
     reviews: (Review & { id: number, createdAt: string })[]
+  }
+
+  type AddressesResponse = {
+    newAddress?: { id: number } & Address,
+    customer: Customer,
+    billingAddress?: Address,
+    shippingAddress?: Address
   }
 
   type ApiErrorResponse = {

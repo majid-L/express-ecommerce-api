@@ -41,14 +41,14 @@ export const selectOrderById = async (id: number) => {
 
 export const insertOrder = async (
   customerDetails: Prisma.CustomerGetPayload<{}>,
-  shippingAddressId: number,
-  billingAddressId: number
+  billingAddressId: number,
+  shippingAddressId: number
   ) => {
   return await prisma.order.create({
     data: {
       customerId: customerDetails.id,
-      shippingAddressId,
       billingAddressId,
+      shippingAddressId,
       status: 'completed'
     }
   });

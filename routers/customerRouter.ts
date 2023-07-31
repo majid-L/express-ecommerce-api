@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import { deleteAddress, getOrCreateSingleAddress } from '../controllers/addresses.controllers';
 import { getCustomerById, deleteAccount } from '../controllers/customer.controllers';
 import { getReviews } from '../controllers/reviews.controller';
-import { addressIsRegisteredToCustomer } from '../middleware/deleteAddressMiddleware';
-import { validateAddressFields, validateAddressFieldValues, validateAddressTypes } from '../middleware/validateNewOrder';
 import validateUpdatedModel from '../middleware/validateUpdatedModel';
-import cartRouter from './cartRouter';
+import cartWishlistRouter from './cartWishlistRouter';
 import ordersRouter from './ordersRouter';
+import addressesRouter from './addressesRouter';
+import getFavorites from '../controllers/favorites.controllers';
 
 const customerRouter = Router();
-customerRouter.use('/cart', cartRouter);
+customerRouter.use(['/cart', '/wishlist'], cartWishlistRouter);
 customerRouter.use('/orders', ordersRouter);
+customerRouter.use('/addresses', addressesRouter);
 
 customerRouter
 .route('/')
@@ -23,19 +23,7 @@ customerRouter
 .get(getReviews);
 
 customerRouter
-.route('/addresses')
-.post(
-    validateAddressTypes,
-    validateAddressFields, 
-    validateAddressFieldValues,
-    getOrCreateSingleAddress
-);
-
-customerRouter
-.route('/addresses/:addressId')
-.delete(
-    addressIsRegisteredToCustomer,
-    deleteAddress
-);
+.route('/favorites')
+.get(getFavorites);
 
 export default customerRouter;

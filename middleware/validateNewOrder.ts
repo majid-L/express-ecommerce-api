@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
 import createError from '../helpers/createError';
+import stockIsInsufficient from '../helpers/checkProductStock';
 
 const requiredFields = ['addressLine1', 'city', 'postcode'];
 const acceptedFields = [...requiredFields, 'addressLine2', 'county'];
@@ -80,6 +81,35 @@ export const getOrCreateAddresses = async (req: Request, res: Response, next: Ne
         req.addresses[addressType as keyof AddressGroup] = newAddress;
       }
     }
+    next();
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const validateSingleOrderItem = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.body.item) return next();
+    const { item: { productId, quantity } }: { item: OrderItem } = req.body;
+
+    if (!productId) {
+      return next(createError('Order item must contain product id.', 400));
+    }
+
+    if (!quantity || quantity <= 0) {
+      return next(createError('Order item must contain a valid quantity value (greater than 0).', 400));
+    }
+
+    if (!await prisma.product.findUnique({ where: { 
+      id: req.body.item.productId } 
+    })) {
+      return next(createError('Product id is invalid. Item does not exist.', 404));
+    }
+
+    if (await stockIsInsufficient(req.body.item)) {
+      return next(createError('Insufficient stock.', 400));
+    }
+
     next();
   } catch (err) {
     next(err);

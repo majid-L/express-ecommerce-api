@@ -4,7 +4,8 @@ import {
     validateAddressTypes, 
     validateAddressFields, 
     validateAddressFieldValues,
-    getOrCreateAddresses
+    getOrCreateAddresses,
+    validateSingleOrderItem
 } from "../middleware/validateNewOrder";
 
 const ordersRouter = Router();
@@ -17,6 +18,7 @@ ordersRouter
     validateAddressFields,
     validateAddressFieldValues,
     getOrCreateAddresses,
+    validateSingleOrderItem,
     createOrder
 );
 

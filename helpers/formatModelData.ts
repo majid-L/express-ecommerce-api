@@ -6,7 +6,7 @@ const formatModelData = async <ModelType>(
   existingModel: ModelType) => {
 
     const acceptedFields = resource === 'customer' ?
-    ['name', 'username', 'password', 'email', 'billingAddress', 'shippingAddress', 'avatar']
+    ['name', 'username', 'password', 'email', 'phone', 'avatar']
     : ['title', 'body', 'rating', 'recommend'];
 
     const updatedModelData: Partial<ModelType> = {};
@@ -14,7 +14,7 @@ const formatModelData = async <ModelType>(
       const valueIsDifferent = requestBody[field] !== existingModel[field];
       if (acceptedFields.includes(field) && valueIsDifferent) {
         if (/^\s*$/.test(requestBody[field] as string)) {
-          return 'Field(s) cannot be empty or blank.';
+          return { error: 'Field(s) cannot be empty or blank.'};
         }
         updatedModelData[field] = requestBody[field];
       }
@@ -25,7 +25,7 @@ const formatModelData = async <ModelType>(
       }
       if (field === 'rating') {
         if (![0, 1, 2, 3, 4, 5].includes((requestBody as unknown as Review).rating)) {
-          return 'Rating must be a whole number between 0 and 5.';
+          return { error: 'Rating must be a whole number between 0 and 5.'};
         }
       }
     }

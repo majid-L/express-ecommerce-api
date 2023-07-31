@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import createError from '../helpers/createError';
 
 const validateRequestMethod = (req: Request, res: Response, next: NextFunction) => {
   let send405Response = false;
@@ -36,6 +37,14 @@ const validateRequestMethod = (req: Request, res: Response, next: NextFunction) 
       }
       break;
 
+    case /^\/api\/customers\/\d+\/addresses\/\d+$/.test(req.url):
+      if (req.method !== 'DELETE') {
+        res.set('Allow', 'DELETE');
+        send405Response = true;
+      }
+      break;
+
+    case /^\/api\/customers\/\d+\/addresses$/.test(req.url):
     case /^\/api\/(login|signup|logout)$/.test(req.url):
       if (req.method !== 'POST') {
         res.set('Allow', 'POST');
@@ -44,7 +53,7 @@ const validateRequestMethod = (req: Request, res: Response, next: NextFunction) 
   }
   
   if (send405Response) {
-    res.status(405).send({msg: 'Method not allowed.'});
+    next(createError('Method not allowed.', 405));
   } else {
     next();
   }

@@ -14,7 +14,7 @@ export const validateUniqueCredentials = async (req: Request, res: Response, nex
   });
   
   if (customerOrNull) {
-    res.status(400).json({ msg: 'Username/email already in use.' });
+    next(createError('Username/email already in use.', 400));
   } else {
     next();
   }
@@ -31,7 +31,7 @@ export const validateAuthInput = (req: Request, res: Response, next: NextFunctio
     : false;
   
   if (requestFieldsAreInvalid) {
-    res.status(400).json({ msg: 'Request body is missing required field(s).' });
+    next(createError('Request body is missing required field(s).', 400));
   } else {
     next();
   }
@@ -40,7 +40,7 @@ export const validateAuthInput = (req: Request, res: Response, next: NextFunctio
 // Protect routes from unauthenticated users
 export const userIsAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session.passport && !/\/customers\/\d+\/reviews.*$/i.test(req.originalUrl)) {
-    res.status(401).json({ msg: 'Unauthenticated.' });
+    next(createError('Unauthenticated.', 401));
   } else {
     next();
   }
@@ -49,7 +49,7 @@ export const userIsAuthenticated = (req: Request, res: Response, next: NextFunct
 // Protect PUT/DELETE /api/reviews/:reviewId routes from unauthorised users
 export const userIsAuthorised = (req: Request, res: Response, next: NextFunction) => {
   if (req.session.passport!.user.id !== req.reviewDetails.customerId) {
-    res.status(403).json({ msg: 'Unauthorised.' });
+    next(createError('Unauthorised.', 403));
   } else {
     next();
   }

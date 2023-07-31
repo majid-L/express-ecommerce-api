@@ -16,8 +16,8 @@ const validateUpdatedModel = async (req: Request, res: Response, next: NextFunct
         'review', req.body, req.reviewDetails as Review
       );
 
-    if (typeof updatedModelData === 'string') {
-      return next(createError(updatedModelData, 400));
+    if ((updatedModelData as { error: string }).error) {
+      return next(createError((updatedModelData as { error: string }).error, 400));
     }
     if (Object.keys(updatedModelData).length === 0) return next();
 

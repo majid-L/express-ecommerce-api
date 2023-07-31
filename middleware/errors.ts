@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 const handleError = (err: MiddlewareError, req: Request, res: Response, next: NextFunction) => {
   let msg = '';
- 
+
   switch (true) {
     case err.message.includes("Unique constraint failed on the fields: (`username`)"):
       msg = 'That username is already taken.';
@@ -55,7 +55,7 @@ const handleError = (err: MiddlewareError, req: Request, res: Response, next: Ne
       msg = err.message;
   }
 
-  res.status(err.status || 500).send({ msg });
+  res.status(err.status || 500).send({ error: { status: err.status || 500, info: msg } });
 }
 
 export default handleError;
