@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { selectBestsellers, selectProductById, selectProducts } from '../models/products.models';
+import { selectBestsellers, selectFavorites, selectProductById, selectProducts } from '../models/products.models';
 
 export const getProducts = async (
   req: Request<{}, {}, {}, ProductsUrlParams>, 
@@ -35,6 +35,16 @@ export const getBestSellers = async (req: Request, res: Response, next: NextFunc
       totalResults: rowCount[0].count,
       bestSellers
     });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const getFavorites = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { limit = 25, page = 1 } = req.query;
+    const favorites = await selectFavorites(Number(page), Number(limit), req.customerDetails.id);
+    res.status(200).send(favorites);
   } catch (err) {
     next(err);
   }

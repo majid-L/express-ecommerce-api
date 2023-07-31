@@ -19,7 +19,6 @@ export const getCartOrWishlistItems = async (
 
     res.status(200).send({ [modelType.slice(0, -5)]: items});
   } catch (err) {
-    console.log(err)
     next(err);
   }
 }
@@ -27,7 +26,8 @@ export const getCartOrWishlistItems = async (
 export const modifyCartOrWishlist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const modelType = req.originalUrl.includes('cart') ? 'cartItem' : 'wishlistItem';
-    await emptyCartOrWishlist(req.customerDetails.id);
+    await emptyCartOrWishlist(req.customerDetails.id, modelType);
+
     if (req.body.length > 0) {
       await insertCartOrWishlistItems(req.body, modelType);
       const updatedItems = 
