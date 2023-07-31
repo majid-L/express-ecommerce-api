@@ -211,12 +211,13 @@ declare global {
   ]
 
   // Types for API JSON responses - used to type variables in testing suite
-  type ProductsResponse = {
-    products: Product[],
+  type Pagination = {
     page: number,
     count: number,
     totalResults: number
   }
+  
+  type ProductsResponse = { products: Product[] } & Pagination;
   
   type OrdersResponse = {
     id: number,
@@ -262,19 +263,33 @@ declare global {
     }
   }
 
-  type BestSellers = { 
-    bestSellers: (Product & ProductExtended)[],
-    page: number,
-    count: number,
-    totalResults: number
+  type WishlistResponse = {
+    wishlist: {
+      id: number,
+      name: string,
+      username: string,
+      wishlistItems: {
+        product: Product
+      }[]
+    }
   }
 
+  type BestSellers = { 
+    bestSellers: (Product & ProductExtended)[]
+  } & Pagination
+
+  type Favorites = {
+    favorites: {
+      addedAt: string,
+      recommend: boolean,
+      rating: number,
+      product: Product
+    }[]
+  } & Pagination;
+
   type ReviewsResponse = {
-    page: number,
-    count: number,
-    totalResults: number,
     reviews: (Review & { id: number, createdAt: string })[]
-  }
+  } & Pagination;
 
   type AddressesResponse = {
     newAddress?: { id: number } & Address,
