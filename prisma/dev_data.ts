@@ -99,8 +99,12 @@ const generateCustomers = (): Customer[] => {
   return customers;
 }
 
-const generateCartItems = (customers: Customer[], products: Product[]): CartItem[] => {
-  const items: CartItem[] = [];
+const generateCartOrWishlistItems = <T extends CartItem | WishlistItem>(
+  customers: Customer[],
+  products: Product[], 
+  tableName: 'cartItem' | 'wishlistItem'): T[] => {
+
+  const items: T[] = [];
   for (let i = 0; i < 50; i++) {
   // generate a unique customerId-productId combination
     const uniqueIdPair = uniqueEnforcer.enforce(() => {
@@ -109,14 +113,19 @@ const generateCartItems = (customers: Customer[], products: Product[]): CartItem
         randomIndex(products.length) + 1
       ];
     });
-    items.push({
+
+    const item = {
       customerId: uniqueIdPair[0],
-      productId: uniqueIdPair[1],
-      quantity: faker.number.int({ min: 1, max: 7 })
-    });
+      productId: uniqueIdPair[1]
+    } as T;
+
+    if (tableName === 'cartItem') {
+      (item as CartItem).quantity = faker.number.int({ min: 1, max: 7 });
+    }
+    items.push(item as T);
   }
-  //return items.filter(item => item.customerId !== 1);
-  return items;
+  
+  return items.filter(item => item.customerId !== 1);
 }
 
 const generateOrders = (customers: Customer[]): Order[] => {
@@ -198,7 +207,8 @@ const generateRandomData = () => {
   const products: Product[] = generateProducts(categories, suppliers);
   const addresses: Address[] = generateAddresses();
   const customers: Customer[] = generateCustomers();
-  const cartItems: CartItem[] = generateCartItems(customers, products);
+  const cartItems: CartItem[] = generateCartOrWishlistItems(customers, products, 'cartItem');
+  const wishlistItems: WishlistItem[] = generateCartOrWishlistItems(customers, products, 'wishlistItem');
   const orders: Order[] = generateOrders(customers);
   const orderItems: OrderItem[] = generateOrderItems(orders, products);
   const reviews = generateReviews(orders, orderItems);
@@ -210,6 +220,7 @@ const generateRandomData = () => {
     addresses,
     customers,
     cartItems,
+    wishlistItems,
     orders,
     orderItems,
     reviews
