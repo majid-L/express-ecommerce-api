@@ -1,22 +1,33 @@
 import prisma from '../prisma/prisma';
 
-export const selectAddressHolders = async (addressId: number) => {
-  const customersWithSameAddress = await prisma.customer.findMany({
+export const selectModelsWithAddress = async (addressId: number) => {
+  const options = {
     where: { 
       OR: [
         { billingAddressId: addressId },
         { shippingAddressId: addressId },
       ]
     }
-  });
+  };
 
-  return customersWithSameAddress;
+  const resultOrNull = await prisma.$transaction([
+    prisma.customer.findMany(options),
+    prisma.order.findMany(options)
+  ]); 
+
+  return resultOrNull;
 }
 
-export const deleteUnusedAddress = async (addressId: number) => {
-  const deletedAddress = await prisma.address.delete({
-    where: { id: addressId }
-  });
-
- return deletedAddress;
+export const deleteUnusedAddress = async (addressId: number, customerId: number) => {
+  const [ customers, orders ] = await selectModelsWithAddress(addressId);
+  const noCustomers = (customers.length === 1 && customers[0].id === customerId)
+    || customers.length === 0;
+    
+  if (noCustomers && orders.length === 0) {
+    const deletedAddress = await prisma.address.delete({
+      where: { id: addressId }
+    });
+    return deletedAddress;
+  }
+  return null;
 }
