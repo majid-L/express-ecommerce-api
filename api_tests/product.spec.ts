@@ -2,7 +2,9 @@ import request from "supertest";
 import app from '../index';
 import chai, { expect } from "chai";
 import chaiSorted from 'chai-sorted';
+import { cookie } from "./index.spec";
 
+let userCookie = cookie;
 chai.use(chaiSorted);
 
 const productTests = () => {
@@ -267,6 +269,45 @@ const productTests = () => {
           .expect(404);
 
         expect(errorResponse.error.info).to.equal('Not found.');
+      });
+    });
+
+    describe('/api/customers/:id/favorites', () => {
+      beforeEach(async () => {
+        const authResponse = await request(app)
+          .post('/api/login')
+          .send({username: 'Frida93', password: 'password'});
+
+        userCookie = authResponse.headers['set-cookie'];
+      });
+
+      it('GET returns a customer\'s favorite items.', async () => {
+        const { body: { page, count, totalResults, favorites } }: 
+        { body: Favorites } = await request(app)
+          .get('/api/customers/3/favorites')
+          .set('Cookie', userCookie)
+          .expect(200);
+        
+        expect(page).to.equal(1);
+        expect(count).to.equal(9);
+        expect(totalResults).to.equal(9);
+        expect(favorites).to.be.sortedBy('addedAt', { descending: true });
+        favorites.forEach(({ recommend }) => {
+          expect(recommend).to.be.true;
+        });
+      });
+
+      it('GET accepts \'page\' number and \'limit\' as query parameters.', async () => {
+        const { body: { page, count, totalResults, favorites } }: 
+        { body: Favorites } = await request(app)
+          .get('/api/customers/3/favorites?page=2&limit=4')
+          .set('Cookie', userCookie)
+          .expect(200);
+        
+        expect(page).to.equal(2);
+        expect(count).to.equal(4);
+        expect(totalResults).to.equal(9);
+        expect(favorites).to.be.sortedBy('addedAt', { descending: true });
       });
     });
   });

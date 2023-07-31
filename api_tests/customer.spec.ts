@@ -1,17 +1,19 @@
 import request from "supertest";
 import app from '../index';
 import { expect } from "chai";
-import { cookie } from "./index.spec";
+import { cookie, setupFunction } from "./index.spec";
 import prisma from "../prisma/prisma";
 
 const customerTests = () => {
   describe('/api/customers/:customerId', () => {
+    beforeEach(setupFunction);
+
     it('Returns customer account information.', async () => {
       const { body: customer }: { body: Customer } = await request(app)
         .get('/api/customers/1')
         .set('Cookie', cookie)
         .expect(200);
-      
+     
       expect(customer).to.have.property('joinDate').that.is.a('string');
       expect(customer).to.include({
         "id": 1,
@@ -19,8 +21,8 @@ const customerTests = () => {
         "username": "alexnes",
         "password": "**********",
         "email": "alex-nes@nexus.pk",
-        "billingAddress": null,
-        "shippingAddress": null,
+        "billingAddressId": 7,
+        "shippingAddressId": 8,
         "avatar": null
       });
     });
@@ -29,8 +31,7 @@ const customerTests = () => {
       const requestBody = {
         "name": "alex",
         "email": "alex-nes@hotmail.com",
-        "billingAddress": "456 billing address",
-        "shippingAddress": "123 shipping address",
+        "phone": "0984507450745",
         "avatar": "avatar.url.com"
       };
       const { body: customer }: { body: Customer } = await request(app)
@@ -133,7 +134,7 @@ const customerTests = () => {
         .set('Cookie', cookie)
         .expect(404);
       
-      expect(errorResponse).to.include({ msg: 'Not found.' });
+      expect(errorResponse.error.info).to.equal('Not found.');
     });
 
     it('Returns 400 response in the case of empty or blank fields.', async () => {
@@ -143,7 +144,7 @@ const customerTests = () => {
         .set('Cookie', cookie)
         .expect(400);
 
-      expect(errorResponse).to.include({ msg: 'Field(s) cannot be empty or blank.' });
+      expect(errorResponse.error).to.include({ info: 'Field(s) cannot be empty or blank.' });
     });
 
     it('Returns 400 response in the case of invalid request body structure.', async () => {
@@ -153,7 +154,7 @@ const customerTests = () => {
         .set('Cookie', cookie)
         .expect(400);
 
-      expect(errorResponse.msg).to.include('Unknown argument `user`.');
+      expect(errorResponse.error.info).to.include('Unknown argument `user`.');
     });
 
     it('Returns 400 response in the case of invalid data types.', async () => {
@@ -163,8 +164,8 @@ const customerTests = () => {
         .set('Cookie', cookie)
         .expect(400);
 
-      expect(errorResponse).to.include({ 
-        msg: 'Argument `email`: Invalid value provided. Expected String or StringFieldUpdateOperationsInput, provided Int.' 
+      expect(errorResponse.error).to.include({ 
+        info: 'Argument `email`: Invalid value provided. Expected String or StringFieldUpdateOperationsInput, provided Int.' 
       });
     });
   });

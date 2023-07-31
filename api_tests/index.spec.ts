@@ -9,20 +9,23 @@ import customerTests from "./customer.spec";
 import reviewsTests from "./reviews.spec";
 import reseedDatabase from '../prisma/seed';
 import endpointsJson from '../endpoints.json';
+import addressTests from "./addresses.spec";
+import categoriesAndSuppliersTests from "./categories&suppliers.spec";
+import wishlistTests from "./wishlist.spec";
 
-export let cookie: [string];
+export let cookie: string;
+export const setupFunction = async () => {
+  await reseedDatabase();
+  const authResponse = await request(app)
+    .post('/api/login')
+    .send({username: 'alexnes', password: 'password'});
+  
+  cookie = authResponse.headers['set-cookie'];
+}
 
 describe('API tests', () => {
-  beforeEach(async () => {
+  after(async () => {
     await reseedDatabase();
-    const authResponse = await request(app)
-      .post('/api/login')
-      .send({username: 'alexnes', password: 'password'});
-    
-    cookie = authResponse.headers['set-cookie'];
-  });
-
-  after(() => {
     setTimeout(() => process.exit(), 1000);
   });
 
@@ -47,4 +50,7 @@ describe('API tests', () => {
   cartTests();
   customerTests();
   reviewsTests();
+  addressTests();
+  categoriesAndSuppliersTests();
+  wishlistTests();
 });
