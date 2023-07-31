@@ -1,17 +1,55 @@
 {
     "info": "Summary of all endpoints and resources served by this API.",
     "endpoints": {
+        "/api/signup": {
+            "POST": {
+                "summary": "allows user to create a new account",
+                "exampleRequest": {
+                    "name": "Jace Corso",
+                    "username": "derrick_moss",
+                    "password": "password",
+                    "email": "corsoThree@raza.net",
+                    "phone": "07754376234",
+                    "avatar": "www.vtrimages.com/category%20"
+                }
+            }
+        },
+        "/api/login": {
+            "POST": {
+                "summary": "allows user to log in using an existing account",
+                "exampleRequest": {
+                    "username": "derrick_moss",
+                    "password": "password"
+                }
+            }
+        },
+        "/api/logout": {
+            "POST": {
+                "summary": "allows user to log out (no request body required)"
+            }
+        },
         "/api/products": {
             "GET": {
                 "summary": "returns listing of all products",
                 "queryParams": {
-                    "sortBy": "Sort by any column, e.g. name, description, price, stock, etc.",
+                    "sortBy": "Sort by any column, e.g. name, description, price, stock, etc",
                     "order": "asc or desc",
                     "page": "the number of the page you want to view",
                     "limit": "the number of results per single page",
                     "minPrice": "specify minimum price, e.g. minPrice=20.50",
                     "maxPrice": "specify maximum price, e.g. maxPrice=95.80",
                     "hideOutOfStock": "hideOutOfStock=true hides all items with 0 stock",
+                    "category": "filter by category name",
+                    "supplier": "filter by supplier name"
+                }
+            }
+        },
+        "/api/products/bestsellers": {
+            "GET": {
+                "summary": "returns listing of products that have been ordered the most times.",
+                "queryParams": {
+                    "page": "the number of the page you want to view",
+                    "limit": "the number of results per single page",
                     "category": "filter by category name",
                     "supplier": "filter by supplier name"
                 }
@@ -79,13 +117,56 @@
                     ]
             }
         },
+        "/api/customers/:id/wishlist": {
+            "routeParam": "customer id (number)",
+            "GET": {
+                "summary": "allows customer to view own wishlist",
+                "queryParams": {
+                    "format": "format=basic returns a simplified representation of the wishlist"
+                }
+            },
+            "PUT": {
+                "summary": "allows customer to modify/clear own wishlist",
+                "exampleRequest": 
+                    [
+                        {
+                            "customerId": 1,
+                            "productId": 1
+                        },
+                        {
+                            "customerId": 1,
+                            "productId": 2
+                        }
+                    ]
+            }
+        },
         "/api/customers/:id/orders": {
             "routeParams": "customer id (number)",
             "GET": {
-                "summary": "returns all orders for a specific customer."
+                "summary": "returns all orders for a specific customer"
             },
             "POST": {
-                "summary": "allows customer to create a new order composed of all existing cart items. No request body is required."
+                "summary": "allows customer to create a new order composed of all existing cart items. The 'item' property on the request body is optional and is intended for express checkout, bypassing the cart.",
+                "exampleRequest": {
+                    "billingAddress": {
+                        "addressLine1": "353 Cristian Glade",
+                        "addressLine2": "Apt. 626",
+                        "city": "South Rodriguez",
+                        "county": "Devon",
+                        "postcode": "JT0 9JE"
+                    },
+                    "shippingAddress": {
+                        "addressLine1": "51 Kertzmann Park",
+                        "addressLine2": "Apt. 630",
+                        "city": "O'Hara-under-Champlin-Kreiger",
+                        "county": "Somerset",
+                        "postcode": "BU72 9TW"
+                    },
+                    "item": {
+                        "productId": 12,
+                        "quantity": 3
+                    }
+                }
             }
         },
         "/api/customers/:id/orders/:id": {
@@ -97,11 +178,46 @@
         "/api/customers/:id/reviews": {
             "routeParams": "customer id (number)",
             "GET": {
-                "summary": "returns all reviews for a specific customer.",
+                "summary": "returns all reviews for a specific customer",
                 "queryParams": {
                     "page": "the number of the page you want to view",
                     "limit": "the number of results per single page"
                 }
+            }
+        },
+        "/api/customers/:id/favorites": {
+            "GET": {
+                "summary": "allows user to view list of products they have recommended",
+                "queryParams": {
+                    "page": "the number of the page you want to view",
+                    "limit": "the number of results per single page"
+                }
+            }
+        },
+        "/api/customers/:id/addresses": {
+            "POST": {
+                "summary": "allows user to register a new address to their account",
+                "exampleRequest": {
+                    "billingAddress": {
+                        "addressLine1": "353 Cristian Glade",
+                        "addressLine2": "Apt. 626",
+                        "city": "South Rodriguez",
+                        "county": "Devon",
+                        "postcode": "JT0 9JE"
+                    },
+                    "shippingAddress": {
+                        "addressLine1": "51 Kertzmann Park",
+                        "addressLine2": "Apt. 630",
+                        "city": "O'Hara-under-Champlin-Kreiger",
+                        "county": "Somerset",
+                        "postcode": "BU72 9TW"
+                    }
+                }
+            }
+        },
+        "/api/customers/:id/addresses/:id": {
+            "DELETE": {
+                "summary": "allows user to delete one of their registered addreses"
             }
         },
         "/api/categories": {
@@ -149,7 +265,7 @@
                 }
             },
             "DELETE": {
-                "summary": "allows customer to delete own review."
+                "summary": "allows customer to delete own review"
             }
         }
     }
