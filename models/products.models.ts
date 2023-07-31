@@ -92,28 +92,44 @@ export const selectBestsellers = async (
 }
 
 export const selectFavorites = async (page: number, limit: number, id: number) => {
-  return await prisma.$queryRaw`
-  SELECT 
-    DISTINCT ON (p."name")
-    p."name",
-    p."id" AS "productId",
-    p."description",
-    o."id" AS "orderId",
-    p."categoryName",
-    p."supplierName",
-    r."recommend",
-    p."thumbnail"
-  FROM "Product" p, "OrderItem" oi, "Customer" c, "Order" o, "Review" r
-  WHERE p."id" = oi."productId"
-  AND oi."orderId" = o."id"
-  AND o."customerId" = c."id"
-  AND r."productId" = p."id"
-  AND c."id" = ${id}
-  AND r."recommend" = true
-  ORDER BY 1
-  LIMIT ${limit}
-  OFFSET ${limit * (page - 1)}
-`;
+  const [count, favorites] = await prisma.$transaction([
+    prisma.review.count({
+      where: { 
+        customerId: id,
+        recommend: true
+      },
+    }),
+    prisma.customer.findUnique({
+      where: { id },
+      select: {
+        reviews: {
+          where: {
+            recommend: true,
+          },
+          select: {
+            recommend: true,
+            rating: true,
+            createdAt: true,
+            product: {}
+          },
+          orderBy: {
+            createdAt: 'desc'
+          },
+          skip: isNaN(page) || isNaN(limit) ? 0 : (page - 1) * limit,
+          take: isNaN(limit) ? 25 : limit
+        }
+      }
+    })
+  ]);
+
+  return {
+    page,
+    count: favorites?.reviews.length,
+    totalResults: count,
+    favorites: favorites?.reviews.map(({ createdAt, ...product }) => {
+      return { addedAt: createdAt , ...product }
+    })
+  };
 }
 
 export const selectProductById = async (productId: number) => {
