@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import prisma from '../prisma/prisma';
 import { selectBestsellers, selectProductById, selectProducts } from '../models/products.models';
 
 export const getProducts = async (
