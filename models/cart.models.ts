@@ -1,34 +1,45 @@
 import prisma from '../prisma/prisma';
 
-export const selectCustomerCartItems = async (customerId: number) => {
-  return await prisma.customer.findUnique({
-    where: { id: customerId },
-    select: {
-      id: true,
-      name: true, username: true,
-      cartItems: {
-        select: {
-          quantity: true,
-          product: {}
-        }
+export const selectCartOrWishlistItems = async (
+  customerId: number, 
+  queryFormat: string,
+  tableName: 'cartItems' | 'wishlistItems',
+  ) => {
+
+  const select = tableName === 'cartItems' ? {
+    quantity: true,
+    product: {}
+  } : { product: {} };
+
+  if (queryFormat === 'basic') {
+    return await prisma.cartItem.findMany({
+      where: { customerId }
+    });
+  } else {
+    return await prisma.customer.findUnique({
+      where: { id: customerId },
+      select: {
+        id: true,
+        name: true, 
+        username: true,
+        [tableName]: { select }
       }
-    }
-  });
+    });
+  }
 }
 
-export const selectCartItems = async (customerId: number) => {
-  return await prisma.cartItem.findMany({
-    where: { customerId }
-  });
+export const insertCartOrWishlistItems = async (
+   data: CartItem[],
+   tableName: 'cartItem' | 'wishlistItem'
+  ) => {
+  if (tableName === 'cartItem') {
+    await prisma.cartItem.createMany({ data } as { data: CartItem[] });
+  } else {
+    await prisma.wishlistItem.createMany({ data } as { data: WishlistItem[] });
+  }
 }
 
-export const insertCartItems = async (data: CartItem[]) => {
-  await prisma.cartItem.createMany({
-    data
-  } as { data: CartItem[] });
-}
-
-export const emptyCart = async (customerId: number) => {
+export const emptyCartOrWishlist = async (customerId: number) => {
   await prisma.cartItem.deleteMany({ 
     where: { customerId } 
   });
