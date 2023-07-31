@@ -184,6 +184,38 @@ const authTests = () => {
         expect(errorResponse.error.info).to.equal('Unauthenticated.');
       });
 
+      it('PUT /api/customers/:customerId/cart forbids unauthenticated access.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+          .put('/api/customers/1/cart')
+          .expect(401);
+        
+        expect(errorResponse.error.info).to.equal('Unauthenticated.');
+      });
+
+      it('GET /api/customers/:customerId/wishlist forbids unauthenticated access.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+          .get('/api/customers/1/wishlist')
+          .expect(401);
+        
+        expect(errorResponse.error.info).to.equal('Unauthenticated.');
+      });
+
+      it('PUT /api/customers/:customerId/wishlist forbids unauthenticated access.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+          .put('/api/customers/1/wishlist')
+          .expect(401);
+        
+        expect(errorResponse.error.info).to.equal('Unauthenticated.');
+      });
+
+      it('GET /api/customers/:id/favorites forbids unauthenticated access.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+          .put('/api/customers/1/favorites')
+          .expect(401);
+        
+        expect(errorResponse.error.info).to.equal('Unauthenticated.');
+      });
+
       it('POST /api/reviews/ forbids unauthenticated access.', async () => {
         const { body: errorResponse }: ApiErrorResponse = await request(app)
           .post('/api/reviews')
