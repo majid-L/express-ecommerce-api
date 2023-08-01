@@ -8,11 +8,10 @@ datasource db {
 }
 
 model Session {
-  sid    String   @unique
-  sess   Json
-  expire DateTime @db.Timestamp(6)
-
-  @@map("session")
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
 }
 
 model CartItem {
