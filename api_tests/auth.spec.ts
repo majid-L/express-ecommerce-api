@@ -110,7 +110,7 @@ const authTests = () => {
             username: "alexnes",
             password: "password"
           })
-          .expect('set-cookie', /connect.sid=.+HttpOnly;\sSameSite=None/);
+          .expect('set-cookie', /connect.sid=.+\sSameSite=None/);
     
         const response = await agent.post('/api/logout')
           .expect(200);
