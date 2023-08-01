@@ -142,8 +142,9 @@ const generateCartOrWishlistItems = <T extends CartItem | WishlistItem>(
   return items.filter(item => item.customerId !== 1);
 }
 
-const generateOrders = (customers: Customer[]): Order[] => {
-  const orders: Order[] = [];
+type OrderWithDate = Order & { createdAt: Date };
+const generateOrders = (customers: Customer[]): OrderWithDate[] => {
+  const orders: OrderWithDate[] = [];
   for (let i = 0; i < 20; i++) {
     const randIndex = randomIndex(customers.length);
     const customer = customers[randIndex];
@@ -152,7 +153,8 @@ const generateOrders = (customers: Customer[]): Order[] => {
       customerId: randIndex ? randIndex + 1 : 2,
       shippingAddressId: customer.shippingAddressId!,
       billingAddressId: customer.billingAddressId!,
-      status: 'completed'
+      status: 'completed',
+      createdAt: faker.date.between({ from: '2016-01-01T00:00:00.000Z', to: Date.now() })
     });
   }
 
@@ -161,7 +163,8 @@ const generateOrders = (customers: Customer[]): Order[] => {
       customerId: 1,
       shippingAddressId: 1,
       billingAddressId: 1,
-      status: 'completed'
+      status: 'completed',
+      createdAt: faker.date.between({ from: '2016-01-01T00:00:00.000Z', to: Date.now() })
     });
   }
 
