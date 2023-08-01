@@ -47,7 +47,7 @@ const handleError = (err: MiddlewareError, req: Request, res: Response, next: Ne
       break;
 
     case /(prisma|invocation|constraint)/i.test(err.message):
-      msg = 'Invalid query.';
+      msg = 'Error querying the database.';
       err.status = 400;
       break;
 
