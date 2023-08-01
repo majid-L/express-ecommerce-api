@@ -71,12 +71,13 @@ express-session | Session middleware
 ### Setup instructions
 1) Clone and fork the repository and install all dependencies.
 2) Create a local empty PSQL database called **ecommerce_db**.
-3) Create a **.env** file in the root of the repository with two environment variables, ```DATABASE_URL``` and ```PORT```.
+3) Create a **.env** file in the root of the repository with 3 environment variables, ```DATABASE_URL```, ```SESSION_SECRET``` and ```PORT```.
 ```
-DATABASE_URL="postgresql://<USER>:<password>@localhost:5432/ecommerce_db"
+DATABASE_URL=postgresql://<USER>:<password>@localhost:5432/ecommerce_db
+SESSION_SECRET=sessionsecret
 PORT=3000
 ```
-4) Replace ```<USER>``` with the name of your local database user (e.g. *postgres*) and replace ```<PASSWORD>``` with whatever password you used to set up the local user.
+4) For ```DATABASE_URL```, Replace ```<USER>``` with the name of your local database user (e.g. *postgres*) and replace ```<PASSWORD>``` with whatever password you used to set up the local user.
 
 You can now run the scripts below and begin to explore the project.
 
