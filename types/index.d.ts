@@ -236,6 +236,16 @@ declare global {
     }[]
   }
 
+  type OrderHistoryResponse = { 
+    body: { 
+      productId: number, 
+      lastOrdered: {
+        orderId: number,
+        lastOrdered: string
+      } | null
+    } 
+  }
+
   type NewOrderResponse = {
     id: number,
     customerId: number,
