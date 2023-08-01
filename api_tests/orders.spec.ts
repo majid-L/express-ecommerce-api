@@ -18,7 +18,7 @@ const requestBody = 	{
 };
 
 const ordersTests = () => {  
-  describe('/api/customers/:customerId/orders', () => {
+  describe('/api/customers/:customerId/orders?productld=61', () => {
     describe('View orders', () => {
       before(setupFunction);
 
@@ -30,7 +30,7 @@ const ordersTests = () => {
           .expect(200);
   
         expect(ordersResponse).to.have.all.keys(['id', 'name', 'username', 'orders']);
-        expect(ordersResponse.orders).to.have.lengthOf(2);
+        expect(ordersResponse.orders).to.have.lengthOf(3);
         expect(ordersResponse.orders[0]).to.have.all.keys(['id', 'customerId', 'shippingAddressId', 'billingAddressId', 'status', 'createdAt', 'shippingAddress', 'orderItems']);
         expect(ordersResponse.orders[0].orderItems[0]).to.have.all.keys(['quantity', 'product']);
         expect(ordersResponse.orders[0].orderItems[0].product).to.have.all.keys(['id', 'name', 'description', 'price', 'stock', 'categoryName', 'supplierName', 'thumbnail']);
@@ -46,6 +46,46 @@ const ordersTests = () => {
       });
     });
 
+    describe('Search orders for single product.', () => {
+      before(setupFunction);
+
+      it('GET returns appropriate response if customer has previously ordered an item.', async () => {
+        const { body }: OrderHistoryResponse = await request(app)
+          .get('/api/customers/1/orders?productId=2')
+          .set('Cookie', cookie)
+          .expect(200);
+
+        expect(body).to.deep.equal({
+          "productId": 2,
+          "lastOrdered": {
+            "orderId": 21,
+            "orderDate": "2029-08-04T05:59:02.342Z"
+          }
+        });
+      });
+
+      it('GET returns appropriate response if customer has not previously ordered an item.', async () => {
+        const { body }: OrderHistoryResponse = await request(app)
+          .get('/api/customers/1/orders?productId=38')
+          .set('Cookie', cookie)
+          .expect(200);
+
+        expect(body).to.deep.equal({
+          "productId": 38,
+          "lastOrdered": null
+        });
+      });
+
+      it('GET returns 404 response if product does not exist.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+          .get('/api/customers/1/orders?productId=54')
+          .set('Cookie', cookie)
+          .expect(404);
+         
+        expect(errorResponse.error.info).to.equal('Product with id 54 does not exist.');
+      });
+    });
+
     describe('Order from cart.', () => {
       beforeEach(setupFunction);
 
@@ -56,7 +96,7 @@ const ordersTests = () => {
           .set('Cookie', cookie)
           .expect(201);
       
-        expect(body.id).to.equal(23);
+        expect(body.id).to.equal(24);
         expect(body.customerId).to.equal(1);
         expect(body.billingAddress).to.include(requestBody.billingAddress);
         expect(body.shippingAddress).to.include(requestBody.shippingAddress);
