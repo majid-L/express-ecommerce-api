@@ -1,7 +1,6 @@
 import { Application } from "express";
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
-import pg from 'pg';
 import pool from "../pool";
 import 'dotenv/config';
 
@@ -20,15 +19,15 @@ declare module 'express-session' {
   }
 }
 
-const pgSession = connectPg(session);
-
 const generateSession = (app: Application) => {
+  const pgSession = connectPg(session);
   app.use(
     session({
       secret: process.env.SESSION_SECRET as string,
       cookie: { 
         maxAge: 30 * 24 * 60 * 60 * 1000, 
-        secure: process.env.DATABASE_URL!.includes('localhost') ? false : true, 
+        secure: process.env.NODE_ENV === 'prod' ? true : false, 
+        httpOnly: false,
         sameSite: 'none' 
       },
       saveUninitialized: false,
