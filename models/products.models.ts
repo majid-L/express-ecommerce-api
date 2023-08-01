@@ -145,3 +145,46 @@ export const selectProductById = async (productId: number) => {
     })
   ]);
 }
+
+export const checkOrderHistory = async (
+  productId: number, 
+  customerId: number
+) => {
+  const productFromQuery = await prisma.product.findUnique({ 
+    where: { id: productId } 
+  });
+
+  if (!productFromQuery) {
+    return { notFound: `Product with id ${productId} does not exist.`};
+  }
+
+  const ordersIds = (await prisma.order.findMany({
+    where: { customerId }
+  })).map(order => order.id);
+  
+  const orderOrNull = await prisma.order.findFirst({
+    where: {
+      AND: [
+        { customerId },
+        { orderItems: {
+            some: {
+              productId,
+              orderId: { in: ordersIds }
+            }
+          }
+        }
+      ]
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
+  return {
+    productId,
+    lastOrdered: orderOrNull ? { 
+      orderId: orderOrNull.id,
+      orderDate: orderOrNull.createdAt
+    } : null
+  }
+}
