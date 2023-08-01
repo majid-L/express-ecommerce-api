@@ -3,6 +3,20 @@ import { UniqueEnforcer } from 'enforce-unique';
 
 faker.seed(123);
 
+const rowCounts = process.argv[2] === 'prod' ?
+  {
+    products: 300,
+    categories: 20,
+    suppliers: 20,
+    customers: 5,
+  }
+  : {
+    products: 50,
+    categories: 4,
+    suppliers: 4,
+    customers: 5,
+  };
+
 const randomIndex = (range: number): number => {
   return Math.floor(Math.random() * range);
 }
@@ -11,11 +25,11 @@ const uniqueEnforcer: UniqueEnforcer = new UniqueEnforcer();
 
 const generateCategories = (): Category[] => {
   const categories: Category[] = [];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < rowCounts.categories; i++) {
     categories.push({
       name: uniqueEnforcer.enforce(() => faker.commerce.department()),
-      description: faker.commerce.productAdjective(),
-      thumbnail: faker.image.urlLoremFlickr({ category: 'commerce' }) 
+      description: `${faker.commerce.productAdjective()} ${faker.company.buzzPhrase()}.`,
+      thumbnail: faker.image.urlLoremFlickr({ category: 'commerce' })
     });
   }
   return categories;
@@ -23,7 +37,7 @@ const generateCategories = (): Category[] => {
 
 const generateSuppliers = (): Supplier[] => {
   const suppliers: Supplier[] = [];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < rowCounts.suppliers; i++) {
     suppliers.push({
       name: uniqueEnforcer.enforce(() => faker.company.name()),
       location: faker.location.country(),
@@ -36,7 +50,7 @@ const generateSuppliers = (): Supplier[] => {
 
 const generateProducts = (categories: Category[], suppliers: Supplier[]) => {
   const products: Product[] = [];
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < rowCounts.products; i++) {
     const category = categories[randomIndex(categories.length)];
     products.push({
       name: faker.commerce.productName(),
