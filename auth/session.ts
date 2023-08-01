@@ -2,6 +2,7 @@ import { Application } from "express";
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
 import pg from 'pg';
+import pool from "../pool";
 import 'dotenv/config';
 
 declare module 'express-session' {
@@ -20,10 +21,6 @@ declare module 'express-session' {
 }
 
 const pgSession = connectPg(session);
-  const pgPool = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
-    max: 2
-  });
 
 const generateSession = (app: Application) => {
   app.use(
@@ -37,7 +34,7 @@ const generateSession = (app: Application) => {
       saveUninitialized: false,
       resave: false,
       store: new pgSession({
-        pool: pgPool,
+        pool,
         tableName: 'session'
       })
     })
