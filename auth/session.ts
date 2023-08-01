@@ -19,13 +19,13 @@ declare module 'express-session' {
   }
 }
 
-const generateSession = (app: Application) => {
-  const pgSession = connectPg(session);
+const pgSession = connectPg(session);
   const pgPool = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
     max: 2
   });
 
+const generateSession = (app: Application) => {
   app.use(
     session({
       secret: process.env.SESSION_SECRET as string,
