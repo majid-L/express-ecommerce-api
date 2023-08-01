@@ -11,14 +11,17 @@ export const deleteAccount = async (req: Request, res: Response, next: NextFunct
     const deletedUser = await prisma.customer.delete({
       where: { id: req.customerDetails.id }
     });
-    res.status(200).send({ 
-      msg: `User ${deletedUser.username} has been deleted.`,
-      deletedUser: {
-        id: deletedUser.id,
-        name: deletedUser.name,
-        username: deletedUser.username,
-        email: deletedUser.email
-      }
+    req.logout((err: Error) => {
+      if (err) return next(err);
+      res.status(200).send({ 
+        msg: `User ${deletedUser.username} has been deleted.`,
+        deletedUser: {
+          id: deletedUser.id,
+          name: deletedUser.name,
+          username: deletedUser.username,
+          email: deletedUser.email
+        }
+      });
     });
   } catch (err) {
     next(err);

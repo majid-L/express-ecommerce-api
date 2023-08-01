@@ -25,7 +25,7 @@ export const login = (req: Request, res: Response) => {
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {
   const username = (req.user as User).username;
-  req.logout(err => {
+  req.logout((err: Error) => {
     if (err) return next(err);
     res.send({msg: username + ' is now logged out.'});
   });
