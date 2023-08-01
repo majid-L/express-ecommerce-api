@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createOrder, getOrderById, getOrders } from "../controllers/orders.controllers";
+import { searchOrderHistory } from "../controllers/orders.controllers";
 import { 
     validateAddressTypes, 
     validateAddressFields, 
@@ -12,7 +13,10 @@ const ordersRouter = Router();
 
 ordersRouter
 .route('/')
-.get(getOrders)
+.get(
+    getOrders,
+    searchOrderHistory
+)
 .post(
     validateAddressTypes, 
     validateAddressFields,
