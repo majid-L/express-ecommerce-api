@@ -8,14 +8,32 @@ import {
 import prisma from '../prisma/prisma';
 import { Prisma } from '@prisma/client';
 import createError from '../helpers/createError';
+import { checkOrderHistory } from '../models/products.models';
 
 export const getOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    if (!isNaN(Number(req.query.productId))) return next();
     const orders = await selectOrders(req.customerDetails.id);
     res.status(200).send(orders)
   } catch (err) {
     next(err);
   }
+}
+
+export const searchOrderHistory = async (
+  req: Request<{}, {}, {}, {productId: string}>, 
+  res: Response,
+  next: NextFunction
+) => {
+  const checkProductInOrders = await checkOrderHistory(
+    Number(req.query.productId), 
+    req.customerDetails.id
+  );
+  
+  if (checkProductInOrders.notFound) {
+    return next(createError(checkProductInOrders.notFound, 404));
+  }
+  res.status(200).send(checkProductInOrders);
 }
 
 export const getOrderById = async (req: Request, res: Response, next: NextFunction) => {
