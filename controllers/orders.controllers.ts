@@ -11,6 +11,8 @@ import createError from '../helpers/createError';
 
 export const getOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    res.send({ cookie: req.headers.cookie });
+    return;
     const orders = await selectOrders(req.customerDetails.id);
     res.status(200).send(orders)
   } catch (err) {
