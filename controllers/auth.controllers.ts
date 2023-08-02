@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
 import bcrypt from 'bcrypt';
+import hidePassword from '../helpers/hidePassword';
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -11,7 +12,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     const newCustomer = await prisma.customer.findUnique({
       where: { username: req.body.username }
     });
-    res.status(201).send(newCustomer);
+    res.status(201).send(hidePassword(newCustomer as User));
   } catch (err) {
     next(err);
   }
@@ -19,8 +20,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
 export const login = (req: Request, res: Response) => {
   res.status(200).send({
-    customer: (({ password, ...obj }) => 
-      ({...obj, password: '**********'}))(req.user as User)
+    customer: hidePassword(req.user as User)
   });
 }
 
