@@ -3,6 +3,25 @@ import prisma from '../prisma/prisma';
 import createError from '../helpers/createError';
 
 // Validation middleware for signup
+export const validateAuthInput = (req: Request, res: Response, next: NextFunction) => {
+  const requiredFields = ['username', 'password', 'name', 'email'];
+
+  for (const field of requiredFields) {
+    if (!req.body[field]) {
+      return next(createError('Request body is missing required field(s).', 400));
+    }
+  }
+
+  for (const field of [...requiredFields, 'phone', 'avatar']) {
+    if (req.body[field] && typeof req.body[field] !== 'string') {
+      return next(createError('Request body fields must all be in string format.', 400));
+    }
+  }
+
+  next();
+}
+
+// Validation middleware for signup
 export const validateUniqueCredentials = async (req: Request, res: Response, next: NextFunction) => {
   const customerOrNull = await prisma.customer.findFirst({
     where: { 
@@ -15,23 +34,6 @@ export const validateUniqueCredentials = async (req: Request, res: Response, nex
   
   if (customerOrNull) {
     next(createError('Username/email already in use.', 400));
-  } else {
-    next();
-  }
-}
-
-// Validation middleware for signup
-export const validateAuthInput = (req: Request, res: Response, next: NextFunction) => {
-  const { name = null, username = null, password = null, email = null } = req.body;
-  const requestFieldsAreInvalid = 
-    req.url === '/signup' ?
-      !name || !username || !password || !email
-    : req.url === '/login' ?
-      !username || !password
-    : false;
-  
-  if (requestFieldsAreInvalid) {
-    next(createError('Request body is missing required field(s).', 400));
   } else {
     next();
   }
