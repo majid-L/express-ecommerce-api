@@ -26,28 +26,39 @@ const authTests = () => {
           .expect('Set-Cookie', /connect.sid=.+/);
       
         expect(customer).to.deep.equal({
-          name: "Alex Nes",
-          username: "alexnes",
-          email: "alex-nes@nexus.pk"
+          "id": 1,
+          "name": "Alex Nes",
+          "username": "alexnes",
+          "email": "alex-nes@nexus.pk",
+          "joinDate": "2021-11-16T23:27:52.223Z",
+          "phone": null,
+          "billingAddressId": 7,
+          "shippingAddressId": 8,
+          "avatar": null,
+          "password": "**********"
         });
       });
   
       it('Incorrect username or password returns 401 response.', async () => {
-        await request(app)
+        const { body: invalidUsername401 }: ApiErrorResponse = await request(app)
           .post('/api/login')
           .send({
             username: "alexnesX",
             password: "password"
           })
           .expect(401);
+        
+        expect(invalidUsername401.error.info).to.equal('Unauthorized');
   
-        await request(app)
+        const { body: invalidPassword401 }: ApiErrorResponse = await request(app)
           .post('/api/login')
           .send({
             username: "alexnes",
             password: "passwordX"
           })
           .expect(401);
+      
+        expect(invalidPassword401.error.info).to.equal('Unauthorized');
       })
     });
 
@@ -98,6 +109,33 @@ const authTests = () => {
           .expect(400);
   
         expect(secondErrorResponse.error.info).to.equal('Username/email already in use.');
+      });
+
+      it('Rejects request body if it is missing a required field.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+        .post('/api/signup')
+        .send({
+          name: "Marcus Boone",
+          username: "marcus_boone433",
+          password: "password"
+        })
+        .expect(400);
+
+      expect(errorResponse.error.info).to.equal('Request body is missing required field(s).');
+      });
+
+      it('Rejects request body if it contains invalid data type.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+        .post('/api/signup')
+        .send({
+          name: 123,
+          email: "alex-nes@nexus.pk",
+          username: "marcus_boone433",
+          password: "password"
+        })
+        .expect(400);
+
+      expect(errorResponse.error.info).to.equal('Request body fields must all be in string format.');
       });
     });
 
