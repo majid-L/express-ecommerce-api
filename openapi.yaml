@@ -1,0 +1,1547 @@
+openapi: 3.0.3
+info:
+  title: Online shop API
+  version: 1.0.0
+  description: >-
+    A RESTful API that serves as the application tier for a full-stack
+    e-commerce application. This API allows customers to create accounts,
+    browse products, filter products in various ways (e.g. by category,
+    supplier, stock, price, and so on), leave reviews and recommendations
+    on products, add and remove items to cart, add and remove items from 
+    wishlist, create new orders, browse previous orders, view and update 
+    account details, add/delete/update billing and shipping addresses,
+    and more.
+   
+#*****************************************************************#
+#*****************************************************************# 
+paths:
+
+#*****************************************************************# 
+  /api/login:
+    summary: Allows customer to login using existing account.
+    post:
+      summary: Login using a username and a password.
+      operationId: login
+      requestBody:
+        description: request body requirements for login requests
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - required:
+                  - username
+                  - password
+                - $ref: '#/components/schemas/Login'
+            example:
+                username: "john8779"
+                password: "passwordabc123"
+      responses:
+        '200':
+          description: Default error sample response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/LoginResponse'
+              example:
+                customer:
+                  name: Andreane Buckridge
+                  username: Andreane36
+                  email: Andreane.Buckridge24@gmail.com
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+      tags:
+        - Login
+        
+#*****************************************************************# 
+  /api/signup:
+    summary: Allows customer to create new account.
+    post:
+      summary: Sign up for a new account.
+      operationId: signup
+      requestBody:
+        description: request body requirements for signup requests
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - required:
+                  - username
+                  - password
+                  - name
+                  - email
+                - $ref: '#/components/schemas/Signup'
+            example:
+                name: "Mike Rumble"
+                username: "mkr98"
+                password: "password123"
+                email: "mike@aol.com"
+      responses:
+        '201':
+          description: successful creation of a new account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CustomerResponse'
+        '400':
+          description: bad request caused by request bodies with missing or invalid data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SignupError'
+      tags:
+        - Signup
+        
+#*****************************************************************# 
+  /api/logout:
+    summary: Logs customer out of their account.
+    post:
+      summary: Logout of current session.
+      description: No request body required.
+      operationId: logout
+      responses:
+        '200':
+          description: successful logout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+              example:
+                  msg: "Andrddeane36 is now logged out."
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+      tags:
+        - Logout
+
+#*****************************************************************# 
+  /api/products:
+    summary: Returns a listing of all products.
+    description: >-
+      Returns a paginated list of products which can be sorted, filtered and
+      ordered via query parameters.
+    get:
+      summary: Gets all products.
+      description: >-
+        Gets a list of 25 products per page and allows pagination through query
+        parameters.
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/categoryParam'
+        - $ref: '#/components/parameters/supplierParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/orderParam'
+        - $ref: '#/components/parameters/hideOutOfStockParam'
+        - $ref: '#/components/parameters/minPriceParam'
+        - $ref: '#/components/parameters/maxPriceParam'
+      operationId: get_products
+      responses:
+        '200':
+          description: paginated list of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ProductsResponse'
+        '400':
+          description: bad request caused by invalid query parameters containing invalid data types or column names.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/InvalidQuery'
+      tags:
+        - Products
+        
+#*****************************************************************# 
+  /api/products/bestsellers:
+    summary: Returns list of bestselling products.
+    description: Allow customer to view the most frequently ordered products.
+    get:
+      summary: Get list of bestselling products.
+      description: >-
+        Get list of products that have been ordered the most. Excludes products
+        that have 0 orders.
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+      operationId: get_bestsellers
+      responses:
+        '200': 
+          description: list of bestsellers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BestsellersResponse'
+      tags:
+        - Products
+        
+#*****************************************************************# 
+  /api/products/{productId}:
+    summary: Returns a specific product object.
+    description: Returns a specific product object.
+    parameters:
+      - $ref: '#/components/parameters/productIdParam'
+    get:
+      summary: Get single product by id.
+      description: >-
+        Includes all of the product's data, including average rating, total
+        ratings, total orders
+      operationId: get_product_by_id
+      responses:
+        '200':
+          description: get single product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SingleProductResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Products
+#*****************************************************************# 
+  /api/products/{productId}/reviews:
+    summary: Returns list of all reviews for a single product.
+    description: Returns a paginated list of reviews for a specific product.
+    get:
+      summary: Get all reviews for a specific product.
+      operationId: get_reviews_by_product
+      parameters:
+        - $ref: '#/components/parameters/productIdParam'
+      responses:
+        '200':
+          description: paginated list of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ReviewsResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Reviews
+        
+#*****************************************************************# 
+  /api/customers/{customerId}:
+    summary: Returns a specific customer object.
+    description: Allows a customer to view, update or delete their own account.
+    parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+    get:
+      summary: Get all of a customer's data.
+      description: Get all of a customer's data, including billing and shipping address.
+      operationId: get_customer_by_id
+      responses:
+        '200':
+          description: customer's account data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CustomerResponseWithAddress'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Customer
+    put:
+      summary: Update customer details.
+      description: Allows customer to update own account details.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCustomerAccountRequest'
+      operationId: update_customer
+      responses:
+        '200':
+          description: returns updated customer account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CustomerResponse'
+              example:
+                id: 1,
+                name: "Alex Nes"
+                username:  "alexnes"
+                password: "**********"
+                email: "alex-nes@nexus.pk"
+                joinDate: "2023-08-01T16:20:52.150Z"
+                phone: null
+                billingAddressId: 1
+                shippingAddressId: 1
+                avatar: null
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Customer
+    delete:
+      summary: Delete a customer
+      description: >-
+        Deletes all data for a specific customer - their account, all of their orders and wishlist.
+      operationId: delete_customer
+      responses:
+        '200':
+          description: successful account deletion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  deletedUser:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      username:
+                        type: string
+                      email:
+                        type: string
+              example:
+                  msg: "User Andrddeane36 has been deleted."
+                  deletedUser:
+                    id: 6
+                    name: "Andre Ane"
+                    username: "Andranna8"
+                    email: "andrea8@yayaya.com"
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Customer
+        
+#*****************************************************************# 
+  /api/customers/{customerId}/cart:
+    summary: Returns list of all cart items for a specific customer.
+    description: Allows customer to view, modify or clear their own cart.
+    parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      - $ref: '#/components/parameters/formatParam'
+    get:
+      summary: Get customer's cart items.
+      description: >-
+        View all of a customer's cart items, in a full format or as a simplified
+        array.
+      operationId: get_cart_items
+      responses:
+        '200':
+          description: get customer's cart items
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Cart'
+                  - $ref: '#/components/schemas/CartAltFormat'
+              example:
+                cart:
+                  id: 1
+                  name: Alex Nes
+                  username: alexnes
+                  cartItems:
+                    - quantity: 2 
+                      product:
+                        id: 56
+                        name: skateboard
+                        description: XL adult skateboard with a single wheel
+                        price: '416.72'
+                        stock: 12
+                        categoryName: Sports
+                        supplierName: John's Sporting Goods
+                        thumbnail: https://loremflickr.com/640/480/Garden?lock=1158606886010880
+                    - quantity: 1 
+                      product:
+                        id: 56
+                        name: bicarbonate of soda
+                        description: part of the baking collection
+                        price: '2.24'
+                        stock: 13
+                        categoryName: Food
+                        supplierName: Uncle Baltar's Treats
+                        thumbnail: https://avatars.com/commerce/food/7225
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Cart
+    put:
+      summary: Update cart.
+      description: >-
+        Allows customer to remove or add cart items and to modify their
+        quantities.
+      operationId: udpate_cart
+      responses:
+        '200':
+          description: returns updated cart
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Cart'
+                  - $ref: '#/components/schemas/CartAltFormat'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Cart
+
+#*****************************************************************# 
+  /api/customers/{customerId}/wishlist:
+    summary: Returns a customer's wishlist.
+    description: Allows customer to view and modify own wishlist.
+    parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer.
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get customer's wishlist items.
+      description: Get all items that the customer has added to their wishlist.
+      operationId: get_wishlist_items
+      responses:
+        '200':
+          description: a customer's wishlist items
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Wishlist'
+                  - $ref: '#/components/schemas/WishlistAltFormat'
+              example:
+                wishlist:
+                  id: 1
+                  name: Alex Nes
+                  username: alexnes
+                  wishlistItems:
+                    - product:
+                        id: 12
+                        name: sunglasses
+                        description: polarized brown lenses
+                        price: '136.82'
+                        stock: 184
+                        categoryName: Accessories
+                        supplierName: Kris & Sons
+                        thumbnail: https://loremflickr.com/640/480/Garden?lock=1158606886010880
+                    - product:
+                        id: 56
+                        name: brown leather shoes
+                        description: fake leather brown shoes with tassels
+                        price: '36.24'
+                        stock: 13
+                        categoryName: Shoes
+                        supplierName: Jefferson Ltd
+                        thumbnail: https://avatars.com/commerce/shoes/23443
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Wishlist
+    put:
+      summary: Update wishlist.
+      description: Allows customer to add or remove items from their wishlist.
+      operationId: update_wishlist
+      responses:
+        '200':
+          description: returns updated wishlist
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Cart'
+                  - $ref: '#/components/schemas/CartAltFormat'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Wishlist
+        
+#*****************************************************************# 
+  /api/customers/{customerId}/orders:
+    summary: Returns a customer's orders or creates a new order.
+    description: Allows customer to view previous orders or to create a new order.
+    parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+    get:
+      summary: Get customer's orders.
+      description: >-
+        Get all orders for a specific customer, including dates, addresses and
+        products ordered.
+      operationId: get_orders
+      responses:
+        '200':
+          description: returns list of customer's orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/OrdersResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Orders
+    post:
+      summary: Create new order.
+      description: >-
+        Creates a new order for that customer, either using all of their cart
+        items or a single item provided in the request body.
+      requestBody:
+        $ref: '#/components/requestBodies/OrdersRequest'
+      operationId: create_order
+      responses:
+        '201':
+          description: successful creation of a new order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleOrder'
+              example:
+                id: 23
+                customerId: 1
+                billingAddressId: 1
+                shippingAddressId: 1,
+                status: completed
+                createdAt: "2023-08-01T23:54:44.756Z"
+                billingAddress:
+                  id": 1
+                  addressLine1": "321 Hyatt Green"
+                  addressLine2: "Apt. 843"
+                  city": "Grant Hill"
+                  county": "Worcestershire"
+                  postcode: "MZ3 1XS"
+                shippingAddress:
+                  id": 1
+                  addressLine1": "321 Hyatt Green"
+                  addressLine2: "Apt. 843"
+                  city": "Grant Hill"
+                  county": "Worcestershire"
+                  postcode: "MZ3 1XS"
+                orderItems:
+                  - quantity: 3
+                    product:
+                      id: 12
+                      name: charging cable
+                      description: premium cable made from cheap materials
+                      price: '36.20'
+                      stock: 15
+                      categoryName: Electronics
+                      supplierName: Kryden Industries
+                      thumbnail: https://loremflickr.com/647266532-12765
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Orders
+        
+#*****************************************************************# 
+  /api/customers/{customerId}/favorites:
+    summary: Returns products that have been recommended by the customer.
+    parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer.
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get customer's recommended items.
+      description: Get all items that have been recommended in reviews by a customer.
+      operationId: get_favorites
+      responses:
+        '200':
+          description: Returns list of products that have been marked as 'recommended' by the customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/FavoritesResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Customer
+        
+#*****************************************************************# 
+  /api/customers/{customerId}/orders/{orderId}:
+    summary: Returns single order
+    description: >-
+      Allows customer to view details about a single order, including date,
+      addresses and products.
+    parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      - $ref: '#/components/parameters/orderIdParam'
+      - $ref: '#/components/parameters/productIdQueryParam'
+    get:
+      summary: Get single order.
+      description: Get all data about a specific order.
+      operationId: get_order_by_id
+      responses:
+        '200':
+          description: get all the information about a specific order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleOrder'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Orders
+        
+#*****************************************************************# 
+  /api/customers/{customerId}/reviews:
+    summary: Returns all reviews posted by a customer.
+    parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+    get:
+      summary: Get all reviews.
+      description: Get a paginated list of reviews.
+      operationId: get_reviews_by_customer
+      responses:
+        '200':
+          description: returns list of a single customer's reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ReviewsResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Reviews
+        
+#*****************************************************************# 
+  /api/customers/{customerId}/addresses:
+    summary: Create or edit address.
+    description: Allows customer to create a new address or modify an existing one.
+    parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+    post:
+      summary: Create or modify address.
+      description: Allows customer to create or modify billing or shipping address.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCustomerAddressRequest'
+      operationId: create_address
+      responses:
+        '201':
+          description: Allows customer to create or edit an address on their account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CustomerResponseWithAddress'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Address
+        
+#*****************************************************************# 
+  /api/customers/{customerId}/addresses/{addressId}:
+    summary: Allows customer to delete an address.
+    description: Deletes billing or shipping address by id.
+    parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      - $ref: '#/components/parameters/addressIdParam'
+    delete:
+      summary: Delete address.
+      description: Allows customer to delete their billing or shipping address.
+      operationId: delete_address
+      responses:
+        '200':
+          description: address successfully deleted from customer's account, leaving behind a null value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CustomerResponseWithAddress'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Address
+        
+#*****************************************************************# 
+  /api/categories:
+    summary: Returns list of all product categories.
+    get:
+      summary: Get all categories.
+      operationId: get_categories
+      responses:
+        '200':
+          description: Returns list of all categories.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        thumbnail:
+                          type: string
+                        products:
+                          description: the total number of unique products that fall under this category
+                          type: string
+      tags:
+        - Categories
+        
+#*****************************************************************# 
+  /api/suppliers:
+    summary: Returns list of all suppliers.
+    get:
+      summary: Get all suppliers.
+      operationId: get_suppliers
+      responses:
+        '200':
+          description: Returns list of all suppliers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  suppliers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        location:
+                          type: string
+                        establishYear:
+                          type: integer
+                        thumbnail:
+                          type: string
+                        products:
+                          description: the total number of unique products that are sold by this supplier
+                          type: string
+      tags:
+        - Suppliers
+        
+#*****************************************************************# 
+  /api/reviews:
+    summary: Returns list of all reviews.
+    description: Allows pagination.
+    get:
+      summary: Get all reviews.
+      operationId: get_reviews
+      responses:
+        '200':
+          description: Returns the first 25 reviews, sorted by most recent first.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ReviewsResponse'
+      tags:
+        - Reviews
+
+#*****************************************************************# 
+  /api/reviews/{reviewId}:
+    summary: Returns single review.
+    parameters:
+      - $ref: '#/components/parameters/reviewIdParam'
+    get:
+      summary: Get single review.
+      description: Returns a single review object, matching the provided id.
+      operationId: get_review_by_id
+      responses:
+        '200':
+          description: returns all relevant data for a single review.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Reviews
+    post:
+      summary: Post a new review.
+      description: Allows customer to post a new review for an item they have previously purchased and not yet reviews.
+      requestBody:
+        description: fields required for updating a review
+        content:
+          application/json:
+            schema:
+              allOf:
+                - required:
+                  - customerId
+                  - productId
+                  - title
+                  - body
+                  - rating
+                - $ref: '#/components/schemas/Review'
+      operationId: update_review
+      responses:
+        '200':
+          description: Returns the newly created review.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  newReview:
+                    $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Reviews
+    put:
+      summary: Modify an existing review.
+      description: Allows customer to modify a variable/unknown number of attributes for a  single review.
+      requestBody:
+        description: optional fields can be specified to modify the review's attributes
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerId:
+                  type: integer
+                productId:
+                  type: integer
+                title:
+                  type: string
+                body:
+                  type: string
+                recommend:
+                  type: boolean
+                  nullable: true
+                rating:
+                  type: integer
+      responses:
+        '200':
+          description: Returns the updated review
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updatedReview:
+                    $ref: '#/components/schemas/Review'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Reviews
+      
+    delete:
+      summary: Delete a review.
+      description: Delete a specific review from the customer's reviews.
+      operationId: delete_review
+      responses:
+        '200':
+          description: returns the deleted review.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Reviews
+
+#*****************************************************************# 
+#*****************************************************************# 
+components:
+
+  schemas:
+#*****************************************************************# 
+    Address:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+          nullable: true
+        city:
+          type: string
+        county:
+          type: string
+          nullable: true
+        postcode:
+          type: string
+          
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          
+    Signup:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        avatar:
+          type: string
+         
+     
+    SingleOrderBase:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        billingAddressId:
+          type: integer
+        shippingAddressId:
+          type: integer
+        status:
+          type: string
+        createdAt:
+          type: string
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        billingAddress:
+          $ref: '#/components/schemas/Address'
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    
+    SingleOrder:
+      type: object
+      allOf:
+        - $ref: SingleOrderBase
+        - type: object
+          properties:
+            billingAddress:
+              $ref: '#/components/schemas/Address'
+    
+    Orders:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/SingleOrderBase'
+              
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: string
+        stock:
+          type: integer
+        categoryName:
+          type: string
+        supplierName:
+          type: string
+        thumbnail:
+          type: string
+    
+    Customer:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+          enum: ["**********"]
+        email:
+          type: string
+        joinDate:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        billingAddressId:
+          type: integer
+          nullable: true
+        shippingAddressId:
+          type: integer
+          nullable: true
+        avatar:
+          type: string
+          nullable: true
+    
+    CustomerWithAddresses:
+      allOf:
+        - $ref: '#/components/schemas/Customer'
+        - type: object
+          properties:
+            billingAddress:
+              allOf:
+                - $ref: '#/components/schemas/Address'
+                - nullable: true
+            shippingAddress:
+              allOf:
+                - $ref: '#/components/schemas/Address'
+                - nullable: true
+          
+    Wishlist:
+      type: object
+      properties:
+        wishlist:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            username:
+              type: string
+            wishlistItems:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+    
+    Cart:
+      type: object
+      properties:
+        cart:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            username:
+              type: string
+            cartItems:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+            
+    WishlistAltFormat:
+      type: array
+      items:
+        type: object
+        properties:
+          customerId:
+            type: integer
+          productId:
+            type: integer
+            
+    CartAltFormat:
+      type: array
+      items:
+        type: object
+        properties:
+          customerId:
+            type: integer
+          productId:
+            type: integer
+          quantity:
+            type: number
+    
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        count:
+          type: integer
+        totalResults:
+          type: integer
+          
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        productId:
+          type: integer
+        title:
+          type: string
+        body:
+          type: string
+        recommend:
+          type: boolean
+          nullable: true
+        rating:
+          type: integer
+        createdAt:
+          type: string
+            
+#*****************************************************************# 
+  parameters:
+    
+    pageParam:
+      name: page
+      in: query
+      description: Which page of results to return. The offset is calculated by multiplying the (limit) with (page minus one).
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 1
+        
+    limitParam:
+      name: limit
+      in: query
+      description: How many entries (objects) to return in a listing.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 25
+        
+    categoryParam:
+      name: category
+      in: query
+      description: filter results by category, either using the category's full name or a partial string.
+      required: false
+      schema:
+        type: string
+      examples:
+        fullCateogryName:
+          summary: filter using a category's full name
+          value: ['computers'] # ?category=computers
+        partialCateogryName:
+          summary: filter using a partial name/substring
+          value: ['ing']
+    
+    supplierParam:
+      name: supplier
+      in: query
+      description: filter results by supplier, either using the supplier's full name or a partial string.
+      required: false
+      schema:
+        type: string
+      examples:
+        fullSupplierName:
+          summary: filter using a supplier's full name
+          value: ['Steuber,%Macejkovic%and%Howe']
+        partialCateogryName:
+          summary: filter using a partial name/substring
+          value: ['mace']
+      
+    hideOutOfStockParam:
+      name: hideOutOfStock
+      in: query
+      description: hides all products with 0 stock
+      required: false
+      schema:
+        type: string
+      example: true
+      
+    sortByParam:
+      name: sortBy
+      in: query
+      description: sort results by a specific property (column name)
+      required: false
+      schema:
+        type: string
+        enum: [id, name, description, price, stock, categoryName, supplierName, thumbnail]
+
+    orderParam:
+      name: order
+      in: query
+      description: set the sort order to ascending or descending
+      required: false
+      schema:
+        type: string
+        enum: [asc, desc]
+      
+    minPriceParam:
+      name: minPrice
+      in: query
+      description: only show products that cost at least this much.
+      required: false
+      schema:
+        type: integer
+      example: 23.44
+    
+    maxPriceParam:
+      name: maxPrice
+      in: query
+      description: only show products that cost less than this value
+      required: false
+      schema:
+        type: integer
+      example: 23.44
+      
+    productIdQueryParam:
+      name: productId
+      in: query
+      description: returns date and id of the most recent order containing this item, or null if the customer has not previously ordered this item.
+      required: false
+      schema:
+        type: integer
+      example: 23 # ?productId=23
+      
+    formatParam:
+      name: format
+      in: query
+      description: allows user to choose between different JSON formats for the response object
+      required: false
+      schema:
+        type: string
+        enum: ["basic"]
+  
+    customerIdParam:
+      name: customerId
+      in: path
+      description: The id of the customer.
+      required: true
+      schema:
+        type: integer
+    
+    productIdParam:
+      name: productId
+      in: path
+      description: The id of the product.
+      required: true
+      schema:
+        type: integer
+        
+    orderIdParam:
+      name: orderId
+      in: path
+      description: The id of the order.
+      required: true
+      schema:
+        type: integer
+    
+    addressIdParam:
+      name: addressId
+      in: path
+      description: The id of the address.
+      required: true
+      schema:
+        type: integer
+    
+    reviewIdParam:
+      name: reviewId
+      in: path
+      description: The id of the review.
+      required: true
+      schema:
+        type: integer
+  
+#*****************************************************************# 
+  requestBodies:
+  
+    UpdateCustomerAccountRequest:
+      description: request body requirements for updating user account
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              username:
+                type: string
+              password:
+                type: string
+              email:
+                type: string
+              phone:
+                type: string
+                nullable: true
+              avatar:
+                type: string
+                nullable: true
+    
+    UpdateCustomerAddressRequest:
+      description: request body requirements for updating a user's address
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Address'
+    
+    OrdersRequest:
+      description: request body requirements for creating a new order
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              billingAddress:
+                $ref: '#/components/schemas/Address'
+              shippingAddress:
+                $ref: '#/components/schemas/Address'
+              item:
+                type: object
+                properties:
+                  productId:
+                    type: string
+                  quantity:
+                    type: string
+
+#*****************************************************************# 
+  responses:
+  
+    LoginResponse:
+      description: response returned upon successful login
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customer:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  username:
+                    type: string
+                  email:
+                    type: string
+  
+    ProductsResponse:
+      description: paginated list of products
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Pagination'
+              - type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Product'
+                        - minItems: 0
+                        - uniqueItems: true
+    
+    FavoritesResponse:
+      description: paginated list of a customer's recommended products
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Pagination'
+              - type: object
+                properties:
+                  favorites:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            addedAt:
+                              type: string
+                            recommend:
+                              type: boolean
+                            rating:
+                              type: integer
+                            product:
+                              $ref: '#/components/schemas/Product'
+                        - minItems: 0
+                        - uniqueItems: true
+    
+    CustomerResponse:
+      description: object returned upon updating a customer's account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Customer'
+            
+    OrdersResponse:
+      description: returns all orders for a specific customer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Orders'
+    
+    CustomerResponseWithAddress:
+      description: all of a customer's account information
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomerWithAddresses'
+    
+    BestsellersResponse:
+      description: paginated list of bestselling products
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Pagination'
+              - type: object
+                properties:
+                  bestSellers:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Product'
+                        - minItems: 0
+                        - uniqueItems: true
+                        - type: object
+                          properties:
+                            numOfTimesOrdered:
+                              type: integer
+                            totalUnitsOrdered:
+                              type: integer
+                            averageRating:
+                              type: integer
+      
+    SingleProductResponse:
+      description: single product by id
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Product'
+              - type: object
+                properties:
+                  totalRatings: 
+                    type: integer
+                  numOfTimesOrdered:
+                    type: integer
+    
+    ReviewsResponse:
+      description: list of reviews
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Pagination'
+              - type: object
+                properties:
+                  reviews:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Review'
+                        - minItems: 0
+                        - uniqueItems: true
+                        
+    NotFound:
+      description: resource not found, such as for non-existent items or invalid URL paths.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                properties:
+                  status:
+                    type: number
+                    enum: [404]
+                  info: 
+                    type: string
+    
+    Unauthorised:
+      description: unauthorised action on a protected route, such as attempting to access or modify another customer's data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                properties:
+                  status:
+                    type: number
+                    enum: [403]
+                  info: 
+                    type: string
+                    enum: ["Unauthorized"]
+                      
+    Unauthenticated:
+      description: response sent for failed login attempts and attempts to access resources without valid authentication credentials.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                properties:
+                  status:
+                    type: number
+                    enum: [401]
+                  info: 
+                    type: string
+                    enum: [
+                      "Unauthorized",
+                      "Unauthenticated"
+                      ]
+
+    SignupError:
+      description: bad request casued by incomplete or invalid request bodies.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                properties:
+                  status:
+                    type: number
+                    enum: [400]
+                  info: 
+                    type: string
+                    enum: [
+                      "Request body is missing required field(s).",
+                      "Request body fields must all be in string format."
+                    ]
+                    
+    InvalidQuery:
+      description: bad request caused by invalid query parameters (e.g. incorrect column names leading to PSQL query errors)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                properties:
+                  status:
+                    type: number
+                    enum: [400]
+                  info: 
+                    type: string
+                    
+    BadRequest:
+      description: bad request caused by missing, invalid or constraint-violating data in request bodies.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                properties:
+                  status:
+                    type: number
+                    enum: [400]
+                  info: 
+                    type: string
