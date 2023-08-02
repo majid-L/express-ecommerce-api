@@ -4,6 +4,7 @@ import { expect } from "chai";
 import bcrypt from 'bcrypt';
 import { cookie } from "./index.spec";
 import { setupFunction } from "./index.spec";
+import prisma from "../prisma/prisma";
 
 const authTests = () => {
   describe('Authorisation and authentication tests', () => {
@@ -77,11 +78,13 @@ const authTests = () => {
           .expect(201);
       
         expect(body).to.be.an('object').that.has.all.keys('id', 'name', 'username', 'password', 'email', 'joinDate', 'billingAddressId', 'shippingAddressId', 'phone', 'avatar');
+        expect(body.id).to.equal(7);
         expect(body.name).to.equal('Kal Varrick');
         expect(body.username).to.equal('kvarrick3000');
         expect(body.email).to.equal('kvarrick@taliphus.ga');
   
-        const matchedPassword = await bcrypt.compare('89hgfb73jf', body.password);
+        const newCustomer = await prisma.customer.findUnique({ where: { id: 7 } });
+        const matchedPassword = await bcrypt.compare('89hgfb73jf', newCustomer!.password);
         expect(matchedPassword).to.be.true;
       });
   
