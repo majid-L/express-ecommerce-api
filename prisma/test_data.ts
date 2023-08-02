@@ -630,6 +630,7 @@ export default {
       username: 'alexnes',
       password: '$2b$10$3GyH.r/44whUPlyf0tTi/ejA2JFm2ERzS6guIONKB9FkfyEANiNbS',
       email: 'alex-nes@nexus.pk',
+      joinDate: "2021-11-16T23:27:52.223Z",
       billingAddressId: 7,
       shippingAddressId: 8
     },
