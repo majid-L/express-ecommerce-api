@@ -11,12 +11,12 @@ const localStrategyConfig = () => {
         });
 
         if (!customerOrNull) {
-          return done(null, false);
+          return done(null, false, { message: 'Invalid username.' });
         } else {
           const hashedPassword = customerOrNull.password;
           const matchedPassword = await bcrypt.compare(password, hashedPassword);
           if (!matchedPassword) {
-            return done(null, false);
+            return done(null, false, { message: 'Invalid password.' });
           } else {
             return done (null, customerOrNull);
           }
