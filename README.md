@@ -1,11 +1,14 @@
-# Express, TypeScript and [Prisma ORM](https://www.prisma.io/) project
+# Express, TypeScript, [Prisma ORM](https://www.prisma.io/) and OpenAPI project
 
 This project features a **[RESTful CRUD API](https://taliphus.vercel.app/api)** that processes data for an ecommerce application.
 
 ## Key product features
-- PSQL database server for managing application data. Configured for [session persistence](./auth/session.ts).
+- Designed and fully documented using Swagger tools and OpenAPI Specification. 
+  - Full **[API contract](./openapi.yaml)** can be found [here](./openapi.yaml).
+- Powered by Vercel's serverless functions, including a PSQL database server for managing application data (configured for [session persistence](./auth/session.ts)).
 - [Session and cookie-based authentication](./auth/) enabling persistent logins.
-- [Middleware functions](./middleware) for data validation and user authentication
+- [Middleware functions](./middleware) for data validation and user authentication.
+  - In-depth error handling, casting a wide net over potential edge cases and sources of error.
 - [Data modelling](./prisma/schema.prisma) and [database migrations](./prisma/migrations/20230728105408_/migration.sql) with Prisma ORM.
 - Comprehensive [integration testing](./api_tests/), achieving over **90% test coverage** as reported by Istanbul's *nyc* CLI.
 - Programmatic [database reseeding](/prisma/seed.ts) using [dummy data](/prisma/dev_data.ts).
@@ -24,35 +27,58 @@ This project features a **[RESTful CRUD API](https://taliphus.vercel.app/api)** 
   <img src="./icons/chai.svg" width="60" />
 </p>
 
+---
 ## Endpoints
 For more information on available query parameters and request body requirements, visit the **[API base url](https://taliphus.vercel.app/api)**.
 
+Many of these endpoints require authenticated access, which you can accomplish by first signing up and then logging in.
+
+```js
+// 1) Send a POST request to /api/signup
+{
+  "username": ...,
+  "password": ...,
+  "email": ... ,
+  "name": ...
+}
+
+// 2) Send a POST request to /api/login
+{
+  "username": ... /* your username from step 1) */,
+  "password": ... /* your password from step 1) */
+}
+```
+
 | HTTP method(s) | URL
 |---|---|
-POST | /signup
-POST | /login
-POST | /logout
-GET | /products
-GET | /products/bestsellers
-GET | /products/:id
-GET | /products/:id/reviws
-GET, PUT, DELETE | /customers/:id
-GET, PUT | /customers/:id/cart
-GET, PUT | /customers/:id/wishlist
-GET, POST | /customers/:id/orders
-GET | /customers/:id/favorites
-GET | /customers/:id/orders/:orderId
-GET | /customers/:id/reviews
-GET | /categories
-GET | /suppliers
-GET, POST | /reviews
-GET, PUT, DELETE | /reviews/:id
+POST | /api/signup
+POST | /api/login
+POST | /api/logout
+GET | /api/products
+GET | /api/products/bestsellers
+GET | /api/products/:id
+GET | /api/products/:id/reviws
+GET, PUT, DELETE | /api/customers/:id
+GET, PUT | /api/customers/:id/cart
+GET, PUT | /api/customers/:id/wishlist
+GET, POST | /api/customers/:id/orders
+GET | /api/customers/:id/favorites
+GET | /api/customers/:id/orders/:orderId
+GET | /api/customers/:id/reviews
+POST | /api/customers/:id/addresses
+DELETE | /api/customers/:id/addresses/:addressId
+GET | /api/categories
+GET | /api/suppliers
+GET, POST | /api/reviews
+GET, PUT, DELETE | /api/reviews/:id
 
+---
 ## Data model
 This is a simplified view of the entity relationships that exist within the database. For a more complete picture, consult the **[schema configuration](/prisma/schema.prisma)** and **[migration](/prisma//migrations/20230728105408_/migration.sql)** files.
 
 <img src="./icons/erd-dark.svg" width="900" /> 
 
+---
 ## Main project dependencies
 | Package | Purpose
 |---|---|
@@ -64,7 +90,7 @@ Chai | Assertion library
 Passport.js | Authentication middleware
 express-session | Session middleware
 
-
+---
 ## Running the project on localhost
 > This project requires PSQL to be installed locally.
 
