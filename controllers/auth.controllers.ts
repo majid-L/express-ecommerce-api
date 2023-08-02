@@ -18,9 +18,10 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 export const login = (req: Request, res: Response) => {
-  const { name, username, email } = req.user as User;
-  const customer = { name, username, email };
-  res.send({customer});
+  res.status(200).send({
+    customer: (({ password, ...obj }) => 
+      ({...obj, password: '**********'}))(req.user as User)
+  });
 }
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {
