@@ -2,7 +2,7 @@ import { Application } from "express";
 import expressSession from 'express-session';
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import prisma from '../prisma/prisma';
-import type { IPrisma, IPrismaSession } from "@quixo3/prisma-session-store/dist/@types";
+import type { IPrisma } from "@quixo3/prisma-session-store/dist/@types";
 import type { PrismaClient } from "@prisma/client";
 
 import 'dotenv/config';
@@ -30,14 +30,16 @@ const store: PrismaSessionStore<"session"> = new PrismaSessionStore(
   }
 );
 
+const secure = process.env.NODE_ENV === 'prod' ? true : false;
+
 const generateSession = (app: Application) => {
   app.use(
     expressSession({
       secret: process.env.SESSION_SECRET as string,
       cookie: { 
         maxAge: 30 * 24 * 60 * 60 * 1000, 
-        secure: process.env.NODE_ENV === 'prod' ? true : false, 
-        httpOnly: process.env.NODE_ENV === 'prod' ? true : false,
+        secure,
+        httpOnly: secure,
         sameSite: 'none' 
       },
       saveUninitialized: false,
