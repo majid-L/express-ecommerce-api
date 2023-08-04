@@ -1,5 +1,7 @@
 import prisma from "../prisma/prisma";
 
+const productTableColumns = [ 'id', 'name', 'description', 'price', 'stock', 'categoryName', 'supplierName', 'thumbnail' ];
+
 export const selectProducts = async (query: ProductsUrlParams) => {
     const { 
         limit = 25, 
@@ -31,11 +33,15 @@ export const selectProducts = async (query: ProductsUrlParams) => {
           { supplierName: { contains: supplier, mode: 'insensitive'  } as ProductQueryParam }
         ]
       },
-      orderBy: {
-        [sortBy as string]: order.toLowerCase()
-      }
+      orderBy: {}
     };
 
+    if (productTableColumns.includes(sortBy)) {
+      queryOptions.orderBy = {
+        [sortBy]: /(asc|desc)/i.test(order) ? order.toLowerCase() : 'asc'
+      }
+    }
+   
     return await prisma.$transaction([
       prisma.product.count(queryOptions),
       prisma.product.findMany({
