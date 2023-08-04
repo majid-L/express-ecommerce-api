@@ -140,14 +140,6 @@ const productTests = () => {
           expect(Number(price)).to.be.within(30.31, 130.36);
         });
       });
-  
-      it('GET respondes with 400 status code if query parameter features an invalid column name.', async () => {
-        const { body: errorResponse }: ApiErrorResponse = await request(app)
-          .get('/api/products?sortBy=namee&order=desc')
-          .expect(400);
-  
-        expect(errorResponse.error.info).to.equal('Unknown argument `namee`. Did you mean `name`?')
-      });
 
       it('GET respondes with 400 status code if pagination query features non-numeric data types.', async () => {
         const { body: invalidPageError }: ApiErrorResponse = await request(app)

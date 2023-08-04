@@ -9,6 +9,8 @@ import prisma from "../prisma/prisma";
 const authTests = () => {
   describe('Authorisation and authentication tests', () => {
     describe('/api/login', () => {
+      beforeEach(setupFunction);
+      
       it('Login response contains Set-Cookie header with session id.', async () => {
         type Customer = { 
           name: string,
@@ -84,7 +86,7 @@ const authTests = () => {
         expect(body.email).to.equal('kvarrick@taliphus.ga');
   
         const newCustomer = await prisma.customer.findUnique({ where: { id: 7 } });
-        const matchedPassword = await bcrypt.compare('89hgfb73jf', newCustomer!.password);
+        const matchedPassword = await bcrypt.compare('89hgfb73jf', newCustomer!.password!);
         expect(matchedPassword).to.be.true;
       });
   
