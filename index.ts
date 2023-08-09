@@ -10,7 +10,11 @@ import validateRequestMethod from './middleware/validateRequestMethod';
 
 const app: express.Application = express();
 app.set('trust proxy', 1);
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:4200',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 app.use(express.json());
 
 generateSession(app);
@@ -20,6 +24,7 @@ app.use(validateRequestMethod);
 app.use('/api/customers/:customerId', userIsAuthenticated);
 
 app.use('/api', apiRouter);
+
 app.use(handleError);
 app.use(_404Handler);
 
