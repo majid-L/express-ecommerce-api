@@ -11,7 +11,7 @@ import validateRequestMethod from './middleware/validateRequestMethod';
 const app: express.Application = express();
 app.set('trust proxy', 1);
 app.use(cors({
-    origin: 'http://localhost:4200',
+    origin: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
