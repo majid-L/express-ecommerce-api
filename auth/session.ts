@@ -38,8 +38,8 @@ const generateSession = (app: Application) => {
       secret: process.env.SESSION_SECRET as string,
       cookie: { 
         maxAge: 30 * 24 * 60 * 60 * 1000, 
-        secure: false,
-        httpOnly: false,
+        secure,
+        httpOnly: secure,
         sameSite: 'none' 
       },
       saveUninitialized: false,
