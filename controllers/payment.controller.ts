@@ -10,7 +10,7 @@ export const createPaymentIntent = async (req: Request, res: Response, next: Nex
       {
         amount: req.body.amount * 100,
         currency: "gbp",
-        payment_method_types: ["card"],
+        payment_method_types: ["card", "klarna", "paypal"]
       },
       function (err: Error, paymentIntent: Stripe.PaymentIntent) {
         if (err) {
