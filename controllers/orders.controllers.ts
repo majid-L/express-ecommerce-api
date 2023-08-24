@@ -101,9 +101,6 @@ export const updateOrderStatus = async (req: Request, res: Response, next: NextF
 
 export const cancelOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (req.orderDetails.status === "completed") {
-      return next(createError('Unable to cancel order because it has already been completed.', 400));
-    }
     const deletedOrder = await deleteOrder(req.orderDetails.id);
     res.status(200).send({ deletedOrder });
   } catch (err) {
