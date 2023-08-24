@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { createOrder, getOrderById, getOrders } from "../controllers/orders.controllers";
+import { createOrder, cancelOrder, getOrderById, getOrders, updateOrderStatus } from "../controllers/orders.controllers";
 import { searchOrderHistory } from "../controllers/orders.controllers";
+import orderIdParamHandler from "../middleware/orderIdParamHandler";
 import { 
     validateAddressTypes, 
     validateAddressFields, 
@@ -10,6 +11,7 @@ import {
 } from "../middleware/validateNewOrder";
 
 const ordersRouter = Router();
+ordersRouter.param("orderId", orderIdParamHandler);
 
 ordersRouter
 .route('/')
@@ -28,6 +30,8 @@ ordersRouter
 
 ordersRouter
 .route('/:orderId')
-.get(getOrderById);
+.get(getOrderById)
+.put(updateOrderStatus)
+.delete(cancelOrder);
 
 export default ordersRouter;
