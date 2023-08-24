@@ -23,33 +23,51 @@ export const selectOrders = async (id: number) => {
   });
 }
 
+const include = {
+  billingAddress: {},
+  shippingAddress: {},
+  orderItems: {
+    select: {
+      quantity: true,
+      product: {}
+    }
+  }
+}
+
 export const selectOrderById = async (id: number) => {
   return await prisma.order.findUnique({
     where: { id },
-    include: {
-      billingAddress: {},
-      shippingAddress: {},
-      orderItems: {
-        select: {
-          quantity: true,
-          product: {}
-        }
-      }
-    }
+    include
+  });
+}
+
+export const updateOrder = async (id: number, data: { status?: string }) => {
+  return await prisma.order.update({
+    where: { id },
+    data,
+    include
+  });
+}
+
+export const deleteOrder = async (id: number) => {
+  return await prisma.order.delete({
+    where: { id },
+    include
   });
 }
 
 export const insertOrder = async (
   customerDetails: Prisma.CustomerGetPayload<{}>,
   billingAddressId: number,
-  shippingAddressId: number
+  shippingAddressId: number,
+  status: string
   ) => {
   return await prisma.order.create({
     data: {
       customerId: customerDetails.id,
       billingAddressId,
       shippingAddressId,
-      status: 'completed'
+      status
     }
   });
 }
