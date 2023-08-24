@@ -23,6 +23,7 @@ declare global {
       customerDetails: Prisma.CustomerGetPayload<{}>,
       productDetails: Prisma.ProductGetPayload<{}>,
       reviewDetails: Prisma.ReviewGetPayload<{}>,
+      orderDetails: Prisma.OrderGetPayload<{}>,
       addresses: AddressPayloadGroup | AddressGroup
     }
   }
