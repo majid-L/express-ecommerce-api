@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import generateArray from '../helpers/generateArray';
-import { insertOrder, selectOrderById, selectOrders, updateStockAmounts } from '../models/orders.models';
+import { deleteOrder, insertOrder, selectOrderById, selectOrders, updateOrder, updateStockAmounts } from '../models/orders.models';
 import { 
   emptyCartOrWishlist as emptyCart, 
   selectCartOrWishlistItems as selectCartItems 
@@ -55,7 +55,8 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     const newOrder = await insertOrder(
       req.customerDetails,
       (req.addresses.billingAddress as Prisma.AddressGetPayload<{}>).id,
-      (req.addresses.shippingAddress as Prisma.AddressGetPayload<{}>).id
+      (req.addresses.shippingAddress as Prisma.AddressGetPayload<{}>).id,
+      req.body.status || "completed"
     );
 
     let orderItems = [] as OrderItem[];
@@ -83,6 +84,28 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     await emptyCart(req.customerDetails.id, 'cartItem');
     const completedOrder = await selectOrderById(newOrder.id);
     res.status(201).send(completedOrder);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const updateOrderStatus = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = req.body.status ? { status: req.body.status } : {};
+    const order = await updateOrder(Number(req.params.orderId), data);
+    return res.status(200).send(order);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const cancelOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (req.orderDetails.status === "completed") {
+      return next(createError('Unable to cancel order because it has already been completed.', 400));
+    }
+    const deletedOrder = await deleteOrder(req.orderDetails.id);
+    res.status(200).send({ deletedOrder });
   } catch (err) {
     next(err);
   }
