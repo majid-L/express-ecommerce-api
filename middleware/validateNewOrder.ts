@@ -35,6 +35,13 @@ export const validateAddressFields = (req: Request, res: Response, next: NextFun
   next();
 }
 
+export const validatePaymentFields = (req: Request, res: Response, next: NextFunction) => {
+  const { paymentMethod, total } = req.body;
+  if (!paymentMethod) return next(createError('New order must include payment method.', 400));
+  if (!total) return next(createError('New order must include total amount.', 400));
+  next();
+}
+
 export const validateAddressFieldValues = (
     req: Request<{}, {}, AddressGroup, {}>, 
     res: Response, 

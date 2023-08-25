@@ -123,7 +123,9 @@ declare global {
     customerId: number,
     shippingAddressId: number,
     billingAddressId: number,
-    status?: string
+    status: string
+    paymentMethod: string
+    total: number
   }
 
   type Review = {

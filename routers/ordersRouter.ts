@@ -7,7 +7,8 @@ import {
     validateAddressFields, 
     validateAddressFieldValues,
     getOrCreateAddresses,
-    validateSingleOrderItem
+    validateSingleOrderItem,
+    validatePaymentFields
 } from "../middleware/validateNewOrder";
 
 const ordersRouter = Router();
@@ -22,6 +23,7 @@ ordersRouter
 .post(
     validateAddressTypes, 
     validateAddressFields,
+    validatePaymentFields,
     validateAddressFieldValues,
     getOrCreateAddresses,
     validateSingleOrderItem,

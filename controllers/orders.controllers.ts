@@ -56,7 +56,9 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       req.customerDetails,
       (req.addresses.billingAddress as Prisma.AddressGetPayload<{}>).id,
       (req.addresses.shippingAddress as Prisma.AddressGetPayload<{}>).id,
-      req.body.status || "completed"
+      req.body.status || "completed",
+      req.body.total,
+      req.body.paymentMethod
     );
 
     let orderItems = [] as OrderItem[];

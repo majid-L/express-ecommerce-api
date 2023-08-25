@@ -38,7 +38,7 @@ model WishlistItem {
 model Category {
   id          Int       @default(autoincrement())
   name        String    @id @db.VarChar(50)
-  description String    @db.VarChar(100)
+  description String    @db.VarChar(250)
   thumbnail   String?
   products    Product[]
 }
@@ -92,7 +92,9 @@ model Order {
   customerId        Int
   billingAddressId  Int
   shippingAddressId Int
-  status            String?     @db.VarChar(20)
+  status            String      @db.VarChar(20)
+  paymentMethod     String
+  total             Decimal     @db.Decimal(6, 2)
   createdAt         DateTime    @default(now()) @db.Timestamp(6)
   orderItems        OrderItem[]
   customer          Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
