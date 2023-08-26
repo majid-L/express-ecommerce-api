@@ -16,14 +16,7 @@ export const selectReviews = async (
           avatar: true 
         }
       },
-      product: {
-        select: { 
-          name: true,
-          categoryName: true,
-          supplierName: true,
-          thumbnail: true
-        }
-      }
+      product: { }
     }
   };
 
