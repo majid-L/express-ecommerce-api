@@ -4,8 +4,8 @@ import { selectBestsellers, selectFavorites, selectProductById, selectProducts }
 export const getProducts = async (
   req: Request<{}, {}, {}, ProductsUrlParams>, 
   res: Response, 
-  next: NextFunction) => {
-
+  next: NextFunction
+) => {
   try {
     const [ totalResults, resultSet ] = await selectProducts(req.query);
     res.send({

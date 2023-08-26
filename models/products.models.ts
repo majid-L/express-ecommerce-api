@@ -112,10 +112,7 @@ export const selectFavorites = async (page: number, limit: number, id: number) =
           where: {
             recommend: true,
           },
-          select: {
-            recommend: true,
-            rating: true,
-            createdAt: true,
+          include: {
             product: {}
           },
           orderBy: {
@@ -186,11 +183,21 @@ export const checkOrderHistory = async (
     }
   });
 
+  const reviewOrNull = await prisma.review.findFirst({
+    where: {
+      AND: [
+        { customerId },
+        { productId }
+      ]
+    }
+  });
+
   return {
     productId,
     lastOrdered: orderOrNull ? { 
       orderId: orderOrNull.id,
       orderDate: orderOrNull.createdAt
-    } : null
+    } : null,
+    review: reviewOrNull
   }
 }
