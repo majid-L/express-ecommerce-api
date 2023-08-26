@@ -67,7 +67,8 @@
                 "summary": "returns all reviews for a specific product",
                 "queryParams": {
                     "page": "the number of the page you want to view",
-                    "limit": "the number of results per single page"
+                    "limit": "the number of results per single page",
+                    "orderBy": "order reviews by createdAt or by rating"
                 }
             }
         },
@@ -143,7 +144,10 @@
         "/api/customers/:id/orders": {
             "routeParams": "customer id (number)",
             "GET": {
-                "summary": "returns all orders for a specific customer"
+                "summary": "returns all orders for a specific customer",
+                "queryParams": {
+                    "productId": "Reveals whether custoemr has ordered and reviewed a specific product."
+                }
             },
             "POST": {
                 "summary": "allows customer to create a new order composed of all existing cart items. The 'item' property on the request body is optional and is intended for express checkout, bypassing the cart.",
@@ -165,7 +169,10 @@
                     "item": {
                         "productId": 12,
                         "quantity": 3
-                    }
+                    },
+                    "total": "122.12",
+                    "paymentMethod": "Card",
+                    "status": "pending"
                 }
             }
         },
@@ -181,7 +188,8 @@
                 "summary": "returns all reviews for a specific customer",
                 "queryParams": {
                     "page": "the number of the page you want to view",
-                    "limit": "the number of results per single page"
+                    "limit": "the number of results per single page",
+                    "orderBy": "order reviews by createdAt or by rating"
                 }
             }
         },
@@ -235,7 +243,8 @@
                 "summary": "returns a listing of all reviews",
                 "queryParams": {
                     "page": "the number of the page you want to view",
-                    "limit": "the number of results per single page"
+                    "limit": "the number of results per single page",
+                    "orderBy": "order reviews by createdAt or by rating"
                 }
             },
             "POST": {
