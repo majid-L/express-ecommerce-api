@@ -5,17 +5,17 @@ import prisma from "../prisma/prisma";
 
 export const getReviews = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { limit = 25, page = 1 } = req.query;
-    const queryOptions = { where: {} };
+    const { limit = 25, page = 1, orderBy = 'createdAt' } = req.query;
 
+    let where: { productId?: number, customerId?: number };
     if (req.originalUrl.includes('products')) {
-      queryOptions.where = { productId: req.productDetails.id }
+      where = { productId: req.productDetails.id }
     } else if (req.originalUrl.includes('customers')) {
-      queryOptions.where = { customerId: req.customerDetails.id }
+      where = { customerId: req.customerDetails.id }
     }
 
     const [ totalResults, reviews ] = 
-      await selectReviews(queryOptions, Number(page), Number(limit));
+      await selectReviews(where!, Number(page), Number(limit), orderBy as string);
 
     res.status(200).send({
       page: Number(page),
@@ -48,7 +48,7 @@ export const updateReview = (req: Request, res: Response) => {
 export const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const deletedReview = await prisma.review.delete({ where: { id: req.reviewDetails.id } });
-    res.status(200).send({deletedReview});
+    res.status(200).send({ deletedReview });
   } catch (err) {
     next(err);
   }
