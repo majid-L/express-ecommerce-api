@@ -3,75 +3,91 @@ export default {
     {
       name: 'Consumables',
       description: 'Single-use utility items as well as payloads and charges for various types of equipment.',
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=2577314038677504'
+      thumbnail: '1'
     },
     {
       name: 'Replicas',
-      description: 'Small-scale models of popular armamenets used during the Corporia Conflagration of the war-era Ionia Sector.',
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=2577314038677504'
+      description: 'Small-scale toy models of popular armaments used during the Corporia Conflagration of war-era Ionia. And if you\'re wondering why we\'re selling toy guns: the Galatic Authority revoked our firearms dealers license, so all we can do now is sell toys.',
+      thumbnail: '2'
     },
     {
       name: 'Exoskeletons',
       description: 'Hardened armour shells designed for strenuous activity and defence applications.',
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=6222937518505984'
+      thumbnail: '3'
     },
     {
       name: 'Provisions',
       description: 'Supplies and consumables for various applications, including storage, medical and technological.',
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=6480400375349248'
+      thumbnail: '4'
     },
     {
       name: 'Cybernetics',
       description: 'Highly customisable nanocircuitry that can be used to upgrade or tune various types of electronics at small, medium and large scales.',
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=7025865462382592'
+      thumbnail: '5'
     },
     {
       name: 'Components',
       description: 'Assorted electronic and mechanical components for a wide range of applications.',
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=7025865462382592'
+      thumbnail: '6'
     },
     {
       name: 'Upgrades',
       description: 'Patented software and hardware upgrades for armour, assorted ship parts and untested prototypes.',
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=7025865462382592'
+      thumbnail: '7'
+    },
+    {
+      name: 'Junk',
+      description: 'Boom\'s Black Market doesn\'t just sell high-value merchandise - we also stock a wide variety of junk items. As the old saying goes, one man\'s rubbish is another man\'s treasure. You never know what you\'ll come across in our collection of junk items.',
+      thumbnail: '8'
+    },
+    {
+      name: 'Lost & Found',
+      description: 'Items reported lost, misplaced or stolen and eventually (mysteriously) found their way to the black market. Might be worth taking a look.',
+      thumbnail: '9'
     }
   ],
   suppliers: [
     {
       name: 'Novina Corp',
       location: 'Rygel-9',
+      description: 'With patents in exotic prototypes, cutting-edge biotech and bold designs, Novina Corp are at the forefront of pioneering technological advancements, with important political and economic ties across Styx Theta and Rygel Cluster.',
       establishYear: 2125,
       thumbnail: '1'
     },
     {
       name: 'Mikkei Combine',
       location: 'Reunion',
+      description: 'Mikkei\'s militarised R&D division is responsible for some of the most influential cybernetic tech of the second half of the 23rd century, with a handful of large subsidiaries overseeing research in nanoinformatics and biotics.',
       establishYear: 2946,
       thumbnail: '2'
     },
     {
       name: 'Sirta Foundation',
       location: 'Noveria',
+      description: 'Specialising in medical and general provisions, Sirta Foundation was first created as a non-profit civilian group tasked with conducting research into genetic engineering on behalf of some of the biggest names in the field. Sirta have since expanded their efforts and now oversee research in many areas related to interspecies genetics, xenobiology and pathogen containment.',
       establishYear: 3003,
       thumbnail: '3'
     },
     {
       name: 'Ferrous LPX',
       location: 'Novina Sector',
+      description: 'Ferrous LPX (previously Ferrous Mercantile) was founded as a collective of separate research divisions which eventually combined their efforts and now oversee research and production in electronics, omni-tools, high grade armour and advanced communication tools. Ferrous LPX also owns several exclusive contracts in weapons design and manufacture.',
       establishYear: 2541,
       thumbnail: '4'
     },
     {
       name: 'Deckow & Kiehn',
       location: 'Taliphus-8',
+      description: 'Headquartered in the Taliphus system of the Minos Nebula, Deckow & Kiehn specialises in mid-range tech, electornics, drones and engineering components. They recently won several bids to become the main electronics suppliers for industrial contracts in Artemis Tau, but they also do a lot of business in the consumer markets of their local star cluster.',
       establishYear: 2127,
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=4787789105201152'
+      thumbnail: '5'
     },
     {
       name: 'G & B Supplies',
       location: 'Kryden System',
+      description: 'Cheap generic supplies and popular provisions and the mainstay of G&B\'s business, though they are also involved in many big asteroid mining and gas hauling operations in the Krogan demilitarised zone. G&B was recently commissioned by the Outer Planets Alliance to distribute rations, supplies and engineering supplies to various colonies near Hades Nexus where most of the company\'s business is located.',
       establishYear: 2319,
-      thumbnail: 'https://loremflickr.com/640/480/commerce?lock=4787789105201152'
+      thumbnail: '6'
     }
   ],
   products: [
@@ -976,68 +992,734 @@ export default {
       thumbnail: '95.png'
     },
     {
-      name: 'Vierja Holo-Display Tablet',
-      description: 'Personal digital assitant, calendar and organiser all in a single package. This device also includes a few hidden features...',
-      price: ,
-      stock: ,
-      categoryName: '',
-      supplierName: '',
+      name: 'ECHO Holo-Display',
+      description: 'Personal digital assitant, communications, calendar and organiser all in a single package. This device also includes a few hidden features, including an experimental quanteum entanglement interfacer, chargeless powercell and cloak field generator.',
+      price: 422.19,
+      stock: 371,
+      categoryName: 'Components',
+      supplierName: 'Ferrous LPX',
       thumbnail: '96.png'
     },
     {
-      name: '',
-      description: '',
-      price: ,
-      stock: ,
-      categoryName: '',
-      supplierName: '',
+      name: 'Cerberus Stasis Module',
+      description: 'Prototype device capable of producing a temporary time dilation effect, suspending objects within a designated volume of space for a short period of time. Also features three alternative modes - anti-grav, temporal stasis and time dilation - which work on smaller objects.',
+      price: 364.42,
+      stock: 74,
+      categoryName: 'Cybernetics',
+      supplierName: 'G & B Supplies',
       thumbnail: '97.png'
     },
     {
-      name: '',
-      description: '',
-      price: ,
-      stock: ,
-      categoryName: '',
-      supplierName: '',
+      name: 'Unstable Radioisotope Core',
+      description: 'Embeddable high-energy core designed to integrate with powersuits, ship drives and Hyperdyne proprietary energy delivery systems. Powered by a miniaturised fusion device and featuring gravitational stabilisers, nuclear magnetic shielding and replaceable fuel rods.',
+      price: 251.00,
+      stock: 336,
+      categoryName: 'Cybernetics',
+      supplierName: 'Deckow & Kiehn',
       thumbnail: '98.png'
     },
     {
-      name: 'Bootleg Raslak',
-      description: 'An uncommon delicacy in the Taliphus system, raslak is a potent alcoholic beverage, even stronger than fellip nectar. It\'s commonly served throughout the Uncharted Territories.',
-      price: ,
-      stock: ,
-      categoryName: '',
-      supplierName: '',
+      name: 'Biomass Fuel Pellet',
+      description: 'Part of a delivery system for active and inert biomass-fueled systems. The liquid suspension is housed within a protective atmosphere that prevents breakdown of the organic material while in storage.',
+      price: 36.53,
+      stock: 63,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
       thumbnail: '101.png'
     },
     {
-      name: 'Liquid ',
-      description: '',
-      price: ,
-      stock: ,
-      categoryName: '',
-      supplierName: '',
+      name: 'Cooling loop reservoir',
+      description: 'High-capacity transparent reservoir containing nanofluid coolant, designed to integrate with open liquid cooling loops. Features an automatic air-bleed mechanism and external pump.',
+      price: 64.86,
+      stock: 274,
+      categoryName: 'Consumables',
+      supplierName: 'Deckow & Kiehn',
       thumbnail: '103.png'
     },
     {
       name: 'Kryden 640-core CPU chip',
-      description: 'Multithreaded CPU with variable logical core configuration.',
-      price: ,
-      stock: ,
+      description: 'Hyperthreaded CPU with variable logical core configuration, designed to work as a secondary processing unit for quantum mainframes, command and navigation systems, communications modules and autonomous synthetics.',
+      price: 855.00,
+      stock: 42,
       categoryName: 'Cybernetics',
-      supplierName: '',
+      supplierName: 'Deckow & Kiehn',
       thumbnail: '104.png'
     },
     {
-      name: 'Superheater',
-      description: 'with an energy transfer rate of 10 exajoules per second, ',
-      price: ,
-      stock: ,
-      categoryName: '',
-      supplierName: '',
+      name: 'Maliwan MCS Caesium Superheater',
+      description: 'Precision flame generator for maintenance and engineering applications, with an energy transfer rate of 10 megajoules per second and low heat dissipation coefficient, this is capable of melting through even the toughest alloys without leaving undesirable trace contaminants.',
+      price: 68.75,
+      stock: 188,
+      categoryName: 'Components',
+      supplierName: 'Sirta Foundation',
       thumbnail: '105.png'
-    }
+    },
+    {
+      name: 'Dragon\'s breath rounds (pack of 2)',
+      description: 'Packed with incendiary magnesium shavings capable of instantaneously igniting flammable targets at close to medium range.',
+      price: 8.05,
+      stock: 2322,
+      categoryName: 'Consumables',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'ammunition_01.png'
+    },
+    {
+      name: '.45 ACP rounds (pack of 12)',
+      description: 'Standard issue full metal jacket rounds with brass shell casings.',
+      price: 2400,
+      stock: 625,
+      categoryName: 'Consumables',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'ammunition_02.png'
+    },
+    {
+      name: 'Armour-shredding rounds (pack of 3)',
+      description: 'High velocity anti-material rifle ammunition, for hectic long-range encounters against synthetics.',
+      price: 2400,
+      stock: 625,
+      categoryName: 'Consumables',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'ammunition_03.png'
+    },
+    {
+      name: 'Adaptive antidote',
+      description: 'Effective against various poisons, venoms, parastiic infections, synthetic pathogens and drug-resistant strains.',
+      price: 25.82,
+      stock: 142,
+      categoryName: 'Consumables',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'antidote_01.png'
+    },
+    {
+      name: 'Compact stainless steel awl',
+      description: 'Handy and versatile awl for piercing through tough leather hides, thick fabrics, thin metal sheets, and other types of material.',
+      price: 6.62,
+      stock: 322,
+      categoryName: 'Provisions',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'awl_01.png'
+    },
+    {
+      name: 'Basic fabric bandage (2000mm x 100mm)',
+      description: 'Basic field bandage with an antiseptic lining and self-tightening design.',
+      price: 0.37,
+      stock: 862,
+      categoryName: 'Provisions',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'bandages_01.png'
+    },
+    {
+      name: 'Steel drum barrel (210 litres)',
+      description: 'Standard GV-approved steel drum barrel with removable top, leakproof construction, non-porous materials, latching ring, radiation shileding and plain interior. Suitable for storing various sustances including flammable and volatile fuels, oils, toxic waste, and liquids at extreme temperature ranges.',
+      price: 0.37,
+      stock: 862,
+      categoryName: 'Provisions',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'barrel_01.png'
+    },
+    {
+      name: 'Polarised cybernetic powercell',
+      description: 'Variable charge powercell designed for driving external low-power cybernetic implants. Contains a lithium-caesium mixture with rapid charge capability and long battery life.',
+      price: 1.52,
+      stock: 761,
+      categoryName: 'Cybernetics',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'battery_01.png'
+    },
+    {
+      name: 'Bootleg Ryncol (190 proof)',
+      description: 'Extremely potent Krogan liquor originally manufactured using engine coolant and industrial cleaner. Its exact composition is unknown and krogans say it "hits aliens like ground glass". Acidic and highly flammable, it\'s capable of melting through machinery, making its consumption extremely hazardous to non-krogans.',
+      price: 26.00,
+      stock: 422,
+      categoryName: 'Consumables',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'beer_01.png'
+    },
+    {
+      name: 'General purpose bolt',
+      description: 'Nickel-iron screw-thread bolt used in construction, DIY projects, mechanical devices and small and large machinery.',
+      price: 0.31,
+      stock: 238,
+      categoryName: 'Provisions',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'bolt_01.png'
+    },
+    {
+      name: 'Spacer\'s diary',
+      description: 'Personal journal belonging to an unknown passenger aboard the Greenleaf freighter during its journey across the Attican Traverse.',
+      price: 0.72,
+      stock: 251,
+      categoryName: 'Lost & Found',
+      supplierName: 'Novina Corp',
+      thumbnail: 'book_01.png'
+    },
+    {
+      name: 'Double-Bulleit Frontier Bourbon',
+      description: 'Original Kentucky bourbon whiskey with high-rye content, distinctive oaky aroma, spicy notes, subtle toffee flavour and an ultra smooth finish.',
+      price: 32.00,
+      stock: 572,
+      categoryName: 'Consumables',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'bottle_01.png'
+    },
+    {
+      name: 'Medium wooden box',
+      description: 'Multi-purpose, medium capacity storage box constructed using synthetic oak, with a waterproof outer coat and internal insulation.',
+      price: 37.16,
+      stock: 169,
+      categoryName: 'Provisions',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'box_01.png'
+    },
+    {
+      name: 'Wooden storage crate with lid',
+      description: 'General purpose wooden crate for assorted item storage, including personal items, perishable goods, fresh produce, machinery, tools, and more.',
+      price: 34.00,
+      stock: 233,
+      categoryName: 'Provisions',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'box_02.png'
+    },
+    {
+      name: 'Block of butter',
+      description: 'Preserved unsalted butter churned from grolak milk. Loved by grolaks, but is probably unsafe for human consumption.',
+      price: 1.65,
+      stock: 621,
+      categoryName: 'Consumables',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'box_03.png'
+    },
+    {
+      name: 'Cleaning brush',
+      description: 'Basic cleaning brush. Can be used on teeth, clothes, floors, machine parts, eyebrows, hair, and almost anything you can think of.',
+      price: 0.82,
+      stock: 172,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'brush_01.png'
+    },
+    {
+      name: 'Bucket',
+      description: 'A simple metallic bucket with a swing handle.',
+      price: 2.17,
+      stock: 752,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'bucket_01.png'
+    },
+    {
+      name: 'Numbered notebook',
+      description: 'A spiral notebook with a single number printed on each page. The design intent behind this item is unclear and its usefulness is questionable at best, which is why it is being sold at a steep discount.',
+      price: 0.06,
+      stock: 3211,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'calendar_01.png'
+    },
+    {
+      name: 'Plain notebook',
+      description: 'Spiral notebook with plain cream pages (300 GSM) and a hard leather back.',
+      price: 3.80,
+      stock: 772,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'calendar_02.png'
+    },
+    {
+      name: 'Gentleman\'s Cane',
+      description: 'Elegant wooden cane with a 9-carat gold handle. Ideal for cane connoisseur with sophisticated tastes.',
+      price: 511.00,
+      stock: 133,
+      categoryName: 'Provisions',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'cane_01.png'
+    },
+    {
+      name: 'Playing cards',
+      description: 'Caprican playing cards typically used to play Dead Man\'s Chest and Triad.',
+      price: 12.00,
+      stock: 208,
+      categoryName: 'Junk',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'cards_01.png'
+    },
+    {
+      name: 'Crosska chocolate bar',
+      description: 'Plain choclate bar made with artificial cocoa, synthetic milk and edible organic plastic.',
+      price: 1.20,
+      stock: 198,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'chocolate_01.png'
+    },
+    {
+      name: 'Clew',
+      description: 'A ball of thread found in a crate on some shipwreck.',
+      price: 0.72,
+      stock: 720,
+      categoryName: 'Junk',
+      supplierName: 'G & B SUpplies',
+      thumbnail: 'clew_01.png'
+    },
+    {
+      name: 'Whac-A-Mole club',
+      description: 'Basic wooden club constructed from cheap syntehtic materials. Prone to breakage and not suitable for real ball games.',
+      price: 9.00,
+      stock: 271,
+      categoryName: 'Junk',
+      supplierName: 'G & B SUpplies',
+      thumbnail: 'club_01.png'
+    },
+    {
+      name: 'Corkscrew',
+      description: 'Basic metallic corkscrew with wooden handle for opening vintage cork-top bottles.',
+      price: 1.50,
+      stock: 188,
+      categoryName: 'Junk',
+      supplierName: 'Novina Corp',
+      thumbnail: 'corkscrew_01.png'
+    },
+    {
+      name: 'Heavy wrecking crowbar',
+      description: 'Heat treated carbon steel construction with chisel end and swan neck. Forged and ground with hexagonal shank.',
+      price: 7.30,
+      stock: 211,
+      categoryName: 'Junk',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'crowbar_01.png'
+    },
+    {
+      name: 'Salted caramel doughnut',
+      description: 'Fresh glazed dougnut with salted caramel filling. Doughnuts don\'t get any better than this.',
+      price: 0.14,
+      stock: 7254,
+      categoryName: 'Junk',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'donut_01.png'
+    },
+    {
+      name: 'Nobels Extradynamit',
+      description: 'Construction dynamite made with powdered clay and a copper percussion cap. Especially designed for construction applications.',
+      price: 51.34,
+      stock: 155,
+      categoryName: 'Consumables',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'dynamite_01.png'
+    },
+    {
+      name: 'Extinguisher',
+      description: 'Dry powwder fire extinguisher especially suited for mixed fire risk environments, making it a good all-rounder for different types of fires. Also effective agaisnt methane, propane, hydrogen and natural gas.',
+      price: 32.00,
+      stock: 281,
+      categoryName: 'Provisions',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'extinguisher_01.png'
+    },
+    {
+      name: 'Dry soil fertiliser',
+      description: 'Heavily fortified phosphorous-potassium mixture intended for depleted soil patches, barren terrain and pest-inflicted crops.',
+      price: 12.90,
+      stock: 145,
+      categoryName: 'Junk',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'fertilizers_01.png'
+    },
+    {
+      name: 'Flash drive',
+      description: 'Portable NVME drive with a TLC memory controller, 10-digit encryption and expandable storage.',
+      price: 17.39,
+      stock: 1022,
+      categoryName: 'Components',
+      supplierName: 'Novina Corp',
+      thumbnail: 'flash_drive_02.png'
+    },
+    {
+      name: 'UV beam torch',
+      description: 'UV flashlight with excellent range, 16 bit dimming, 250V fuse, 0-100% brightness curve, strobe function and variable fade control.',
+      price: 27.12,
+      stock: 721,
+      categoryName: 'Provisions',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'flashlight_01.png'
+    },
+    {
+      name: 'Stainless steel hip flask',
+      description: 'Take your favourite tipple with you on chilly winter walks with this screw-top stainless steel hip flask, whether it\'s bourbon, single-malt, raslak or ryncol.',
+      price: 36.67,
+      stock: 485,
+      categoryName: 'Provisions',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'flask_01.png'
+    },
+    {
+      name: 'Mystery elixir',
+      description: 'Unknown potion of Batarian origin. Some claim it possesses medicinal benefits, while others insist that it\'s a potent biotoxin.',
+      price: 14.46,
+      stock: 182,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'flask_02.png'
+    },
+    {
+      name: 'Gaff hook',
+      description: 'Razor sharp hook designed to fit onto fishing gaffs, but it probably has some alternative uses.',
+      price: 0.28,
+      stock: 84,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'gaff_01.png'
+    },
+    {
+      name: '8-segment rotary gear',
+      description: 'Straight steel gear with 8mm bore diameter, 40mm pitch diameter and 19mm hub diameter. Compatible with machine tools, transmissions and complex gear groupings.',
+      price: 7.05,
+      stock: 294,
+      categoryName: 'Components',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'gears_01.png'
+    },
+    {
+      name: 'Birthday gift',
+      description: 'Unclaimed personal gift containing a random item. Looks like someone missed their birthday, but don\'t let that spoil your fun. In a way, you\'ll be celebrating their birthday on their behalf.',
+      price: 1.59,
+      stock: 48,
+      categoryName: 'Lost & Found',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'gift_01.png'
+    },
+    {
+      name: 'Reading glasses',
+      description: 'Elegant glasses in pristine condition, fitted with non-prescription lenses.',
+      price: 4.00,
+      stock: 362,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'glasses_01.png'
+    },
+    {
+      name: 'Replica Jacob\'s "Two Fer" Maggie',
+      description: 'A toy replica of the infamous Jacob\'s Maggie revolver, chambered in 0.38 ammunition. The original kicks like an angry mule but packs a wallop and is known (and feared) for its reliability and effectiveness.',
+      price: 74.00,
+      stock: 215,
+      categoryName: 'Replicas',
+      supplierName: 'Novina Corp',
+      thumbnail: 'gun_01.png'
+    },
+    {
+      name: 'Club hammer',
+      description: 'Whether you\'re looking to hammer some nails, tenderise a slab of meat or break through a strong wall, this hammer has all of your needs covered.',
+      price: 7.66,
+      stock: 175,
+      categoryName: 'Junk',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'hammer_01.png'
+    },
+    {
+      name: 'Crash helmet',
+      description: 'Fibreglass safety helmet with removable head strap, internal loudspeakers, thick protective shell and opaque visor. That means you won\'t be able to see anything while wearing this helmet.',
+      price: 38.62,
+      stock: 89,
+      categoryName: 'Junk',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'helmet_01.png'
+    },
+    {
+      name: 'Insulating tape',
+      description: 'A handy item for electrical work, engineering jobs, repair and maintenance tasks, or general household duties.',
+      price: 3.18,
+      stock: 283,
+      categoryName: 'Junk',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'insulating_tape_01.png'
+    },
+    {
+      name: 'Jerry can',
+      description: '20 litre fuel oil storage can made of aluminium alloy and coated with fuel-resistant alkyd ammonia paint to prevent internal rust.',
+      price: 7.00,
+      stock: 653,
+      categoryName: 'Junk',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'jerrycan_01.png'
+    },
+    {
+      name: 'Storage unit key',
+      description: 'Generic lockbox key of unknown origin. Might be worth something if you melt it down.',
+      price: 0.60,
+      stock: 18,
+      categoryName: 'Lost & Found',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'key_01.png'
+    },
+    {
+      name: 'Outdoor key',
+      description: 'Lost key possibly belonging to a storage shed or some kind of outdoor structure.',
+      price: 1.13,
+      stock: 62,
+      categoryName: 'Lost & Found',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'key_02.png'
+    },
+    {
+      name: 'Brass key',
+      description: 'Unclaimed key of unknown origin. Belongs to a set of similar keys found abandoned near a residential facility.',
+      price: 0.84,
+      stock: 7,
+      categoryName: 'Lost & Found',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'key_03.png'
+    },
+    {
+      name: 'Silver ring key',
+      description: 'This key seems to be decorative or ornamental rather than functional.',
+      price: 2.84,
+      stock: 13,
+      categoryName: 'Lost & Found',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'key_04.png'
+    },
+    {
+      name: 'Spare car key',
+      description: 'This seems to be some sort of personal vehicle key with a separate remote control unit.',
+      price: 0.73,
+      stock: 7,
+      categoryName: 'Lost & Found',
+      supplierName: 'Novina Corp',
+      thumbnail: 'key_05.png'
+    },
+    {
+      name: 'Fixed blade knife',
+      description: 'Utility blade with a fixed straight 6-inch steel blade, full tang and steel grip.',
+      price: 37.00,
+      stock: 736,
+      categoryName: 'Provisions',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'knife_01.png'
+    },
+    {
+      name: 'Pocket knife',
+      description: 'Compact knife with a 3-inch straight-edged blade and smooth locking action.',
+      price: 32.50,
+      stock: 820,
+      categoryName: 'Provisions',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'knife_02.png'
+    },
+    {
+      name: 'Sealed letter',
+      description: 'An old official letter with a plain wax seal found in an abandoned outpost in the Thousand Cuts region of Charon-6.',
+      price: 0.27,
+      stock: 8,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'letter_01.png'
+    },
+    {
+      name: 'LED lightbulb',
+      description: 'Virtual filament flat cap lightbulb with 1055lm brightness and 10W power draw.',
+      price: 3.85,
+      stock: 377,
+      categoryName: 'Provisions',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'lightbulb_01.png'
+    },
+    {
+      name: 'Kerosene oil lighter',
+      description: 'Zinc alloy mechanical oil-based lighter for high-end cigars.',
+      price: 36.00,
+      stock: 526,
+      categoryName: 'Provisions',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'lighter_01.png'
+    },
+    {
+      name: 'Magnifying glass',
+      description: 'Basic magnification lens with wooden handle. Not to be used against ants.',
+      price: 5.15,
+      stock: 294,
+      categoryName: 'Provisions',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'magnifier_01.png'
+    },
+    {
+      name: 'Vierja capsules',
+      description: 'Potent, fast-acting and long-lasting painkillers for some serious pain relief. Sirta\'s pharmaceutics division managed to engineer the active substance with a pharmakokinetic profile that minimises toxicity even at high doses.',
+      price: 48.00,
+      stock: 995,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'medicine_01.png'
+    },
+    {
+      name: 'Medical supplies chest',
+      description: 'Secure and sterile container for holding medical supplies. Includes complimentary first-aid action kit with a few Medi-Gels, sterile gauze, bandages and painkillers.',
+      price: 18.00,
+      stock: 753,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'medicine_chest_01.png'
+    },
+    {
+      name: 'Counterfeit bank notes',
+      description: 'Seized from Eclipse mercenaries by a rival organisation during a bandit camp raid, these counterfeit notes are worthless but are highly flammable, serving as an excellent feed source for your next camp fire.',
+      price: 0.60,
+      stock: 680,
+      categoryName: 'Junk',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'money_01.png'
+    },
+    {
+      name: 'Mouthpiece broadcaster',
+      description: 'For when you need to make a statement or if you\'re feeling the need to be heard out loud, take this mouthpiece to your next group gathering and let the world hear your voice.',
+      price: 14.40,
+      stock: 321,
+      categoryName: 'Junk',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'mouthpiece_01.png'
+    },
+    {
+      name: 'Standard 3-inch nail',
+      description: 'Iron nail with straight flat tip and circular top section.',
+      price: 0.08,
+      stock: 2324,
+      categoryName: 'Junk',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'nail_01.png'
+    },
+    {
+      name: 'Threading needle',
+      description: 'Use this for your next sewing adventure, whether you\'re working on fabrics or flesh.',
+      price: 2.00,
+      stock: 741,
+      categoryName: 'Junk',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'needle_01.png'
+    },
+    {
+      name: 'Wire cutter',
+      description: 'Basic plier for cutting through electircal cables, coils, thin metal sheets, jewellery, bones, etc.',
+      price: 13.57,
+      stock: 466,
+      categoryName: 'Provisions',
+      supplierName: 'Novina Corp',
+      thumbnail: 'nippers_01.png'
+    },
+    {
+      name: 'Ship captain\'s personal jounal entry',
+      description: 'An extract taken from a ship captain\'s personal journal which was found in an abandoned mining settlement on Rygel-9.',
+      price: 0.47,
+      stock: 22,
+      categoryName: 'Junk',
+      supplierName: 'Novina Corp',
+      thumbnail: 'note_01.png'
+    },
+    {
+      name: 'Manuscript fragment',
+      description: 'A set of pages from an unknown manuscript written in an undocumented language.',
+      price: 7.92,
+      stock: 18,
+      categoryName: 'Junk',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'note_02.png'
+    },
+    {
+      name: 'Steel hex nut',
+      description: 'General purpose hexagonal fastener for connecting and tightening bolts or screws in a wide range of applications.',
+      price: 1.12,
+      stock: 1273,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'nut_01.png'
+    },
+    {
+      name: 'Milk carton',
+      description: 'Preserved milk from synthetic cows. Not the tastiest stuff, but at least it doesn\'t go off.',
+      price: 0.42,
+      stock: 713,
+      categoryName: 'Consumables',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'packaging_01.png'
+    },
+    {
+      name: 'Plain notebook',
+      description: 'Great for journalling, note-taking, scribbling, drawing, or simply capturing creative thoughts and ideas.',
+      price: 2.00,
+      stock: 170,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'pad_01.png'
+    },
+    {
+      name: 'Covert IDENT chip',
+      description: 'Configurable identity chip that prevents detection systems from registering the user on facial and DNA-based recognition systems. It hides the user\'s identity by masking its signal emissions with broad-spectrum interference which is perceived as background noise by most detection systems.',
+      price: 372.50,
+      stock: 183,
+      categoryName: 'Cybernetics',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'pass_01.png'
+    },
+    {
+      name: 'Enhanced ID documents',
+      description: 'Expertly forged passport enabling anonymous and untraceable passage through restricted trade zones.',
+      price: 1300.00,
+      stock: 207,
+      categoryName: 'Provisions',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'passport_01.png'
+    },
+    {
+      name: 'Protective plaster',
+      description: 'Cushioned plaster with topical local anaesthetic and antiseptic center patch.',
+      price: 0.28,
+      stock: 870,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'patch_01.png'
+    },
+    {
+      name: 'Pencil',
+      description: 'Basic pencil for writing, drawing, or as a behind-the-ear accessory.',
+      price: 0.17,
+      stock: 259,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'pencil_01.png'
+    },
+    {
+      name: 'Hyperion HX-3000 tablet',
+      description: 'Digital organiser, personal assistant, streaming device and data analyser, all wrapped up in one power-efficient package housing a 180-core CPU, virtual volatile memory and floating inputs.',
+      price: 736.00,
+      stock: 518,
+      categoryName: 'Provisions',
+      supplierName: 'Novina Corp',
+      thumbnail: 'phone_01.png'
+    },
+    {
+      name: 'AdrenoCoryzone regimen',
+      description: 'Prescription-free combination regimen consisting of AdrenoCore and Coryzone, a fast-onset adrenergic agonist and a short-acting stimulant, respectively.',
+      price: 28.80,
+      stock: 322,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'pills_01.png'
+    },
+    {
+      name: 'AdrenoCore capsule',
+      description: 'Adrenergic receptor agonist with fast onset and negligible side-effect profile.',
+      price: 15.00,
+      stock: 219,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'pills_02.png'
+    },
+    {
+      name: 'Orexeza tablets',
+      description: 'Appetite suppressant used in weight loss therapy as well as by slingshot racers, athletes and those undergoing radiation exposure.',
+      price: 32.00,
+      stock: 755,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'pills_03.png'
+    },
   ],
   addresses: [
     {
@@ -1191,872 +1873,5 @@ export default {
       billingAddressId: 6,
       shippingAddressId: 6
     },
-  ],
-  cartItems: [
-    { customerId: 1, productId: 1, quantity: 4 },
-    { customerId: 1, productId: 2, quantity: 4 },
-    { customerId: 1, productId: 3, quantity: 4 },
-    { customerId: 2, productId: 48, quantity: 1 },
-    { customerId: 5, productId: 3, quantity: 4 },
-    { customerId: 2, productId: 30, quantity: 3 },
-    { customerId: 4, productId: 49, quantity: 6 },
-    { customerId: 5, productId: 1, quantity: 2 },
-    { customerId: 3, productId: 35, quantity: 3 },
-    { customerId: 3, productId: 37, quantity: 1 },
-    { customerId: 4, productId: 7, quantity: 4 },
-    { customerId: 5, productId: 22, quantity: 5 },
-    { customerId: 3, productId: 1, quantity: 1 },
-    { customerId: 4, productId: 21, quantity: 4 },
-    { customerId: 5, productId: 32, quantity: 5 },
-    { customerId: 3, productId: 32, quantity: 6 },
-    { customerId: 3, productId: 40, quantity: 2 },
-    { customerId: 4, productId: 31, quantity: 4 },
-    { customerId: 3, productId: 2, quantity: 2 },
-    { customerId: 2, productId: 5, quantity: 1 },
-    { customerId: 2, productId: 21, quantity: 6 },
-    { customerId: 2, productId: 10, quantity: 5 },
-    { customerId: 3, productId: 17, quantity: 4 },
-    { customerId: 3, productId: 9, quantity: 5 },
-    { customerId: 3, productId: 24, quantity: 3 },
-    { customerId: 2, productId: 44, quantity: 5 },
-    { customerId: 5, productId: 13, quantity: 4 },
-    { customerId: 2, productId: 16, quantity: 6 },
-    { customerId: 5, productId: 50, quantity: 5 },
-    { customerId: 5, productId: 43, quantity: 1 },
-    { customerId: 5, productId: 28, quantity: 7 },
-    { customerId: 2, productId: 22, quantity: 5 },
-    { customerId: 4, productId: 5, quantity: 1 },
-    { customerId: 5, productId: 4, quantity: 1 },
-    { customerId: 3, productId: 50, quantity: 6 },
-    { customerId: 2, productId: 19, quantity: 4 },
-    { customerId: 5, productId: 35, quantity: 6 },
-    { customerId: 4, productId: 3, quantity: 2 },
-    { customerId: 3, productId: 49, quantity: 2 },
-    { customerId: 5, productId: 19, quantity: 6 },
-    { customerId: 3, productId: 44, quantity: 4 },
-    { customerId: 3, productId: 25, quantity: 6 },
-    { customerId: 2, productId: 43, quantity: 6 }
-  ],
-  wishlistItems: [
-    { customerId: 1, productId: 44 },
-    { customerId: 1, productId: 12 },
-    { customerId: 1, productId: 36 },
-    { customerId: 5, productId: 33 },
-    { customerId: 2, productId: 11 },
-    { customerId: 5, productId: 47 },
-    { customerId: 2, productId: 18 },
-    { customerId: 2, productId: 15 },
-    { customerId: 3, productId: 42 },
-    { customerId: 3, productId: 5 },
-    { customerId: 3, productId: 12 },
-    { customerId: 2, productId: 41 },
-    { customerId: 4, productId: 13 },
-    { customerId: 3, productId: 19 },
-    { customerId: 4, productId: 42 },
-    { customerId: 5, productId: 7 },
-    { customerId: 3, productId: 26 },
-    { customerId: 4, productId: 43 },
-    { customerId: 5, productId: 16 },
-    { customerId: 2, productId: 49 },
-    { customerId: 3, productId: 47 },
-    { customerId: 3, productId: 3 },
-    { customerId: 3, productId: 45 },
-    { customerId: 4, productId: 1 },
-    { customerId: 5, productId: 48 },
-    { customerId: 3, productId: 11 },
-    { customerId: 2, productId: 13 },
-    { customerId: 3, productId: 7 },
-    { customerId: 3, productId: 36 },
-    { customerId: 5, productId: 26 },
-    { customerId: 4, productId: 41 },
-    { customerId: 2, productId: 36 },
-    { customerId: 2, productId: 9 },
-    { customerId: 5, productId: 8 },
-    { customerId: 2, productId: 17 },
-    { customerId: 2, productId: 20 },
-    { customerId: 5, productId: 17 },
-    { customerId: 2, productId: 12 },
-    { customerId: 4, productId: 30 },
-    { customerId: 4, productId: 39 },
-    { customerId: 4, productId: 36 }
-  ],
-  orders: [
-    {
-      customerId: 2,
-      shippingAddressId: 1,
-      billingAddressId: 1,
-      status: 'completed',
-      createdAt: '2023-02-16T05:59:02.342Z'
-    },
-    {
-      customerId: 2,
-      shippingAddressId: 1,
-      billingAddressId: 1,
-      status: 'completed',
-      createdAt: '2020-12-20T05:59:02.342Z'
-    },
-    {
-      customerId: 2,
-      shippingAddressId: 1,
-      billingAddressId: 1,
-      status: 'completed',
-      createdAt: '2020-12-20T05:59:02.342Z'
-    },
-    {
-      customerId: 3,
-      shippingAddressId: 3,
-      billingAddressId: 3,
-      status: 'completed',
-      createdAt: '2020-12-20T05:59:02.342Z'
-    },
-    {
-      customerId: 2,
-      shippingAddressId: 1,
-      billingAddressId: 1,
-      status: 'completed',
-      createdAt: '2020-12-20T05:59:02.342Z'
-    },
-    {
-      customerId: 4,
-      shippingAddressId: 4,
-      billingAddressId: 4,
-      status: 'completed',
-      createdAt: '2020-12-20T05:59:02.342Z'
-    },
-    {
-      customerId: 3,
-      shippingAddressId: 3,
-      billingAddressId: 3,
-      status: 'completed',
-      createdAt: '2020-12-20T05:59:02.342Z'
-    },
-    {
-      customerId: 3,
-      shippingAddressId: 3,
-      billingAddressId: 3,
-      status: 'completed'
-    },
-    {
-      customerId: 3,
-      shippingAddressId: 3,
-      billingAddressId: 3,
-      status: 'completed'
-    },
-    {
-      customerId: 5,
-      shippingAddressId: 5,
-      billingAddressId: 5,
-      status: 'completed'
-    },
-    {
-      customerId: 2,
-      shippingAddressId: 2,
-      billingAddressId: 2,
-      status: 'completed'
-    },
-    {
-      customerId: 2,
-      shippingAddressId: 2,
-      billingAddressId: 2,
-      status: 'completed'
-    },
-    {
-      customerId: 4,
-      shippingAddressId: 4,
-      billingAddressId: 4,
-      status: 'completed'
-    },
-    {
-      customerId: 3,
-      shippingAddressId: 3,
-      billingAddressId: 3,
-      status: 'completed'
-    },
-    {
-      customerId: 3,
-      shippingAddressId: 3,
-      billingAddressId: 3,
-      status: 'completed'
-    },
-    {
-      customerId: 2,
-      shippingAddressId: 2,
-      billingAddressId: 2,
-      status: 'completed'
-    },
-    {
-      customerId: 2,
-      shippingAddressId: 1,
-      billingAddressId: 1,
-      status: 'completed'
-    },
-    {
-      customerId: 5,
-      shippingAddressId: 5,
-      billingAddressId: 9,
-      status: 'completed'
-    },
-    {
-      customerId: 4,
-      shippingAddressId: 4,
-      billingAddressId: 4,
-      status: 'completed'
-    },
-    {
-      customerId: 4,
-      shippingAddressId: 4,
-      billingAddressId: 4,
-      status: 'completed'
-    },
-    {
-      customerId: 1,
-      shippingAddressId: 1,
-      billingAddressId: 1,
-      status: 'completed',
-      createdAt: '2029-08-04T05:59:02.342Z'
-    },
-    {
-      customerId: 1,
-      shippingAddressId: 1,
-      billingAddressId: 1,
-      status: 'completed',
-      createdAt: '2023-04-20T05:59:02.342Z'
-    },
-    {
-      customerId: 1,
-      shippingAddressId: 1,
-      billingAddressId: 1,
-      status: 'completed',
-      createdAt: '2028-10-21T05:59:02.342Z'
-    }
-  ],
-  orderItems: [
-    { orderId: 1, productId: 15, quantity: 2 },
-    { orderId: 1, productId: 42, quantity: 1 },
-    { orderId: 2, productId: 24, quantity: 3 },
-    { orderId: 2, productId: 5, quantity: 2 },
-    { orderId: 2, productId: 48, quantity: 7 },
-    { orderId: 2, productId: 14, quantity: 4 },
-    { orderId: 2, productId: 30, quantity: 5 },
-    { orderId: 3, productId: 19, quantity: 4 },
-    { orderId: 4, productId: 21, quantity: 6 },
-    { orderId: 4, productId: 40, quantity: 4 },
-    { orderId: 4, productId: 9, quantity: 5 },
-    { orderId: 5, productId: 44, quantity: 3 },
-    { orderId: 5, productId: 40, quantity: 2 },
-    { orderId: 5, productId: 1, quantity: 4 },
-    { orderId: 6, productId: 49, quantity: 4 },
-    { orderId: 6, productId: 40, quantity: 3 },
-    { orderId: 6, productId: 50, quantity: 6 },
-    { orderId: 6, productId: 39, quantity: 1 },
-    { orderId: 7, productId: 37, quantity: 5 },
-    { orderId: 7, productId: 13, quantity: 1 },
-    { orderId: 8, productId: 42, quantity: 1 },
-    { orderId: 8, productId: 39, quantity: 1 },
-    { orderId: 9, productId: 22, quantity: 1 },
-    { orderId: 9, productId: 8, quantity: 5 },
-    { orderId: 9, productId: 1, quantity: 3 },
-    { orderId: 9, productId: 2, quantity: 4 },
-    { orderId: 9, productId: 39, quantity: 7 },
-    { orderId: 10, productId: 15, quantity: 1 },
-    { orderId: 10, productId: 33, quantity: 4 },
-    { orderId: 10, productId: 27, quantity: 3 },
-    { orderId: 10, productId: 19, quantity: 2 },
-    { orderId: 10, productId: 29, quantity: 6 },
-    { orderId: 10, productId: 31, quantity: 3 },
-    { orderId: 11, productId: 49, quantity: 6 },
-    { orderId: 11, productId: 7, quantity: 2 },
-    { orderId: 12, productId: 41, quantity: 1 },
-    { orderId: 12, productId: 28, quantity: 3 },
-    { orderId: 12, productId: 43, quantity: 5 },
-    { orderId: 12, productId: 21, quantity: 2 },
-    { orderId: 12, productId: 30, quantity: 3 },
-    { orderId: 13, productId: 12, quantity: 6 },
-    { orderId: 13, productId: 47, quantity: 7 },
-    { orderId: 14, productId: 15, quantity: 4 },
-    { orderId: 14, productId: 8, quantity: 2 },
-    { orderId: 14, productId: 16, quantity: 2 },
-    { orderId: 15, productId: 6, quantity: 2 },
-    { orderId: 15, productId: 45, quantity: 7 },
-    { orderId: 16, productId: 30, quantity: 4 },
-    { orderId: 16, productId: 29, quantity: 3 },
-    { orderId: 16, productId: 20, quantity: 4 },
-    { orderId: 17, productId: 29, quantity: 7 },
-    { orderId: 18, productId: 49, quantity: 1 },
-    { orderId: 18, productId: 39, quantity: 1 },
-    { orderId: 19, productId: 27, quantity: 4 },
-    { orderId: 19, productId: 12, quantity: 5 },
-    { orderId: 19, productId: 31, quantity: 6 },
-    { orderId: 19, productId: 40, quantity: 4 },
-    { orderId: 20, productId: 22, quantity: 3 },
-    { orderId: 20, productId: 43, quantity: 4 },
-    { orderId: 20, productId: 23, quantity: 5 },
-    { orderId: 21, productId: 1, quantity: 1 },
-    { orderId: 21, productId: 2, quantity: 2 },
-    { orderId: 21, productId: 4, quantity: 5 },
-    { orderId: 22, productId: 40, quantity: 6 },
-    { orderId: 22, productId: 2, quantity: 2 },
-    { orderId: 22, productId: 37, quantity: 1 },
-    { orderId: 23, productId: 2, quantity: 3 }
-  ],
-  reviews: [
-    {
-      customerId: 2,
-      productId: 15,
-      title: 'Horizontal clear-thinking methodology',
-      body: 'Nihil magni recusandae corporis. Pariatur aliquam praesentium odio magnam. Tenetur fugit facere dolorum ad maxime reiciendis pariatur doloribus et.',
-      recommend: true,
-      rating: 4,
-      createdAt: '2020-12-20T05:59:02.342Z'
-    },
-    {
-      customerId: 2,
-      productId: 42,
-      title: 'Polarised foreground moderator',
-      body: 'Veritatis laboriosam eius.',
-      recommend: false,
-      rating: 1,
-      createdAt: '2017-01-10T23:07:27.129Z'
-    },
-    {
-      customerId: 2,
-      productId: 24,
-      title: 'Integrated local collaboration',
-      body: 'Perferendis architecto molestiae error quibusdam reprehenderit officiis vel magnam ipsam.',
-      recommend: false,
-      rating: 5,
-      createdAt: '2020-06-16T04:06:27.085Z'
-    },
-    {
-      customerId: 2,
-      productId: 5,
-      title: 'Face to face asynchronous adapter',
-      body: 'Molestias pariatur eligendi incidunt odit rem ipsam beatae doloribus quasi.',
-      recommend: false,
-      rating: 5,
-      createdAt: '2018-08-29T07:28:06.207Z'
-    },
-    {
-      customerId: 2,
-      productId: 48,
-      title: 'Inverse human-resource monitoring',
-      body: 'Consequatur velit quae aut animi sit quia expedita eveniet recusandae. Nihil nihil voluptas omnis atque possimus.',
-      recommend: false,
-      rating: 2,
-      createdAt: '2020-12-09T19:38:04.174Z'
-    },
-    {
-      customerId: 2,
-      productId: 14,
-      title: 'Ergonomic contextually-based Graphic Interface',
-      body: 'Aspernatur impedit magni dicta. Doloribus adipisci numquam facilis aliquid exercitationem officia. Omnis repellat eveniet doloremque sapiente.',
-      recommend: false,
-      rating: 3,
-      createdAt: '2016-04-17T02:24:04.812Z'
-    },
-    {
-      customerId: 2,
-      productId: 30,
-      title: 'Implemented radical middleware',
-      body: 'Et architecto mollitia eaque tempore.',
-      recommend: false,
-      rating: 4,
-      createdAt: '2020-01-22T22:55:20.977Z'
-    },
-    {
-      customerId: 2,
-      productId: 19,
-      title: 'Balanced cohesive encoding',
-      body: 'Sapiente labore non placeat iste explicabo. Iste eaque doloribus praesentium saepe alias dolor.',
-      recommend: true,
-      rating: 0,
-      createdAt: '2021-10-30T10:53:08.628Z'
-    },
-    {
-      customerId: 3,
-      productId: 21,
-      title: 'Visionary empowering structure',
-      body: 'Laboriosam commodi excepturi soluta molestias dolorem qui nisi beatae illum.',
-      recommend: false,
-      rating: 0,
-      createdAt: '2022-01-21T18:52:21.922Z'
-    },
-    {
-      customerId: 3,
-      productId: 40,
-      title: 'Total secondary initiative',
-      body: 'Quo aliquam porro voluptates vero totam. Maxime ea nulla aliquam repudiandae maiores aliquam quibusdam quis. Perspiciatis laborum reprehenderit impedit itaque quaerat aliquid soluta molestiae.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2020-03-26T12:53:12.115Z'
-    },
-    {
-      customerId: 3,
-      productId: 9,
-      title: 'Intuitive content-based workforce',
-      body: 'Possimus dolor beatae. Similique fugit in ut voluptates. Optio rem exercitationem accusantium necessitatibus maiores pariatur natus fugiat.',
-      recommend: true,
-      rating: 5,
-      createdAt: '2021-01-03T18:23:52.977Z'
-    },
-    {
-      customerId: 2,
-      productId: 44,
-      title: 'Implemented exuding emulation',
-      body: 'Molestias aut libero voluptatem laborum eaque non vitae.',
-      recommend: true,
-      rating: 4,
-      createdAt: '2020-01-27T23:15:16.134Z'
-    },
-    {
-      customerId: 2,
-      productId: 40,
-      title: 'Total non-volatile time-frame',
-      body: 'Quod iusto similique repudiandae accusantium neque corrupti harum nulla qui. Excepturi eos aliquam praesentium fugiat eligendi aliquid.',
-      recommend: true,
-      rating: 1,
-      createdAt: '2022-03-11T07:11:12.771Z'
-    },
-    {
-      customerId: 2,
-      productId: 1,
-      title: 'Total clear-thinking frame',
-      body: 'Laboriosam maxime non nesciunt deserunt. Accusantium accusamus optio ullam rem ad vero explicabo totam assumenda.',
-      recommend: true,
-      rating: 1,
-      createdAt: '2017-02-01T09:52:57.211Z'
-    },
-    {
-      customerId: 4,
-      productId: 49,
-      title: 'Seamless responsive definition',
-      body: 'Reprehenderit pariatur enim at ut necessitatibus delectus. Eum at accusamus provident deserunt.',
-      recommend: false,
-      rating: 5,
-      createdAt: '2018-07-16T18:18:32.648Z'
-    },
-    {
-      customerId: 4,
-      productId: 40,
-      title: 'Synchronised bi-directional time-frame',
-      body: 'Ipsum maxime maxime tempore voluptate omnis quibusdam distinctio. Distinctio accusantium doloremque.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2021-08-13T07:20:41.596Z'
-    },
-    {
-      customerId: 4,
-      productId: 50,
-      title: 'Secured optimal customer loyalty',
-      body: 'Recusandae iure temporibus ex libero sunt. Rem mollitia in expedita id mollitia corrupti.',
-      recommend: true,
-      rating: 0,
-      createdAt: '2019-05-03T17:28:32.152Z'
-    },
-    {
-      customerId: 4,
-      productId: 39,
-      title: 'Assimilated reciprocal open system',
-      body: 'Beatae sapiente corrupti vero iusto nihil sunt error.',
-      recommend: false,
-      rating: 2,
-      createdAt: '2021-11-13T10:16:54.473Z'
-    },
-    {
-      customerId: 3,
-      productId: 37,
-      title: 'Enhanced even-keeled function',
-      body: 'Animi est molestias. Perspiciatis molestiae dolores reiciendis. Voluptatem repudiandae sed magni magnam eligendi hic maiores eveniet.',
-      recommend: false,
-      rating: 0,
-      createdAt: '2021-12-20T09:52:48.419Z'
-    },
-    {
-      customerId: 3,
-      productId: 13,
-      title: 'Visionary global pricing structure',
-      body: 'Velit itaque sunt accusamus accusamus nisi quos.',
-      recommend: false,
-      rating: 3,
-      createdAt: '2020-11-26T14:53:54.957Z'
-    },
-    {
-      customerId: 3,
-      productId: 42,
-      title: 'Implemented empowering algorithm',
-      body: 'Quam consequuntur eius totam ullam quos a harum.',
-      recommend: true,
-      rating: 1,
-      createdAt: '2021-03-10T10:02:37.546Z'
-    },
-    {
-      customerId: 3,
-      productId: 39,
-      title: 'Managed empowering knowledge base',
-      body: 'Animi nemo sequi quia quasi. Hic ullam hic architecto. Debitis perferendis iure amet nobis quod quam.',
-      recommend: false,
-      rating: 1,
-      createdAt: '2019-06-10T09:42:25.400Z'
-    },
-    {
-      customerId: 3,
-      productId: 22,
-      title: 'Managed executive synergy',
-      body: 'Dicta unde dicta deserunt a pariatur placeat repudiandae consequuntur aliquid.',
-      recommend: true,
-      rating: 1,
-      createdAt: '2020-12-19T05:18:20.824Z'
-    },
-    {
-      customerId: 3,
-      productId: 8,
-      title: 'Realigned real-time moderator',
-      body: 'Consequuntur assumenda doloribus vero amet facilis. Ut cupiditate natus reiciendis reprehenderit animi asperiores. Nam totam fugiat cumque esse beatae dicta.',
-      recommend: true,
-      rating: 1,
-      createdAt: '2023-03-20T23:41:16.932Z'
-    },
-    {
-      customerId: 3,
-      productId: 1,
-      title: 'Robust hybrid project',
-      body: 'Nemo exercitationem maxime quas suscipit magni impedit.',
-      recommend: false,
-      rating: 2,
-      createdAt: '2017-06-11T09:04:19.294Z'
-    },
-    {
-      customerId: 3,
-      productId: 2,
-      title: 'Switchable disintermediate approach',
-      body: 'Alias quam autem modi repellendus hic. Saepe laboriosam reprehenderit minus.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2017-07-26T06:24:06.646Z'
-    },
-    {
-      customerId: 5,
-      productId: 15,
-      title: 'User-centric local encoding',
-      body: 'Non aut ad accusamus est quae minus tempore. Repellat ipsam blanditiis laborum. Similique perspiciatis id error.',
-      recommend: true,
-      rating: 4,
-      createdAt: '2023-02-22T16:54:01.495Z'
-    },
-    {
-      customerId: 5,
-      productId: 33,
-      title: 'Devolved systematic superstructure',
-      body: 'Voluptate doloremque deleniti fuga molestias sequi consectetur. Quos quos temporibus. Nam nulla aspernatur architecto voluptas id eius expedita quis.',
-      recommend: true,
-      rating: 4,
-      createdAt: '2023-05-12T05:21:42.060Z'
-    },
-    {
-      customerId: 5,
-      productId: 27,
-      title: 'Versatile directional analyzer',
-      body: 'Totam modi quidem atque velit nobis.',
-      recommend: true,
-      rating: 5,
-      createdAt: '2020-04-08T19:48:08.254Z'
-    },
-    {
-      customerId: 5,
-      productId: 19,
-      title: 'Fully-configurable tangible structure',
-      body: 'Dolorem quas non nisi. Quibusdam cumque delectus natus doloremque blanditiis aut. Reprehenderit eligendi nostrum deleniti dolorum necessitatibus culpa.',
-      recommend: false,
-      rating: 5,
-      createdAt: '2022-12-08T05:14:54.846Z'
-    },
-    {
-      customerId: 5,
-      productId: 29,
-      title: 'Distributed radical focus group',
-      body: 'Laboriosam fugit incidunt tempora animi exercitationem minima.',
-      recommend: false,
-      rating: 4,
-      createdAt: '2017-10-05T12:44:01.951Z'
-    },
-    {
-      customerId: 5,
-      productId: 31,
-      title: 'Cross-group mission-critical product',
-      body: 'At temporibus cupiditate eum inventore error asperiores. Laborum voluptatibus deserunt eligendi voluptas corrupti totam. Quisquam saepe accusantium neque.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2016-03-18T18:04:45.811Z'
-    },
-    {
-      customerId: 2,
-      productId: 49,
-      title: 'Upgradable grid-enabled contingency',
-      body: 'Quis fugiat assumenda assumenda. Ullam delectus modi excepturi. Ad doloribus magni temporibus.',
-      recommend: true,
-      rating: 5,
-      createdAt: '2022-01-15T04:54:44.857Z'
-    },
-    {
-      customerId: 2,
-      productId: 7,
-      title: 'Open-architected 6th generation array',
-      body: 'Molestias veniam eligendi.',
-      recommend: false,
-      rating: 4,
-      createdAt: '2023-03-07T09:45:59.851Z'
-    },
-    {
-      customerId: 2,
-      productId: 41,
-      title: 'Adaptive stable task-force',
-      body: 'Autem sapiente velit.',
-      recommend: true,
-      rating: 1,
-      createdAt: '2017-08-02T09:05:24.818Z'
-    },
-    {
-      customerId: 2,
-      productId: 28,
-      title: 'Public-key national infrastructure',
-      body: 'Ullam architecto in corrupti a. Unde nisi voluptatum quaerat illum.',
-      recommend: true,
-      rating: 4,
-      createdAt: '2020-03-18T07:49:48.751Z'
-    },
-    {
-      customerId: 2,
-      productId: 43,
-      title: 'Open-source 24/7 hub',
-      body: 'Repudiandae amet quos non modi exercitationem asperiores quisquam suscipit. Quidem accusantium harum. Iure eveniet nesciunt laboriosam delectus.',
-      recommend: false,
-      rating: 0,
-      createdAt: '2019-04-11T07:48:01.432Z'
-    },
-    {
-      customerId: 2,
-      productId: 21,
-      title: 'Multi-tiered local conglomeration',
-      body: 'Dicta assumenda impedit nemo iure. Nisi sequi mollitia.',
-      recommend: false,
-      rating: 2,
-      createdAt: '2023-05-27T21:37:03.602Z'
-    },
-    {
-      customerId: 4,
-      productId: 12,
-      title: 'Reverse-engineered multimedia info-mediaries',
-      body: 'Nisi cupiditate accusamus maiores tenetur est non. Distinctio aut ut ipsum.',
-      recommend: false,
-      rating: 2,
-      createdAt: '2019-05-26T12:00:54.372Z'
-    },
-    {
-      customerId: 4,
-      productId: 47,
-      title: 'Integrated optimizing protocol',
-      body: 'At et laboriosam a deleniti rem fugiat perspiciatis pariatur.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2020-12-02T11:25:44.497Z'
-    },
-    {
-      customerId: 3,
-      productId: 15,
-      title: 'Phased system-worthy projection',
-      body: 'Reiciendis odio rerum aliquid possimus. Aperiam iste laborum eos animi. Architecto minus quibusdam facere iste.',
-      recommend: false,
-      rating: 0,
-      createdAt: '2022-09-29T04:09:51.538Z'
-    },
-    {
-      customerId: 3,
-      productId: 16,
-      title: 'Function-based client-driven encryption',
-      body: 'Excepturi optio unde distinctio ex architecto repellat laudantium aut. Vero soluta ea saepe nulla ipsam fugit.',
-      recommend: true,
-      rating: 2,
-      createdAt: '2021-07-20T21:56:16.099Z'
-    },
-    {
-      customerId: 3,
-      productId: 6,
-      title: 'Visionary multi-state matrix',
-      body: 'Exercitationem debitis sequi vitae qui nulla inventore. Inventore cupiditate quibusdam repudiandae suscipit harum quae ratione necessitatibus a.',
-      recommend: true,
-      rating: 4,
-      createdAt: '2018-01-12T00:38:56.641Z'
-    },
-    {
-      customerId: 3,
-      productId: 45,
-      title: 'Synchronised coherent attitude',
-      body: 'Vitae laborum nam. Itaque laboriosam est quia nulla dignissimos velit. Laborum sunt rerum at.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2022-08-06T05:04:17.389Z'
-    },
-    {
-      customerId: 2,
-      productId: 29,
-      title: 'Balanced tertiary hardware',
-      body: 'Possimus voluptatem et.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2022-03-22T00:13:14.405Z'
-    },
-    {
-      customerId: 2,
-      productId: 20,
-      title: 'Up-sized high-level support',
-      body: 'Consequuntur facere cum culpa cum repellat eligendi dolor ullam.',
-      recommend: false,
-      rating: 2,
-      createdAt: '2019-06-22T11:10:31.538Z'
-    },
-    {
-      customerId: 5,
-      productId: 49,
-      title: 'Profound dedicated structure',
-      body: 'Nostrum reprehenderit culpa. Aut nulla optio exercitationem commodi necessitatibus.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2019-08-24T11:20:41.646Z'
-    },
-    {
-      customerId: 5,
-      productId: 39,
-      title: 'Enterprise-wide heuristic data-warehouse',
-      body: 'Nostrum officia voluptate dignissimos ex eveniet totam consequuntur error. Adipisci animi praesentium hic perspiciatis aut perferendis.',
-      recommend: true,
-      rating: 3,
-      createdAt: '2016-04-22T22:17:10.100Z'
-    },
-    {
-      customerId: 4,
-      productId: 27,
-      title: 'Enterprise-wide scalable groupware',
-      body: 'Laudantium minima provident iusto culpa sit eum quaerat laboriosam. Est enim veniam neque facilis labore doloribus a. Veritatis ipsam quam incidunt ipsa quos atque enim fugit assumenda.',
-      recommend: false,
-      rating: 5,
-      createdAt: '2018-01-01T17:06:24.398Z'
-    },
-    {
-      customerId: 4,
-      productId: 31,
-      title: 'Fully-configurable cohesive infrastructure',
-      body: 'Facilis beatae maxime mollitia pariatur nostrum autem. Molestiae maxime aliquid ab.',
-      recommend: true,
-      rating: 5,
-      createdAt: '2018-02-07T20:58:09.913Z'
-    },
-    {
-      customerId: 4,
-      productId: 22,
-      title: 'Organic mobile parallelism',
-      body: 'In odio at deserunt exercitationem quod. Illum reprehenderit assumenda.',
-      recommend: false,
-      rating: 2,
-      createdAt: '2018-11-17T00:15:54.452Z'
-    },
-    {
-      customerId: 4,
-      productId: 43,
-      title: 'Seamless coherent hub',
-      body: 'Dolores maiores ad inventore sint vel.',
-      recommend: false,
-      rating: 5,
-      createdAt: '2016-04-28T12:00:18.271Z'
-    },
-    {
-      customerId: 4,
-      productId: 23,
-      title: 'Re-contextualized user-facing hierarchy',
-      body: 'Sed alias voluptatum perspiciatis dolorum.',
-      recommend: true,
-      rating: 1,
-      createdAt: '2018-05-06T15:58:53.843Z'
-    },
-    {
-      customerId: 1,
-      productId: 14,
-      title: 'Grass-roots dedicated portal',
-      body: 'Aliquid dolorem modi. Quis eos ipsum.',
-      recommend: true,
-      rating: 2,
-      createdAt: '2019-09-22T08:33:00.625Z'
-    },
-    {
-      customerId: 1,
-      productId: 19,
-      title: 'Expanded uniform workforce',
-      body: 'Facilis praesentium inventore. Labore laboriosam asperiores odit quas aperiam.',
-      recommend: false,
-      rating: 5,
-      createdAt: '2016-03-30T21:27:50.162Z'
-    },
-    {
-      customerId: 1,
-      productId: 20,
-      title: 'Seamless asymmetric help-desk',
-      body: 'Aut magnam repudiandae iure numquam illum repellat sint.',
-      recommend: false,
-      rating: 3,
-      createdAt: '2017-11-24T13:24:17.352Z'
-    },
-    {
-      customerId: 1,
-      productId: 29,
-      title: 'Synergistic zero tolerance secured line',
-      body: 'Magni commodi qui. Dolorum rem inventore expedita cupiditate asperiores ab dolor dolor recusandae. Dolorum ducimus ea sint dolore tempora repellendus reprehenderit sequi aspernatur.',
-      recommend: false,
-      rating: 3,
-      createdAt: '2019-02-26T23:49:11.609Z'
-    },
-    {
-      customerId: 1,
-      productId: 40,
-      title: 'Balanced upward-trending analyzer',
-      body: 'In ipsa temporibus totam ex modi culpa ratione. Sint quibusdam dolore neque esse iure odit.',
-      recommend: false,
-      rating: 0,
-      createdAt: '2021-07-09T16:16:09.953Z'
-    },
-    {
-      customerId: 1,
-      productId: 16,
-      title: 'Configurable methodical approach',
-      body: 'Labore eligendi autem minus minima sapiente recusandae. Repellat aspernatur pariatur nihil. Nulla officiis cumque magni quas blanditiis quia rerum.',
-      recommend: true,
-      rating: 0,
-      createdAt: '2021-06-13T18:28:34.662Z'
-    },
-    {
-      customerId: 1,
-      productId: 43,
-      title: 'Seamless explicit circuit',
-      body: 'Cupiditate laborum nam odit distinctio.',
-      recommend: false,
-      rating: 0,
-      createdAt: '2018-01-25T08:54:02.232Z'
-    },
-    {
-      customerId: 1,
-      productId: 21,
-      title: 'Fundamental radical groupware',
-      body: 'Accusamus vitae et laboriosam sunt praesentium. Expedita perferendis excepturi.',
-      recommend: true,
-      rating: 2,
-      createdAt: '2022-03-04T03:01:24.712Z'
-    },
-    {
-      customerId: 1,
-      productId: 37,
-      title: 'Up-sized intangible matrix',
-      body: 'Fuga pariatur at laborum accusamus necessitatibus dicta asperiores blanditiis dolor. Harum perferendis repudiandae neque perferendis hic quod laborum et placeat.',
-      recommend: false,
-      rating: 2,
-      createdAt: '2020-08-20T17:31:42.785Z'
-    }
   ]
 }
