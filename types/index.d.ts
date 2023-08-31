@@ -92,14 +92,15 @@ declare global {
   type Category = ProductCount & {
     name: string,
     description: string,
-    thumbnail?: string
+    thumbnail: string
   }
   
   type Supplier = ProductCount & {
     name: string,
     location: string,
+    description: string,
     establishYear: number,
-    thumbnail?: string
+    thumbnail: string
   }
   
   type CartItem = {
@@ -131,6 +132,7 @@ declare global {
   type Review = {
     customerId: number,
     productId: number,
+    orderId: number,
     title: string,
     body: string,
     rating: number,
@@ -151,8 +153,9 @@ declare global {
     category: string,
     supplier: string,
     hideOutOfStock: boolean,
-    sortBy: string,
-    order: string
+    orderBy: string,
+    order: string,
+    avgRating: string
   }
 
   type MiddlewareError = Error & {
@@ -220,7 +223,14 @@ declare global {
     totalResults: number
   }
   
-  type ProductsResponse = { products: Product[] } & Pagination;
+  type ProductsResponse = Pagination & { 
+    products: (Product & {
+      numOfTimesOrdered: number,
+      totalUnitsOrdered: number | null
+      numOfReviews: number
+      averageRating: string | null
+    })[]
+  };
   
   type OrdersResponse = {
     id: number,

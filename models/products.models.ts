@@ -1,8 +1,9 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../prisma/prisma";
 
 const productTableColumns = [ 'id', 'name', 'description', 'price', 'stock', 'categoryName', 'supplierName', 'thumbnail' ];
 
-export const selectProducts = async (query: ProductsUrlParams) => {
+export const selectProductsX = async (query: ProductsUrlParams) => {
     const { 
         limit = 25, 
         page = 1,
@@ -11,7 +12,7 @@ export const selectProducts = async (query: ProductsUrlParams) => {
         category = '',
         supplier = '',
         hideOutOfStock = false,
-        sortBy = 'id',
+        orderBy = 'id',
         order = 'asc'
       } = query;
     
@@ -36,9 +37,9 @@ export const selectProducts = async (query: ProductsUrlParams) => {
       orderBy: {}
     };
 
-    if (productTableColumns.includes(sortBy)) {
+    if (productTableColumns.includes(orderBy)) {
       queryOptions.orderBy = {
-        [sortBy]: /(asc|desc)/i.test(order) ? order.toLowerCase() : 'asc'
+        [orderBy]: /(asc|desc)/i.test(order) ? order.toLowerCase() : 'asc'
       }
     }
    
@@ -52,6 +53,94 @@ export const selectProducts = async (query: ProductsUrlParams) => {
         })
     ]);
 }
+
+export const selectBestsellers = () => {};
+
+export const selectProducts = async (query: ProductsUrlParams) => {
+  const { 
+    limit = 25, 
+    page = 1,
+    minPrice = 0,
+    maxPrice = 1e5,
+    category = '',
+    supplier = '',
+    hideOutOfStock = false,
+    orderBy = "id",
+    order = "ASC",
+    avgRating = 0
+  } = query;
+
+  const stock = hideOutOfStock ? '0' : '-1';
+  const offset = (Number(page) - 1) * Number(limit);
+  const column = 
+    orderBy === "bestsellers" ? 'COUNT(oi."orderId")'
+    : orderBy === "avgRating" ? 'AVG(r."rating")'
+    : `p."${orderBy}"`;
+
+  let countQuery = `
+    SELECT COUNT(*)::INTEGER 
+    FROM (
+      SELECT p."id"
+      FROM "Product" p
+      LEFT JOIN "Review" r
+      ON p."id" = r."productId"
+      WHERE p."categoryName" ILIKE '%${category}%'
+      AND p."supplierName" ILIKE '%${supplier}%'
+      AND p."price" ::DECIMAL BETWEEN ${minPrice} AND ${maxPrice}
+      AND p."stock" != ${stock}
+      GROUP BY 1
+    `;
+
+    let productQuery = `
+      SELECT
+        p."id",
+        p."name",
+        COUNT(oi."orderId")::INTEGER AS "numOfTimesOrdered",
+        SUM(oi."quantity")::INTEGER AS "totalUnitsOrdered",
+        COUNT(r."id")::INTEGER AS "numOfReviews",
+        ROUND(AVG(r."rating"), 2) AS "averageRating",
+        p."description",
+        p."price",
+        p."stock", 
+        p."categoryName", 
+        p."supplierName", 
+        p."thumbnail"
+      FROM "Product" p
+      LEFT JOIN "OrderItem" oi
+      ON p."id" = oi."productId"
+      LEFT JOIN "Review" r
+      ON p."id" = r."productId"
+      AND oi."orderId" = r."orderId"
+      WHERE p."categoryName" ILIKE '%${category}%'
+      AND p."supplierName" ILIKE '%${supplier}%'
+      AND p."price" ::DECIMAL BETWEEN ${minPrice} AND ${maxPrice}
+      AND p."stock" != ${stock}
+      GROUP BY 1
+    `;
+
+    if (avgRating) {
+      const havingClause = `HAVING ROUND(AVG(r."rating")) = ${avgRating}`;
+      productQuery += havingClause;
+      countQuery += havingClause;
+    }
+    countQuery += `) AS temp`;
+    productQuery += `
+      ORDER BY ${column} ${order}
+      LIMIT ${limit}
+      OFFSET ${offset};
+    `;
+
+    const transaction = await prisma.$transaction([
+      prisma.$queryRaw<[{ count: number }]>(Prisma.raw(countQuery)),
+      prisma.$queryRaw<(Product & ProductExtended)[]>(Prisma.raw(productQuery))
+    ]);
+
+    return transaction;
+}
+
+/*
+
+ORIGINAL - unchanged (I think)
 
 export const selectBestsellers = async (
     category: string, 
@@ -96,6 +185,8 @@ export const selectBestsellers = async (
       `
     ]);
 }
+
+*/
 
 export const selectFavorites = async (page: number, limit: number, id: number) => {
   const [count, favorites] = await prisma.$transaction([

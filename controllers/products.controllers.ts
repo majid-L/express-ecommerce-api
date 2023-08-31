@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { selectBestsellers, selectFavorites, selectProductById, selectProducts } from '../models/products.models';
+import { selectFavorites, selectProductById, selectProducts } from '../models/products.models';
+
+/*
+ORIGINAL FUNCTION - working
 
 export const getProducts = async (
   req: Request<{}, {}, {}, ProductsUrlParams>, 
@@ -21,9 +24,27 @@ export const getProducts = async (
   } catch (err) {
     next(err);
   }  
+}*/
+
+export const getProducts = async (
+  req: Request<{}, {}, {}, ProductsUrlParams>, 
+  res: Response, 
+  next: NextFunction
+) => {
+  try {
+    const [ rowCount, resultSet ] = await selectProducts(req.query);
+    res.send({ 
+      page: Number(req.query.page || 1),
+      count: resultSet.length,
+      totalResults: rowCount[0].count,
+      products: resultSet
+    });
+  } catch (err) {
+    next(err);
+  }
 }
 
-export const getBestSellers = async (req: Request, res: Response, next: NextFunction) => {
+/*export const getBestSellers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { limit = 25, page = 1, category = '', supplier = '' } = req.query;
     const [ rowCount, bestSellers ] = 
@@ -38,7 +59,9 @@ export const getBestSellers = async (req: Request, res: Response, next: NextFunc
   } catch (err) {
     next(err);
   }
-}
+}*/
+
+export const getBestSellers = () => {};
 
 export const getFavorites = async (req: Request, res: Response, next: NextFunction) => {
   try {

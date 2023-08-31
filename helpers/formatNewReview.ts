@@ -2,6 +2,7 @@ const formatNewReview = (body: Review & { [key: string]: any }): Review => {
   const newReview: Review = {
     customerId: body.customerId,
     productId: body.productId,
+    orderId: body.orderId,
     title: body.title,
     body: body.body,
     rating: body.rating
