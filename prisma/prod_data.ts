@@ -37,7 +37,7 @@ export default {
     },
     {
       name: 'Junk',
-      description: 'Boom\'s Black Market doesn\'t just sell high-value merchandise - we also stock a wide variety of junk items. As the old saying goes, one man\'s rubbish is another man\'s treasure. You never know what you\'ll come across in our collection of junk items.',
+      description: 'Boom\'s Black Market doesn\'t just sell high-value merchandise - we also stock a wide variety of mundane junk items. As the old saying goes, one man\'s rubbish is another man\'s treasure. You never know what you\'ll come across in our collection of junk items.',
       thumbnail: '8'
     },
     {
@@ -258,7 +258,7 @@ export default {
       description: 'Exoskeleton chest armour forged from superheated viridum alloy, completed with a frictionless lining and embedded nanocircuitry for monitoring the wearer\'s vitals. Suitable for extreme applications.',
       price: 420.00,
       stock: 243,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'Novina Corp',
       thumbnail: '24.png'
     },
@@ -267,7 +267,7 @@ export default {
       description: 'Second generation exoskeleton made of synthetic materials resembling Charrad bone in appearance and density. Not the most reliable choice for combat, but handy for most basic and non-critical applications.',
       price: 29.00,
       stock: 243,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'Deckow & Kiehn',
       thumbnail: '46.png'
     },
@@ -276,7 +276,7 @@ export default {
       description: 'Modelled after the Spartan programme\'s armour, the XTRU exoskeleton is lightweight, tough and able to be connected to a secondary power source to provide increased movement speed and power generation. Also comes equipped with hidden internal pouches for tactical equipment.',
       price: 162.00,
       stock: 243,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'Ferrous LPX',
       thumbnail: '47.png'
     },
@@ -285,7 +285,7 @@ export default {
       description: 'Used by the Salarian STG during the Rachni encounters, this design contains high-tech parts built with a patented specification. Integrates effectively with electronic assistive technology and other STG gear.',
       price: 142.00,
       stock: 212,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'Mikkei Combine',
       thumbnail: '48.png'
     },
@@ -294,7 +294,7 @@ export default {
       description: 'Low tech universal work gear for professional labour applications. Single size fits all. It\'s not upgradeable, but it can take a hell of a beating.',
       price: 67.00,
       stock: 416,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'G & B Supplies',
       thumbnail: '49.png'
     },
@@ -303,7 +303,7 @@ export default {
       description: 'Ultra rare prototype built by Cerberus to integrate with specific ship modules, allowing pilots to interface directly with ship systems via neural link. Equipped with an advanced onboard computer specialised in monitoring ship systems and providing diagnostics to the user via a holographic display.',
       price: 220.00,
       stock: 56,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'Novina Corp',
       thumbnail: '62.png'
     },
@@ -312,7 +312,7 @@ export default {
       description: 'Hardened against medium-impact blasts, providing good protection in high-risk environments. Popular in construction applications but has also been known to be used by Cerberus infantry in the past.',
       price: 127.00,
       stock: 248,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'Ferrous LPX',
       thumbnail: '64.png'
     },
@@ -321,7 +321,7 @@ export default {
       description: 'Low density insulator exoskeleton, excelling in protecting against electrical hazrads. This is the exoskeleton of choice for many engineers working on ship electircal systems or performing EVA in the midst of an electrical storm.',
       price: 89.00,
       stock: 387,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'Deckow & Kiehn',
       thumbnail: '66.png'
     },
@@ -330,7 +330,7 @@ export default {
       description: 'Moldable, transverse titanium plates which can be affixed to most types of exoskeletons to enhance impact strength and defence capabilities. Comes with the tools necessary to attach each plate to your existing exoskeleton.',
       price: 34.00,
       stock: 864,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'G & B Supplies',
       thumbnail: '69.png'
     },
@@ -339,7 +339,7 @@ export default {
       description: 'Equipped with levitation technology to counteract the wearer\'s weight in high gravity environments, or for making short work of strenuous tasks involving heavy lifting.',
       price: 77.80,
       stock: 422,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'G & B Supplies',
       thumbnail: '72.png'
     },
@@ -348,7 +348,7 @@ export default {
       description: 'Camouflage-enabled exterior that adapts to surrounding light levels and conceals the wearer. Includes exterior motion and thermal sensors for detecting neraby lifeforms. Useful for many applications, including combat, recon, wildlife exploration, or genral usage.',
       price: 77.80,
       stock: 422,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'G & B Supplies',
       thumbnail: '73.png'
     },
@@ -357,7 +357,7 @@ export default {
       description: 'Provides protection for your robotic assistants. Compatible with various models of robotic units, including DRD-2, DRD-3, DRD-8 and VCG-1. Equipped with backup power and failsafe redundancies for malfunctioning units.',
       price: 37.80,
       stock: 342,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'Ferrous LPX',
       thumbnail: '74.png'
     },
@@ -366,7 +366,7 @@ export default {
       description: 'For high-speed encounters, this is the perfect tool. It integrates with peripheral cybernetics as well as interfacing directly with the peripheral nervous system to boost your speed without adversely affecting your precision or coordination. Mainly used for athletic and recreational applications.',
       price: 59.00,
       stock: 623,
-      categoryName: 'Exoskeleteons',
+      categoryName: 'Exoskeletons',
       supplierName: 'G & B Supplies',
       thumbnail: '75.png'
     },
@@ -618,7 +618,7 @@ export default {
       description: 'Specialised arc welder with variable voltage. Intended for nickel and chromium-based alloys but can also be used for general repair and fabrication. Features thermal overload protection and fan cooling for improved duty cycle. Supplied with electrode holder, earthing clamp, hand-held welding mask and chipping hammer.',
       price: 174.00,
       stock: 462,
-      categoryName: 'Priovisions',
+      categoryName: 'Provisions',
       supplierName: 'G & B Supplies',
       thumbnail: '84.png'
     },
@@ -814,7 +814,7 @@ export default {
     {
       name: 'DGX-2 sublight engine',
       description: 'Early version of the DGX series of sublight engines used in small craft. The design is relatively simple compared to large-scale FTL engines, thought the DGX-2 is noted for its reliability and fuel efficiency, making it a very popular choice among pilots over the last decade since its original release.',
-      price: 12300.00,
+      price: 9800.00,
       stock: 14,
       categoryName: 'Upgrades',
       supplierName: 'Deckow & Kiehn',
@@ -1258,7 +1258,7 @@ export default {
       price: 0.72,
       stock: 720,
       categoryName: 'Junk',
-      supplierName: 'G & B SUpplies',
+      supplierName: 'G & B Supplies',
       thumbnail: 'clew_01.png'
     },
     {
@@ -1267,7 +1267,7 @@ export default {
       price: 9.00,
       stock: 271,
       categoryName: 'Junk',
-      supplierName: 'G & B SUpplies',
+      supplierName: 'G & B Supplies',
       thumbnail: 'club_01.png'
     },
     {
@@ -1694,7 +1694,7 @@ export default {
       thumbnail: 'phone_01.png'
     },
     {
-      name: 'AdrenoCoryzone regimen',
+      name: 'AdrenoCoryzone combo',
       description: 'Prescription-free combination regimen consisting of AdrenoCore and Coryzone, a fast-onset adrenergic agonist and a short-acting stimulant, respectively.',
       price: 28.80,
       stock: 322,
@@ -1719,6 +1719,258 @@ export default {
       categoryName: 'Consumables',
       supplierName: 'Sirta Foundation',
       thumbnail: 'pills_03.png'
+    },
+    {
+      name: 'Safety pin',
+      description: 'Basic nickel-palted safety pin for your sewing kit.',
+      price: 1.17,
+      stock: 326,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'pin_01.png'
+    },
+    {
+      name: 'Copper pipe',
+      description: 'Generic pipe with U-bend. Part of most standard plumbing systems.',
+      price: 8.42,
+      stock: 192,
+      categoryName: 'Junk',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'pipe_01.png'
+    },
+    {
+      name: 'Fluorescent flowering plant',
+      description: 'Genetically modified lily with glow-in-the-dark phenotype and anti-senescence.',
+      price: 3.62,
+      stock: 422,
+      categoryName: 'Lost & Found',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'plant_01.png'
+    },
+    {
+      name: 'Ceramic pot',
+      description: 'Growing pot for small plants. Comes with fortified soil mix.',
+      price: 0.73,
+      stock: 658,
+      categoryName: 'Junk',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'pot_01.png'
+    },
+    {
+      name: 'Fossilised hand print',
+      description: 'Fossilised specimen discovered in an Earth cave dating back to the early paleoxoic period.',
+      price: 0.06,
+      stock: 8,
+      categoryName: 'Junk',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'print_01.png'
+    },
+    {
+      name: 'Cloth rag',
+      description: 'Thin plain waterproof rag with anti-static technology.',
+      price: 0.28,
+      stock: 530,
+      categoryName: 'Junk',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'rag_01.png'
+    },
+    {
+      name: 'Garden rake',
+      description: 'Raking tool with 6-tooth design, composite handle and adjustable spacing.',
+      price: 4.00,
+      stock: 64,
+      categoryName: 'Junk',
+      supplierName: 'Novina Corp',
+      thumbnail: 'rake_01.png'
+    },
+    {
+      name: 'Carpenter\'s rasp',
+      description: 'Flat single-sided carbon-steel rasp for shaping wood.',
+      price: 12.42,
+      stock: 167,
+      categoryName: 'Junk',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'rasp_01.png'
+    },
+    {
+      name: 'Safety razor',
+      description: 'Cheap safety razor with a single blunt-edged blade. This will leave one hell of a razor burn.',
+      price: 0.30,
+      stock: 767,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'razor_01.png'
+    },
+    {
+      name: 'Barber\'s straight razor',
+      description: 'High quality barber\'s razor with replaceable sharp alloy blade and loose pivot joint.',
+      price: 6.50,
+      stock: 624,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'razor_02.png'
+    },
+    {
+      name: 'Steel ring',
+      description: 'Non-descript cheap ring of brittle design. The outer surface appears chipped and slightly tarnished.',
+      price: 0.17,
+      stock: 27,
+      categoryName: 'Lost & Found',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'ring_01.png'
+    },
+    {
+      name: 'Braided rope',
+      description: '8mm 2-strand synthetic utility rope suitable for outdoor tasks, crafts, DIY, sports, etc.',
+      price: 2.72,
+      stock: 539,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'rope_01.png'
+    },
+    {
+      name: 'Hand saw',
+      description: 'Chromium-vanadium steel saw with metal handle. Suitable for use on wood, metal and plastic.',
+      price: 27.00,
+      stock: 372,
+      categoryName: 'Junk',
+      supplierName: 'Novina Corp',
+      thumbnail: 'saw_01.png'
+    },
+    {
+      name: 'Flat screw',
+      description: 'Basic utility screw with 40mm length and 14 inch thread.',
+      price: 0.18,
+      stock: 826,
+      categoryName: 'Junk',
+      supplierName: 'Novina Corp',
+      thumbnail: 'screw_01.png'
+    },
+    {
+      name: 'Undertaker\'s shovel',
+      description: 'Basic outdoor shovel with steel head and wooden handle.',
+      price: 8.00,
+      stock: 175,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'shovel_01.png'
+    },
+    {
+      name: 'UP stimulant drink (370ml)',
+      description: 'Keeps you going even when you\'re running on empty. Enriched with cadmium, azathioprine, naphthylamine and thorium-232.',
+      price: 1.50,
+      stock: 1227,
+      categoryName: 'Consumables',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'soda_01.png'
+    },
+    {
+      name: 'Brass spring',
+      description: 'Flexible brass spring with 5-inch diameter and 4-foot extended length.',
+      price: 2.43,
+      stock: 263,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'spring_01.png'
+    },
+    {
+      name: 'Straight ladder',
+      description: 'Small single-section wooden ladder with reinforced rungs.',
+      price: 15.43,
+      stock: 421,
+      categoryName: 'Junk',
+      supplierName: 'Deckow & Kiehn',
+      thumbnail: 'stairs_01.png'
+    },
+    {
+      name: 'Medical syringe',
+      description: '100ml plastic syringe with single-use sterile hypodermic needle.',
+      price: 2.62,
+      stock: 886,
+      categoryName: 'Provisions',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'syringe_01.png'
+    },
+    {
+      name: 'Tension strap',
+      description: 'Elasticated tensioning strap for stabilising joints and ligaments. Can also be used as a torniquet.',
+      price: 0.40,
+      stock: 425,
+      categoryName: 'Provisions',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'tape_01.png'
+    },
+    {
+      name: 'Canned soup',
+      description: 'Canned green tomatoes for your next soup, preserved in a herb and tomato mix.',
+      price: 0.25,
+      stock: 2143,
+      categoryName: 'Consumables',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'tomato_soup_01.png'
+    },
+    {
+      name: 'Contractor\'s trowel',
+      description: 'Tradesman tool with a hardened and corrosion-resistant steel head. Ideal for plastering, masonry, tiling and brick work.',
+      price: 4.20,
+      stock: 57,
+      categoryName: 'Junk',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'trowel_01.png'
+    },
+    {
+      name: 'Antique mechanical watch',
+      description: 'Sophisticated timepiece with leather strap, brass parts, floating dials and mechanical clockwork mechanism.',
+      price: 225.00,
+      stock: 230,
+      categoryName: 'Provisions',
+      supplierName: 'G & B Supplies',
+      thumbnail: 'watch_01.png'
+    },
+    {
+      name: 'Drinking water',
+      description: 'Distilled deuterium water in a biodegradeable bottle.',
+      price: 0.21,
+      stock: 905,
+      categoryName: 'Consumables',
+      supplierName: 'Sirta Foundation',
+      thumbnail: 'water_01.png'
+    },
+    {
+      name: 'Ultrasonic whistle',
+      description: 'Whistle with adjustable waveform characteristics. Useful for training animals and pets...and some humans.',
+      price: 0.31,
+      stock: 107,
+      categoryName: 'Junk',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'whistle_01.png'
+    },
+    {
+      name: 'Split-ended rhodium wire',
+      description: 'Superconducting magnetised cable for communications circuitry, power delivery systems and charge transduction components.',
+      price: 41.00,
+      stock: 407,
+      categoryName: 'Cybernetics',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'wire_01.png'
+    },
+    {
+      name: 'Continuous rhodium wire',
+      description: 'Continuous rhodium cable with protective sleeve cover, ideal for use with solenoids, small motors and electrical generators.',
+      price: 35.00,
+      stock: 420,
+      categoryName: 'Cybernetics',
+      supplierName: 'Ferrous LPX',
+      thumbnail: 'wire_02.png'
+    },
+    {
+      name: 'Vanadium steel spanner',
+      description: 'Everyday tool for tightening and loosening nuts and bolts. Made with vanadium steel and measuring 13 x 15 mm.',
+      price: 5.27,
+      stock: 368,
+      categoryName: 'Junk',
+      supplierName: 'Mikkei Combine',
+      thumbnail: 'wrench_01.png'
     },
   ],
   addresses: [
