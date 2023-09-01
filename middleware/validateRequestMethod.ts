@@ -5,7 +5,7 @@ const validateRequestMethod = (req: Request, res: Response, next: NextFunction) 
   let send405Response = false;
   
   switch(true) {
-    case req.url.startsWith('/api/products'):
+    case /^\/api\/products[^/]*$/.test(req.url):
     case /^\/api\/customers\/\d+\/reviews/.test(req.url):
       if (req.method !== 'GET') {
         res.set('Allow', 'GET');
@@ -23,6 +23,7 @@ const validateRequestMethod = (req: Request, res: Response, next: NextFunction) 
       break;
 
     case /^\/api\/customers\/\d+\/cart$/.test(req.url):
+    case /^\/api\/products\/\d+\$/.test(req.url):
       if (!/^(GET|PUT)$/.test(req.method)) {
         res.set('Allow', 'GET, PUT');
         send405Response = true;
