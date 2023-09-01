@@ -20,11 +20,11 @@ const reviewsTests = () => {
 
         expect(page).to.equal(1);
         expect(count).to.equal(25);
-        expect(totalResults).to.equal(62);
+        expect(totalResults).to.equal(57);
         expect(reviews).to.be.an('array').that.has.length(25);
         expect(reviews).to.be.sortedBy("createdAt", { descending: true });
         reviews.forEach(review => {
-            expect(review).to.have.all.keys('id', 'customerId', 'productId', 'title', 'body', 'recommend', 'rating', 'createdAt');
+            expect(review).to.have.all.keys('id', 'customerId', 'productId', 'orderId', 'title', 'body', 'recommend', 'rating', 'createdAt', 'customer', 'product');
             expect(review).to.have.property('id').that.is.a('number');
             expect(review).to.have.property('customerId').that.is.a('number');
             expect(review).to.have.property('productId').that.is.a('number');
@@ -33,6 +33,7 @@ const reviewsTests = () => {
             expect(review).to.have.property('recommend').that.is.a('boolean');
             expect(review).to.have.property('rating').that.is.a('number').to.be.within(0, 5);
             expect(review).to.have.property('createdAt').that.is.a('string');
+            expect(review).to.have.property('customer').that.is.a('object').with.all.keys('username', 'avatar');
           });
       });
 
@@ -43,15 +44,16 @@ const reviewsTests = () => {
           .expect(200);
         
         expect(page).to.equal(3);
-        expect(count).to.equal(20);
-        expect(totalResults).to.equal(62);
-        expect(reviews).to.be.an('array').that.has.length(20);
+        expect(count).to.equal(17);
+        expect(totalResults).to.equal(57);
+        expect(reviews).to.be.an('array').that.has.length(17);
         expect(reviews).to.be.sortedBy("createdAt", { descending: true });
       });
 
       const requestBody = {
         "customerId": 1,
         "productId": 2,
+        "orderId": 21,
         "title": "Fundamental systemic encryption",
         "body": "Magnam recusandae tenetur fugit facere dolorum. Maxime reiciendis pariatur doloribus et.",
         "recommend": true,
@@ -67,7 +69,7 @@ const reviewsTests = () => {
           .expect(201);
 
         expect(newReview).to.include(requestBody);
-        expect(newReview.id).to.equal(63);
+        expect(newReview.id).to.equal(58);
       });
 
       it('POST does not allow customer to post a review for a product they have not ordered.', async () => {
@@ -169,6 +171,7 @@ const reviewsTests = () => {
           "id": 12,
           "customerId": 2,
           "productId": 44,
+          "orderId": 5,
           "title": "Implemented exuding emulation",
           "body": "Molestias aut libero voluptatem laborum eaque non vitae.",
           "recommend": true,
@@ -184,11 +187,23 @@ const reviewsTests = () => {
         
         expect(errorResponse.error.info).to.equal('Not found.')
       });
+
+      const review57 = {
+        "id": 57,
+        "customerId": 1,
+        "productId": 37,
+        "orderId": 22,
+        "title": "Configurable methodical approach",
+        "body": "Labore eligendi autem minus minima sapiente recusandae. Repellat aspernatur pariatur nihil. Nulla officiis cumque magni quas blanditiis quia rerum.",
+        "recommend": true,
+        "rating": 0,
+        "createdAt": "2021-06-13T18:28:34.662Z"
+      };
       
       it('PUT allows customer to modify his/her own review and ignores all extra fields.', async () => {
         const { body: { updatedReview } }:
         { body: { updatedReview: Review } } = await request(app)
-          .put('/api/reviews/58')
+          .put('/api/reviews/57')
           .send({ 
             productId: 1,
             title: 'yaya', 
@@ -199,35 +214,21 @@ const reviewsTests = () => {
           .expect(200);
 
         expect(updatedReview).to.deep.equal({
-          "id": 58,
-          "customerId": 1,
-          "productId": 40,
-          "title": "yaya",
-          "body": "Put on the black-on-black-on-slate-black blazer.",
-          "recommend": false,
-          "rating": 0,
-          "createdAt": "2021-07-09T16:16:09.953Z"
+          ...review57,
+          title: 'yaya',
+          body: 'Put on the black-on-black-on-slate-black blazer.'
         });
       });
 
       it('PUT accepts an empty object as the request body and returns the original review.', async () => {
         const { body: { updatedReview } }:
         { body: { updatedReview: Review } } = await request(app)
-          .put('/api/reviews/58')
+          .put('/api/reviews/57')
           .send({})
           .set('Cookie', cookie)
           .expect(200);
         
-        expect(updatedReview).to.deep.equal({
-          "id": 58,
-          "customerId": 1,
-          "productId": 40,
-          "title": "Balanced upward-trending analyzer",
-          "body": "In ipsa temporibus totam ex modi culpa ratione. Sint quibusdam dolore neque esse iure odit.",
-          "recommend": false,
-          "rating": 0,
-          "createdAt": "2021-07-09T16:16:09.953Z"
-        });
+        expect(updatedReview).to.deep.equal(review57);
       });
 
       it('PUT rejects request bodies containing empty field values.', async () => {
@@ -249,7 +250,7 @@ const reviewsTests = () => {
 
       it('PUT rejects request body containing a required field with a null value.', async () => {
         const { body: errorResponse }: ApiErrorResponse = await request(app)
-          .put('/api/reviews/58')
+          .put('/api/reviews/57')
           .send({ title: null })
           .set('Cookie', cookie)
           .expect(400);
@@ -259,7 +260,7 @@ const reviewsTests = () => {
 
       it('PUT rejects request body containing an invalid data type', async () => {
         const { body: errorResponse }: ApiErrorResponse = await request(app)
-          .put('/api/reviews/58')
+          .put('/api/reviews/57')
           .send({ recommend: 'yes' })
           .set('Cookie', cookie)
           .expect(400);
@@ -274,16 +275,7 @@ const reviewsTests = () => {
           .set('Cookie', cookie)
           .expect(200);
         
-        expect(deletedReview).to.deep.equal({
-          "id": 57,
-          "customerId": 1,
-          "productId": 29,
-          "title": "Synergistic zero tolerance secured line",
-          "body": "Magni commodi qui. Dolorum rem inventore expedita cupiditate asperiores ab dolor dolor recusandae. Dolorum ducimus ea sint dolore tempora repellendus reprehenderit sequi aspernatur.",
-          "recommend": false,
-          "rating": 3,
-          "createdAt": "2019-02-26T23:49:11.609Z"
-        });
+        expect(deletedReview).to.deep.equal(review57);
 
         await request(app)
           .get('/api/reviews/57')
@@ -338,7 +330,7 @@ const reviewsTests = () => {
       it('GET returns reviews for a specific product.', async () => {
         const { body: { page, count, totalResults, reviews } }:
         { body: ReviewsResponse } = await request(app)
-          .get('/api/products/21/reviews')
+          .get('/api/products/1/reviews')
           .expect(200);
 
         expect(page).to.equal(1);
@@ -346,7 +338,7 @@ const reviewsTests = () => {
         expect(totalResults).to.equal(3);
         expect(reviews).to.be.an('array').that.has.length(3);
         reviews.forEach(review => {
-          expect(review.productId).to.equal(21);
+          expect(review.productId).to.equal(1);
         });
       });
 

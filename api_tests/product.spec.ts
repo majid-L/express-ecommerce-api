@@ -2,7 +2,7 @@ import request from "supertest";
 import app from '../index';
 import chai, { expect } from "chai";
 import chaiSorted from 'chai-sorted';
-import { cookie } from "./index.spec";
+import { cookie, setupFunction } from "./index.spec";
 
 let userCookie = cookie;
 chai.use(chaiSorted);
@@ -22,7 +22,7 @@ const productTests = () => {
         expect(products).to.be.an('array').that.has.lengthOf(25);
   
         products.forEach(product => {
-          expect(product).to.have.all.keys('id', 'name', 'description', 'price', 'stock', 'categoryName', 'supplierName', 'thumbnail', 'numOfTimesOrdered');
+          expect(product).to.have.all.keys('id', 'name', 'description', 'price', 'stock', 'categoryName', 'supplierName', 'thumbnail', 'numOfTimesOrdered', 'totalUnitsOrdered', 'numOfReviews', 'averageRating');
           expect(product).to.have.property('id').that.is.a('number');
           expect(product).to.have.property('stock').that.is.a('number');
           expect(product).to.have.property('name').that.is.a('string');
@@ -31,6 +31,14 @@ const productTests = () => {
           expect(product).to.have.property('categoryName').that.is.a('string');
           expect(product).to.have.property('supplierName').that.is.a('string');
           expect(product).to.have.property('thumbnail').that.is.a('string');
+          expect(product).to.have.property('numOfTimesOrdered').that.is.a('number');
+          expect(product).to.have.property('numOfReviews').that.is.a('number');
+          expect(product.totalUnitsOrdered).to.satisfy((value: number | null) => {
+            return value === null || typeof value === 'number';
+          });
+          expect(product.averageRating).to.satisfy((value: string | null) => {
+            return value === null || typeof value === 'string';
+          });
         });
       });
   
@@ -48,7 +56,7 @@ const productTests = () => {
       it('GET accepts \'category\' as a query parameter.', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
-          .get('/api/products?category=toy')
+          .get('/api/products?category=Toys')
           .expect(200);
   
         expect(products).to.be.an('array').that.has.length(8);
@@ -63,24 +71,24 @@ const productTests = () => {
       it('GET accepts \'supplier\' as a query parameter.', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
-          .get('/api/products?supplier=ie')
+          .get('/api/products?supplier=Deckow%20-%20Kiehn')
           .expect(200);
   
-        expect(products).to.be.an('array').that.has.length(25);
+        expect(products).to.be.an('array').that.has.length(12);
         expect(page).to.equal(1);
-        expect(count).to.equal(25);
-        expect(totalResults).to.equal(26);
+        expect(count).to.equal(12);
+        expect(totalResults).to.equal(12);
         products.forEach(({ supplierName }) => {
           expect(supplierName).to.satisfy((string: string): boolean => {
-            return string === 'Deckow - Kiehn' || string === 'Beier LLC';
+            return string === 'Deckow - Kiehn';
           });
         });
       });
   
-      it('GET accepts \'sortBy\' as query parameter (column: product name).', async () => {
+      it('GET accepts \'orderBy\' as query parameter (column: product name).', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
-          .get('/api/products?sortBy=name')
+          .get('/api/products?orderBy=name')
           .expect(200);
   
         const formattedArray = products.map(product => ({...product, price: Number(product.price)}));
@@ -92,10 +100,10 @@ const productTests = () => {
         expect(formattedArray).to.be.sortedBy("name");
       });
   
-      it('GET accepts \'sortBy\' and \'order\' as query parameters (column: price).', async () => {
+      it('GET accepts \'orderBy\' and \'order\' as query parameters (column: price).', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
-          .get('/api/products?sortBy=price&order=desc')
+          .get('/api/products?orderBy=price&order=desc')
           .expect(200);
   
         const formattedArray = products.map(product => ({...product, price: Number(product.price)}));
@@ -106,11 +114,41 @@ const productTests = () => {
         expect(totalResults).to.equal(53);
         expect(formattedArray).to.be.sortedBy("price", { descending: true });
       });
+
+      it('GET allows results to be ordered by avgRating.', async () => {
+        const { body: { products, page, count, totalResults } }: 
+        { body: ProductsResponse } = await request(app)
+          .get('/api/products?orderBy=avgRating&order=desc')
+          .expect(200);
+  
+        const formattedArray = products.map(product => ({...product, averageRating: Number(product.averageRating)}));
+  
+        expect(products).to.be.an('array').that.has.length(25);
+        expect(page).to.equal(1);
+        expect(count).to.equal(25);
+        expect(totalResults).to.equal(53);
+        expect(formattedArray).to.be.sortedBy("averageRating", { descending: true });
+      });
+
+      it('GET allows results to be ordered by bestsellers (numOfTimesOrdered).', async () => {
+        const { body: { products, page, count, totalResults } }: 
+        { body: ProductsResponse } = await request(app)
+          .get('/api/products?orderBy=bestsellers&order=desc')
+          .expect(200);
+  
+        const formattedArray = products.map(product => ({...product, numOfTimesOrdered: product.numOfTimesOrdered}));
+  
+        expect(products).to.be.an('array').that.has.length(25);
+        expect(page).to.equal(1);
+        expect(count).to.equal(25);
+        expect(totalResults).to.equal(53);
+        expect(formattedArray).to.be.sortedBy("numOfTimesOrdered", { descending: true });
+      });
   
       it('GET accepts \'hideOutOfStock\' as query parameter.', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
-          .get('/api/products?hideOutOfStock=true&sortBy=stock&order=desc&limit=100')
+          .get('/api/products?hideOutOfStock=true&orderBy=stock&order=desc&limit=100')
           .expect(200);
   
         expect(products).to.be.an('array').that.has.length(50);
@@ -122,11 +160,26 @@ const productTests = () => {
           expect(product.stock).to.not.equal(0);
         })
       });
+
+      it('GET accepts \'avgRating\' as query parameter.', async () => {
+        const { body: { products, page, count, totalResults } }: 
+        { body: ProductsResponse } = await request(app)
+          .get('/api/products?avgRating=4')
+          .expect(200);
+  
+        expect(products).to.be.an('array').that.has.length(9);
+        expect(page).to.equal(1);
+        expect(count).to.equal(9);
+        expect(totalResults).to.equal(9);
+        products.forEach(product => {
+          expect(Math.round(Number(product.averageRating))).to.equal(4);
+        })
+      });
   
       it('GET accepts \'minPrice\' and \'maxPrice\' as query parameters.', async () => {
         const { body: { products, page, count, totalResults } }: 
         { body: ProductsResponse } = await request(app)
-          .get('/api/products?minPrice=30.31&maxPrice=130.36&limit=100&sortBy=price')
+          .get('/api/products?minPrice=30.31&maxPrice=130.36&limit=100&orderBy=price')
           .expect(200);
   
         const formattedArray = products.map(product => ({...product, price: Number(product.price)}));
@@ -141,81 +194,37 @@ const productTests = () => {
         });
       });
 
-      it('GET respondes with 400 status code if pagination query features non-numeric data types.', async () => {
-        const { body: invalidPageError }: ApiErrorResponse = await request(app)
-          .get('/api/products?page=xxx&limit=10')
-          .expect(400);
+      it('GET allows searching for specific product(s) by name.', async () => {
+        const { body: { products, page, count, totalResults } }: 
+        { body: ProductsResponse } = await request(app)
+          .get('/api/products?product=salad')
+          .expect(200);
 
-        const { body: invalidLimitError }: ApiErrorResponse = await request(app)
-          .get('/api/products?page=2&limit=xxx')
-          .expect(400);
-  
-        expect(invalidPageError.error.info).to.equal('Invalid query. Argument `skip` is missing.');
-        expect(invalidLimitError.error.info).to.equal('Invalid query. Argument `take` is missing.');
+        expect(products).to.be.an('array').that.has.length(4);
+        expect(page).to.equal(1);
+        expect(count).to.equal(4);
+        expect(totalResults).to.equal(4);
+        products.forEach(product => {
+          expect(product.name).to.match(/salad/i);
+        });
+      });
+
+      it('GET ignores pagination query parameter with non-numeric data types.', async () => {
+        const { body: { products, page, count, totalResults } }: 
+        { body: ProductsResponse } = await request(app)
+          .get('/api/products?page=x&limit=x')
+          .expect(200);
+
+        expect(products).to.be.an('array').that.has.length(25);
+        expect(page).to.equal(1);
+        expect(count).to.equal(25);
+        expect(totalResults).to.equal(53);
       });
     });
 
-    describe('/api/products/bestsellers', () => {
-      it('GET returns best selling items in descending order of popularity, and allows pagination.', async () => {
-        const { body: { bestSellers } }:
-          { body: BestSellers } = await request(app)
-          .get('/api/products/bestsellers')
-          .expect(200);
-  
-        expect(bestSellers).to.be.an('array').that.has.lengthOf(25);
-        expect(bestSellers).to.be.sortedBy("numOfTimesOrdered", { descending: true });
-  
-        bestSellers.forEach(product => {
-          expect(product).to.have.property('numOfTimesOrdered').that.is.a('number');
-          expect(product).to.have.property('totalUnitsOrdered').that.is.a('number');
-          expect(product).to.have.property('averageRating').that.is.a('string');
-          expect(Number(product.averageRating)).to.be.a('number');
-        });
-  
-        // Request the second page and verify the outcome
-        const secondPage = await request(app)
-          .get('/api/products/bestsellers?page=2&limit=10')
-          .expect(200);
-        
-        const secondPageResults = (secondPage.body as BestSellers).bestSellers;
-        expect(secondPageResults).to.be.an('array').that.has.lengthOf(10);
-        expect(secondPageResults[0].id).to.not.equal(bestSellers[0].id);
-      });
-  
-      it('GET accepts \'category\' as query parameter.', async () => {
-        const { body: { bestSellers, page, count, totalResults } }: 
-          { body: BestSellers } = await request(app)
-          .get('/api/products/bestsellers?category=cloth')
-          .expect(200);
-  
-        expect(bestSellers).to.be.an('array').that.has.length(6);
-        expect(page).to.equal(1);
-        expect(count).to.equal(6);
-        expect(totalResults).to.equal(6);
-        expect(bestSellers).to.be.sortedBy("numOfTimesOrdered", { descending: true });
-        bestSellers.forEach(({ categoryName }) => {
-          expect(categoryName).to.equal('Clothing');
-        });
-      });
-  
-      it('GET accepts \'supplier\' as query parameter.', async () => {
-        const { body: { bestSellers, page, count, totalResults } }: 
-          { body: BestSellers } = await request(app)
-          .get('/api/products/bestsellers?supplier=bei')
-          .expect(200);
-  
-        expect(bestSellers).to.be.an('array').that.has.length(10);
-        expect(page).to.equal(1);
-        expect(count).to.equal(10);
-        expect(totalResults).to.equal(10);
-        expect(bestSellers).to.be.sortedBy("numOfTimesOrdered", { descending: true });
-        bestSellers.forEach(({ supplierName }) => {
-          expect(supplierName).to.equal('Beier LLC');
-        });
-      });
-    });
+    describe('/api/products/:productId', () => {
+      beforeEach(setupFunction);
 
-    describe('/api/products:productId', () => {
       it('GET returns a single product.', async () => {
         const { body: product }: { body: Product } = await request(app)
           .get('/api/products/13')
@@ -261,6 +270,45 @@ const productTests = () => {
           .expect(404);
 
         expect(errorResponse.error.info).to.equal('Not found.');
+      });
+
+      it('PUT allows user to update stock amount for a specific product.', async () => {
+        const { body: { updatedProduct } }:
+        { body: { updatedProduct: Product } } = await request(app)
+          .put('/api/products/1')
+          .send({ stock: 726 })
+          .set('Cookie', cookie)
+          .expect(200);
+
+        expect(updatedProduct).to.have.property("stock").that.is.equal(726);
+      });
+
+      it('PUT accepts stock value if it is a valid numerical string.', async () => {
+        const { body: { updatedProduct } }:
+        { body: { updatedProduct: Product } } = await request(app)
+          .put('/api/products/2')
+          .send({ stock: "18" })
+          .set('Cookie', cookie)
+          .expect(200);
+
+        expect(updatedProduct).to.have.property("stock").that.is.equal(18);
+      });
+
+      it('PUT returns 400 response for invalid stock amount.', async () => {
+        const { body: errorResponse1 }: ApiErrorResponse = await request(app)
+          .put('/api/products/1')
+          .send({ stock: -1 })
+          .set('Cookie', cookie)
+          .expect(400);
+
+         const { body: errorResponse2 }: ApiErrorResponse = await request(app)
+          .put('/api/products/1')
+          .send({ stock: "one" })
+          .set('Cookie', cookie)
+          .expect(400);
+  
+        expect(errorResponse1.error.info).to.equal('Invalid stock amount.');
+        expect(errorResponse2.error.info).to.equal('Invalid stock amount.');
       });
     });
 

@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { cookie } from "./index.spec";
 import { setupFunction } from "./index.spec";
 
-const requestBody = 	{
+const requestBody = {
   "shippingAddress": {
     "addressLine1": "1 Konopelski Close",
     "city": "Wintheiserhill",
@@ -14,7 +14,9 @@ const requestBody = 	{
     "addressLine1": "50xd Jazmyne Approach",
     "city": "West Lebsack Cross",
     "postcode": "IUs0 7PF"
-  }
+  },
+  "paymentMethod": "Card",
+  "total": 1000
 };
 
 const ordersTests = () => {  
@@ -31,7 +33,7 @@ const ordersTests = () => {
   
         expect(ordersResponse).to.have.all.keys(['id', 'name', 'username', 'orders']);
         expect(ordersResponse.orders).to.have.lengthOf(3);
-        expect(ordersResponse.orders[0]).to.have.all.keys(['id', 'customerId', 'shippingAddressId', 'billingAddressId', 'status', 'createdAt', 'shippingAddress', 'orderItems']);
+        expect(ordersResponse.orders[0]).to.have.all.keys(['id', 'customerId', 'shippingAddressId', 'billingAddressId', 'status', 'paymentMethod', 'total', 'createdAt', 'shippingAddress', 'orderItems']);
         expect(ordersResponse.orders[0].orderItems[0]).to.have.all.keys(['quantity', 'product']);
         expect(ordersResponse.orders[0].orderItems[0].product).to.have.all.keys(['id', 'name', 'description', 'price', 'stock', 'categoryName', 'supplierName', 'thumbnail']);
       });
@@ -60,6 +62,33 @@ const ordersTests = () => {
           "lastOrdered": {
             "orderId": 21,
             "orderDate": "2029-08-04T05:59:02.342Z"
+          },
+          "review": null
+        });
+      });
+
+      it('GET returns appropriate response if customer has previously reviewed an item.', async () => {
+        const { body }: OrderHistoryResponse = await request(app)
+          .get('/api/customers/1/orders?productId=40')
+          .set('Cookie', cookie)
+          .expect(200);
+
+        expect(body).to.deep.equal({
+          "productId": 40,
+          "lastOrdered": {
+            "orderId": 22,
+            "orderDate": "2023-04-20T05:59:02.342Z"
+          },
+          "review": {
+            "id": 56,
+            "customerId": 1,
+            "productId": 40,
+            "orderId": 22,
+            "title": "Synergistic zero tolerance secured line",
+            "body": "Magni commodi qui. Dolorum rem inventore expedita cupiditate asperiores ab dolor dolor recusandae. Dolorum ducimus ea sint dolore tempora repellendus reprehenderit sequi aspernatur.",
+            "recommend": false,
+            "rating": 3,
+            "createdAt": "2019-02-26T23:49:11.609Z"
           }
         });
       });
@@ -72,7 +101,8 @@ const ordersTests = () => {
 
         expect(body).to.deep.equal({
           "productId": 38,
-          "lastOrdered": null
+          "lastOrdered": null,
+          "review": null
         });
       });
 
@@ -98,6 +128,7 @@ const ordersTests = () => {
       
         expect(body.id).to.equal(24);
         expect(body.customerId).to.equal(1);
+        expect(body.total).to.equal(requestBody.total.toString());
         expect(body.billingAddress).to.include(requestBody.billingAddress);
         expect(body.shippingAddress).to.include(requestBody.shippingAddress);
         body.orderItems.forEach((item, index) => {
