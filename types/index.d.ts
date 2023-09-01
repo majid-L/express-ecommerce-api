@@ -24,7 +24,8 @@ declare global {
       productDetails: Prisma.ProductGetPayload<{}>,
       reviewDetails: Prisma.ReviewGetPayload<{}>,
       orderDetails: Prisma.OrderGetPayload<{}>,
-      addresses: AddressPayloadGroup | AddressGroup
+      addresses: AddressPayloadGroup | AddressGroup,
+      productQueryParams: ProductsUrlParams
     }
   }
 
@@ -152,10 +153,11 @@ declare global {
     maxPrice: StrOrNum,
     category: string,
     supplier: string,
-    hideOutOfStock: boolean,
+    product: string,
+    hideOutOfStock: string,
     orderBy: string,
     order: string,
-    avgRating: string
+    avgRating: StrOrNum
   }
 
   type MiddlewareError = Error & {
@@ -255,7 +257,8 @@ declare global {
       lastOrdered: {
         orderId: number,
         lastOrdered: string
-      } | null
+      } | null,
+      review: Review | null
     } 
   }
 
@@ -265,6 +268,8 @@ declare global {
     shippingAddressId: number,
     billingAddressId: number,
     status: string,
+    paymentMethod: string,
+    total: string,
     created_at: string,
     billingAddress: { id: number } & Address,
     shippingAddress: { id: number } & Address,
