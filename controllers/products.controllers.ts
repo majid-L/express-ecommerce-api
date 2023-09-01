@@ -1,40 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
-import { selectFavorites, selectProductById, selectProducts } from '../models/products.models';
-
-/*
-ORIGINAL FUNCTION - working
+import createError from '../helpers/createError';
+import { selectFavorites, selectProductById, selectProducts, updateProduct } from '../models/products.models';
 
 export const getProducts = async (
   req: Request<{}, {}, {}, ProductsUrlParams>, 
   res: Response, 
-  next: NextFunction
-) => {
+  next: NextFunction) => {
   try {
-    const [ totalResults, resultSet ] = await selectProducts(req.query);
-    res.send({
-      page: Number(req.query.page || 1),
-      count: resultSet.length,
-      totalResults,
-      products: resultSet.map((product: ProductWithOrderCount) => {
-        product.numOfTimesOrdered = product._count!.orderItems;
-        delete product._count;
-        return product;
-      })
-    });
-  } catch (err) {
-    next(err);
-  }  
-}*/
-
-export const getProducts = async (
-  req: Request<{}, {}, {}, ProductsUrlParams>, 
-  res: Response, 
-  next: NextFunction
-) => {
-  try {
-    const [ rowCount, resultSet ] = await selectProducts(req.query);
+    const [ rowCount, resultSet ] = await selectProducts(req.productQueryParams);
     res.send({ 
-      page: Number(req.query.page || 1),
+      page: req.productQueryParams.page,
       count: resultSet.length,
       totalResults: rowCount[0].count,
       products: resultSet
@@ -43,25 +18,6 @@ export const getProducts = async (
     next(err);
   }
 }
-
-/*export const getBestSellers = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { limit = 25, page = 1, category = '', supplier = '' } = req.query;
-    const [ rowCount, bestSellers ] = 
-      await selectBestsellers(<string>category, <string>supplier, <string>page, <string>limit);
- 
-    res.send({ 
-      page: Number(page),
-      count: bestSellers.length,
-      totalResults: rowCount[0].count,
-      bestSellers
-    });
-  } catch (err) {
-    next(err);
-  }
-}*/
-
-export const getBestSellers = () => {};
 
 export const getFavorites = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -93,6 +49,19 @@ export const getProductById = async (req: Request, res: Response, next: NextFunc
     });
     
   } catch (err) {
+    next(err);
+  }
+}
+
+export const updateProductStock = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const stock = Number(req.body.stock);
+    if (isNaN(stock) || stock < 0) {
+      return next(createError("Invalid stock amount.", 400));
+    }
+    const updatedProduct = await updateProduct(req.productDetails.id, stock);
+    res.status(200).send({ updatedProduct });
+  } catch(err) {
     next(err);
   }
 }
