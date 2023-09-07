@@ -10,7 +10,7 @@ This project features a **[RESTful CRUD API](https://taliphus.vercel.app/api)** 
 - [Middleware functions](./middleware) for data validation and user authentication.
   - In-depth error handling, casting a wide net over potential edge cases and sources of error.
 - [Data modelling](./prisma/schema.prisma) and [database migrations](./prisma/migrations/20230728105408_/migration.sql) with Prisma ORM.
-- Comprehensive [integration testing](./api_tests/), achieving over **90% test coverage** as reported by Istanbul's *nyc* CLI.
+- Comprehensive [integration testing](./api_tests/), achieving **90% test coverage** as reported by Istanbul's *nyc* CLI.
 - Programmatic [database reseeding](/prisma/seed.ts) using [dummy data](/prisma/dev_data.ts).
 
 <p float="left">
