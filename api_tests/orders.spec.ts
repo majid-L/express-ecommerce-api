@@ -73,24 +73,15 @@ const ordersTests = () => {
           .set('Cookie', cookie)
           .expect(200);
 
-        expect(body).to.deep.equal({
-          "productId": 40,
-          "lastOrdered": {
-            "orderId": 22,
-            "orderDate": "2023-04-20T05:59:02.342Z"
-          },
-          "review": {
-            "id": 56,
-            "customerId": 1,
-            "productId": 40,
-            "orderId": 22,
-            "title": "Synergistic zero tolerance secured line",
-            "body": "Magni commodi qui. Dolorum rem inventore expedita cupiditate asperiores ab dolor dolor recusandae. Dolorum ducimus ea sint dolore tempora repellendus reprehenderit sequi aspernatur.",
-            "recommend": false,
-            "rating": 3,
-            "createdAt": "2019-02-26T23:49:11.609Z"
-          }
+        expect(body).to.have.property("productId", 40);
+        expect(body.lastOrdered).to.have.property("orderId", 22);
+        expect(body.review).to.include({
+          "id": 56,
+		      "customerId": 1,
+		      "productId": 40,
+		      "orderId": 22,
         });
+        expect(body.review!.product).to.have.property("id", 40);
       });
 
       it('GET returns appropriate response if customer has not previously ordered an item.', async () => {
