@@ -258,7 +258,15 @@ declare global {
         orderId: number,
         lastOrdered: string
       } | null,
-      review: Review | null
+      review: Review & { 
+        id: number, 
+        createdAt: string ,
+        customer: {
+          username: string,
+          avatar: stirng | null
+        },
+        product: Product
+      } | null
     } 
   }
 
@@ -316,7 +324,15 @@ declare global {
   } & Pagination;
 
   type ReviewsResponse = {
-    reviews: (Review & { id: number, createdAt: string })[]
+    reviews: (Review & { 
+      id: number, 
+      createdAt: string ,
+      customer: {
+        username: string,
+        avatar: stirng | null
+      },
+      product: Product
+    })[]
   } & Pagination;
 
   type AddressesResponse = {

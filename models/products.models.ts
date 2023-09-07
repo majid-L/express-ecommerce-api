@@ -188,6 +188,15 @@ export const checkOrderHistory = async (
         { customerId },
         { productId }
       ]
+    },
+    include: {
+      customer: {
+        select: { 
+          username: true,
+          avatar: true 
+        }
+      },
+      product: { }
     }
   });
 
