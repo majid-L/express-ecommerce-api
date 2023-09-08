@@ -3,6 +3,18 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
 import createError from '../helpers/createError';
 
+const extendedOptions = {
+  include: {
+    customer: {
+      select: { 
+        username: true,
+        avatar: true 
+      }
+    },
+    product: { }
+  }
+};
+
 const getModelData = async (url: string, id: number) => {
   let objectOrNull: ModelObject | null = null;
   const options = { where: { id } };
@@ -18,7 +30,10 @@ const getModelData = async (url: string, id: number) => {
   } else if (url.includes('products')) {
     objectOrNull = await prisma.product.findUnique(options);
   } else if (url.includes('reviews')) {
-    objectOrNull = await prisma.review.findUnique(options);
+    objectOrNull = await prisma.review.findUnique({
+      ...options,
+      ...extendedOptions
+    });
   }
   return objectOrNull
 }
@@ -29,7 +44,7 @@ const attachModelDataToRequest = (req: Request, modelObject: ModelObject) => {
   } else if (req.originalUrl.includes('products')) {
     req.productDetails = modelObject as Prisma.ProductGetPayload<{}>;
   } else if (req.originalUrl.includes('reviews')) {
-    req.reviewDetails = modelObject as Prisma.ReviewGetPayload<{}>;
+    req.reviewDetails = modelObject as Prisma.ReviewGetPayload<typeof extendedOptions>;
   }
 }
 
