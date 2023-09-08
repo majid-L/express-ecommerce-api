@@ -14,6 +14,18 @@ type CartItemsPayload = Prisma.CustomerGetPayload<{
   }
 }>;
 
+type ReviewPayload = Prisma.ReviewGetPayload<{
+  include: {
+    customer: {
+      select: { 
+        username: true,
+        avatar: true 
+      }
+    },
+    product: { }
+  }
+}>;
+
 export {}
 
 declare global {
@@ -22,7 +34,7 @@ declare global {
       cartItems: CartItemsPayload,
       customerDetails: Prisma.CustomerGetPayload<{}>,
       productDetails: Prisma.ProductGetPayload<{}>,
-      reviewDetails: Prisma.ReviewGetPayload<{}>,
+      reviewDetails: ReviewPayload,
       orderDetails: Prisma.OrderGetPayload<{}>,
       addresses: AddressPayloadGroup | AddressGroup,
       productQueryParams: ProductsUrlParams
@@ -139,6 +151,14 @@ declare global {
     rating: number,
     recommend?: boolean,
     createdAt?: Date
+  }
+
+  type ReviewExtended = {
+    customer?: {
+      username: string,
+      avatar: string
+    },
+    product?: Product
   }
 
   type ProductQueryParam = { 
