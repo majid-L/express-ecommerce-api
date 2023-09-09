@@ -17,7 +17,8 @@ export const selectOrders = async (id: number) => {
               product: {}
             }
           }
-        }
+        },
+        orderBy: { createdAt: "desc" }
       }
     }
   });
