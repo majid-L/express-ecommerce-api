@@ -7,8 +7,9 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
-  
-    await prisma.customer.create({ data: {...req.body, password: hashedPassword} });
+    const data = (({ username, name, email }) => 
+      ({ username, name, email, password: hashedPassword }))(req.body);
+    await prisma.customer.create({ data });
     const newCustomer = await prisma.customer.findUnique({
       where: { username: req.body.username }
     });
