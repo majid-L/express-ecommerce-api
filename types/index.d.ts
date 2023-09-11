@@ -180,6 +180,8 @@ declare global {
     avgRating: StrOrNum
   }
 
+  type AddressId = "shippingAddressId" | "billingAddressId";
+
   type MiddlewareError = Error & {
     code?: string,
     status?: number

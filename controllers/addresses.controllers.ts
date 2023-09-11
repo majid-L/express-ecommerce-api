@@ -29,7 +29,7 @@ export const getOrCreateSingleAddress = async (req: Request, res: Response, next
     }
 }
 
-export const deleteAddress = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteAddress = async (req: Request<{ addressId?: number }, {}, {}, { identity: AddressId }>, res: Response, next: NextFunction) => {
   try {
     const addressId = Number(req.params.addressId);
 
@@ -41,9 +41,7 @@ export const deleteAddress = async (req: Request, res: Response, next: NextFunct
     
     /* Cannot delete primary key while it's being referenced by other orders/customers, 
     but we can set the foreign id to null in the customer table */
-    const addressIdType = req.customerDetails.billingAddressId === addressId ? 
-      'billingAddressId' 
-      : 'shippingAddressId';
+    const addressIdType = req.query.identity;
     const customer = await updateCustomer(null, req, addressIdType);
     res.status(200).send(customer);
   } catch (err) {
