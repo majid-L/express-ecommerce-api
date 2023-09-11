@@ -20,7 +20,7 @@ export const getOrCreateSingleAddress = async (req: Request, res: Response, next
       
       /* Delete old address if it is not referenced by another other customers or orders */ 
       const addressId = req.customerDetails[addressIdType];
-      if (addressId) await deleteUnusedAddress(addressId, req.customerDetails.id);
+      if (addressId) await deleteUnusedAddress(addressId, req.customerDetails);
 
       res.status(201).send({ newAddress, customer });
     }
@@ -34,7 +34,7 @@ export const deleteAddress = async (req: Request, res: Response, next: NextFunct
     const addressId = Number(req.params.addressId);
 
     /* Delete the unused address */
-    const deletedAddress = await deleteUnusedAddress(addressId, req.customerDetails.id);
+    const deletedAddress = await deleteUnusedAddress(addressId, req.customerDetails);
     if (deletedAddress) {
       return res.status(200).send({ deletedAddress });
     }

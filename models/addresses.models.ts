@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import prisma from '../prisma/prisma';
 
 export const selectModelsWithAddress = async (addressId: number) => {
@@ -18,9 +19,10 @@ export const selectModelsWithAddress = async (addressId: number) => {
   return resultOrNull;
 }
 
-export const deleteUnusedAddress = async (addressId: number, customerId: number) => {
+export const deleteUnusedAddress = async (addressId: number, customer: Prisma.CustomerGetPayload<{}>) => {
+  if (customer.billingAddressId === customer.shippingAddressId) return null;
   const [ customers, orders ] = await selectModelsWithAddress(addressId);
-  const noCustomers = (customers.length === 1 && customers[0].id === customerId)
+  const noCustomers = (customers.length === 1 && customers[0].id === customer.id)
     || customers.length === 0;
     
   if (noCustomers && orders.length === 0) {
