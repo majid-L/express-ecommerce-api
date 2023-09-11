@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addressIsRegisteredToCustomer } from '../middleware/deleteAddressMiddleware';
+import { addressIsRegisteredToCustomer, identityQueryIsValid } from '../middleware/deleteAddressMiddleware';
 import { 
     validateAddressFields,
     validateAddressFieldValues, 
@@ -24,6 +24,7 @@ addressesRouter
 addressesRouter
 .route('/:addressId')
 .delete(
+    identityQueryIsValid,
     addressIsRegisteredToCustomer,
     deleteAddress
 );

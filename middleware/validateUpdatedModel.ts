@@ -23,7 +23,11 @@ const validateUpdatedModel = async (req: Request, res: Response, next: NextFunct
 
     const customerQueryOptions = () => ({
       where: { id : req[modelData].id },
-      data: updatedModelData as Customer
+      data: updatedModelData as Customer,
+      include: {
+        billingAddress: {},
+        shippingAddress: {}
+      }
     });
 
     const reviewQueryOptions = () => ({

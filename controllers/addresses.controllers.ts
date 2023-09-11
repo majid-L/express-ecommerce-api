@@ -32,7 +32,7 @@ export const getOrCreateSingleAddress = async (req: Request, res: Response, next
 export const deleteAddress = async (req: Request<{ addressId?: number }, {}, {}, { identity: AddressId }>, res: Response, next: NextFunction) => {
   try {
     const addressId = Number(req.params.addressId);
-
+    
     /* Delete the unused address */
     const deletedAddress = await deleteUnusedAddress(addressId, req.customerDetails);
     if (deletedAddress) {
