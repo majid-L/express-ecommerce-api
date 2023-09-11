@@ -103,7 +103,7 @@ const addressTests = () => {
       it('DELETE allows customer to delete his/her address if it does not have a foreign key dependency.', async () => {
         const { body: { deletedAddress } }: 
         { body: { deletedAddress: { id: number } & Address } } = await request(app)
-          .delete('/api/customers/1/addresses/7')
+          .delete('/api/customers/1/addresses/7?identity=billingAddressId')
           .set('Cookie', cookie)
           .expect(200);
         
@@ -145,7 +145,7 @@ const addressTests = () => {
         expect(updateResponse.billingAddressId).to.equal(6);
 
         const { body: deleteResponse } = await request(app)
-          .delete('/api/customers/1/addresses/6')
+          .delete('/api/customers/1/addresses/6?identity=billingAddressId')
           .set('Cookie', cookie)
           .expect(200);
         
@@ -168,7 +168,7 @@ const addressTests = () => {
           .expect(200);
 
         const { body: deleteResponse } = await request(app)
-          .delete('/api/customers/1/addresses/9')
+          .delete('/api/customers/1/addresses/9?identity=shippingAddressId')
           .set('Cookie', cookie)
           .expect(200);
 
@@ -219,7 +219,7 @@ const addressTests = () => {
 
       it('DELETE returns 404 response if address id is not associated with customer account.', async () => {
         const { body: errorResponse }: ApiErrorResponse = await request(app)
-        .delete('/api/customers/1/addresses/9')
+        .delete('/api/customers/1/addresses/9?identity=billingAddressId')
         .set('Cookie', cookie)
         .expect(404);
       

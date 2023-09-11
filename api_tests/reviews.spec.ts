@@ -62,11 +62,12 @@ const reviewsTests = () => {
 
       it('POST allows customer to post a new review.', async () => {
         const { body: { newReview } }: 
-        { body: { newReview: Review & { id: number } } } = await request(app)
-          .post('/api/reviews')
-          .send(requestBody)
-          .set('Cookie', cookie)
-          .expect(201);
+        { body: { newReview: Review & ReviewExtended & { id: number } } } = 
+          await request(app)
+            .post('/api/reviews')
+            .send(requestBody)
+            .set('Cookie', cookie)
+            .expect(201);
 
         expect(newReview).to.include(requestBody);
         expect(newReview.id).to.equal(58);
@@ -163,11 +164,11 @@ const reviewsTests = () => {
       beforeEach(setupFunction);
       
       it('GET returns a single review.', async () => {
-        const { body }: { body: Review } = await request(app)
+        const { body }: { body: Review & ReviewExtended } = await request(app)
           .get('/api/reviews/12')
           .expect(200);
         
-        expect(body).to.deep.equal({
+        expect(body).to.include({
           "id": 12,
           "customerId": 2,
           "productId": 44,
@@ -202,7 +203,7 @@ const reviewsTests = () => {
       
       it('PUT allows customer to modify his/her own review and ignores all extra fields.', async () => {
         const { body: { updatedReview } }:
-        { body: { updatedReview: Review } } = await request(app)
+        { body: { updatedReview: Review & ReviewExtended } } = await request(app)
           .put('/api/reviews/57')
           .send({ 
             productId: 1,
@@ -213,7 +214,7 @@ const reviewsTests = () => {
           .set('Cookie', cookie)
           .expect(200);
 
-        expect(updatedReview).to.deep.equal({
+        expect(updatedReview).to.include({
           ...review57,
           title: 'yaya',
           body: 'Put on the black-on-black-on-slate-black blazer.'
@@ -222,13 +223,13 @@ const reviewsTests = () => {
 
       it('PUT accepts an empty object as the request body and returns the original review.', async () => {
         const { body: { updatedReview } }:
-        { body: { updatedReview: Review } } = await request(app)
+        { body: { updatedReview: Review & ReviewExtended } } = await request(app)
           .put('/api/reviews/57')
           .send({})
           .set('Cookie', cookie)
           .expect(200);
         
-        expect(updatedReview).to.deep.equal(review57);
+        expect(updatedReview).to.include(review57);
       });
 
       it('PUT rejects request bodies containing empty field values.', async () => {
@@ -270,12 +271,12 @@ const reviewsTests = () => {
 
       it('DELETE allows user to delete own review.', async () => {
         const { body: { deletedReview } }:
-        { body: { deletedReview: Review }  } = await request(app)
+        { body: { deletedReview: Review & ReviewExtended }  } = await request(app)
           .delete('/api/reviews/57')
           .set('Cookie', cookie)
           .expect(200);
         
-        expect(deletedReview).to.deep.equal(review57);
+        expect(deletedReview).to.include(review57);
 
         await request(app)
           .get('/api/reviews/57')
