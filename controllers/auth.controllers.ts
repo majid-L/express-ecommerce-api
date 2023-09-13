@@ -13,7 +13,9 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     const newCustomer = await prisma.customer.findUnique({
       where: { username: req.body.username }
     });
-    res.status(201).send(hidePassword(newCustomer as User));
+    res.status(201).send({
+      customer: hidePassword(newCustomer as User)
+    });
   } catch (err) {
     next(err);
   }

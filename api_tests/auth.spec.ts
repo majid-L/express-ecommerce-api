@@ -69,7 +69,8 @@ const authTests = () => {
       beforeEach(setupFunction);
 
       it('Customer can sign up for a new account.', async () => {
-        const { body }: { body: Customer } = await request(app)
+        const { body: { customer } }: 
+        { body: { customer: Customer } } = await request(app)
           .post('/api/signup')
           .send({
             name: "Kal Varrick",
@@ -79,11 +80,11 @@ const authTests = () => {
           })
           .expect(201);
       
-        expect(body).to.be.an('object').that.has.all.keys('id', 'name', 'username', 'password', 'email', 'joinDate', 'billingAddressId', 'shippingAddressId', 'phone', 'avatar');
-        expect(body.id).to.equal(7);
-        expect(body.name).to.equal('Kal Varrick');
-        expect(body.username).to.equal('kvarrick3000');
-        expect(body.email).to.equal('kvarrick@taliphus.ga');
+        expect(customer).to.be.an('object').that.has.all.keys('id', 'name', 'username', 'password', 'email', 'joinDate', 'billingAddressId', 'shippingAddressId', 'phone', 'avatar');
+        expect(customer.id).to.equal(7);
+        expect(customer.name).to.equal('Kal Varrick');
+        expect(customer.username).to.equal('kvarrick3000');
+        expect(customer.email).to.equal('kvarrick@taliphus.ga');
   
         const newCustomer = await prisma.customer.findUnique({ where: { id: 7 } });
         const matchedPassword = await bcrypt.compare('89hgfb73jf', newCustomer!.password!);
