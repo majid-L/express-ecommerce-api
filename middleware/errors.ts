@@ -1,5 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 
+export const handleLoginError = (err: MiddlewareError, req: Request, res: Response, next: NextFunction) => {
+  const loginError = req.flash("error") as unknown as string[];
+  if (loginError) {
+    res.status(401).send({ 
+      error: {
+        status: 401,
+        info: loginError[0]
+      }
+     });
+  } else {
+    next(err);
+  }
+}
+
 const handleError = (err: MiddlewareError, req: Request, res: Response, next: NextFunction) => {
   let msg = '';
   

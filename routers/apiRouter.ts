@@ -10,6 +10,7 @@ import getCategoriesOrSuppliers from '../controllers/categories.controllers';
 import endpoints from '../endpoints.json';
 import passport from 'passport';
 import { createPaymentIntent } from '../controllers/payment.controller';
+import { handleLoginError } from '../middleware/errors';
 
 const apiRouter = Router();
 apiRouter.param('customerId', idParamHandler);
@@ -28,7 +29,7 @@ apiRouter.use('/customers/:customerId', customerRouter);
 // Route controllers
 apiRouter.get('/categories', getCategoriesOrSuppliers);
 apiRouter.get('/suppliers', getCategoriesOrSuppliers);
-apiRouter.post('/login', passport.authenticate('local', { failWithError: true }), login);
+apiRouter.post('/login', passport.authenticate('local', { failWithError: true, failureFlash: true }), login, handleLoginError);
 
 apiRouter.post('/logout', userIsAuthenticated, logout);
 apiRouter.post('/signup', validateAuthInput, validateUniqueCredentials, signup);

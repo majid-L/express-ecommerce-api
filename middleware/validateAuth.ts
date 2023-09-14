@@ -33,7 +33,8 @@ export const validateUniqueCredentials = async (req: Request, res: Response, nex
   });
   
   if (customerOrNull) {
-    next(createError('Username/email already in use.', 400));
+    const msg = req.body.username === customerOrNull.username ? "That username is taken." : "Email already in use.";
+    next(createError(msg, 400));
   } else {
     next();
   }

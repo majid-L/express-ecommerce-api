@@ -51,7 +51,7 @@ const authTests = () => {
           })
           .expect(401);
         
-        expect(invalidUsername401.error.info).to.equal('Unauthorized');
+        expect(invalidUsername401.error.info).to.equal('Invalid username.');
   
         const { body: invalidPassword401 }: ApiErrorResponse = await request(app)
           .post('/api/login')
@@ -61,11 +61,11 @@ const authTests = () => {
           })
           .expect(401);
       
-        expect(invalidPassword401.error.info).to.equal('Unauthorized');
+        expect(invalidPassword401.error.info).to.equal('Invalid password.');
       })
     });
 
-    describe.only('/api/signup', () => {
+    describe('/api/signup', () => {
       beforeEach(setupFunction);
 
       it('Customer can sign up for a new account.', async () => {

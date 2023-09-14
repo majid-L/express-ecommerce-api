@@ -10,10 +10,10 @@ const localStrategyConfig = () => {
           where: { username }
         });
 
-        if (!customerOrNull) {
+        if (!customerOrNull || customerOrNull.password === null) {
           return done(null, false, { message: 'Invalid username.' });
         } else {
-          const hashedPassword = customerOrNull.password;
+          const hashedPassword = customerOrNull.password!;
           const matchedPassword = await bcrypt.compare(password, hashedPassword);
           if (!matchedPassword) {
             return done(null, false, { message: 'Invalid password.' });
