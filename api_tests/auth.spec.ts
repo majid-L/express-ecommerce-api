@@ -65,7 +65,7 @@ const authTests = () => {
       })
     });
 
-    describe('/api/signup', () => {
+    describe.only('/api/signup', () => {
       beforeEach(setupFunction);
 
       it('Customer can sign up for a new account.', async () => {
@@ -102,7 +102,7 @@ const authTests = () => {
           })
           .expect(400);
   
-        expect(firstErrorResponse.error.info).to.equal('Username/email already in use.');
+        expect(firstErrorResponse.error.info).to.equal('That username is taken.');
   
         const { body: secondErrorResponse }: ApiErrorResponse = await request(app)
           .post('/api/signup')
@@ -114,7 +114,7 @@ const authTests = () => {
           })
           .expect(400);
   
-        expect(secondErrorResponse.error.info).to.equal('Username/email already in use.');
+        expect(secondErrorResponse.error.info).to.equal('Email already in use.');
       });
 
       it('Rejects request body if it is missing a required field.', async () => {

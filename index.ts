@@ -7,9 +7,11 @@ import passportConfig from './auth/passport';
 import generateSession from './auth/session';
 import _404Handler from './middleware/404Handler';
 import validateRequestMethod from './middleware/validateRequestMethod';
+import flash from 'express-flash';
 
 const app: express.Application = express();
 app.set('trust proxy', 1);
+app.use(flash());
 app.use(cors({
     origin: ['http://localhost:4200', 'https://localhost:4200'],
     allowedHeaders: ['Content-Type', 'Authorization'],
