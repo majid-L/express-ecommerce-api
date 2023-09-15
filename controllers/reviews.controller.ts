@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 import formatNewReview from '../helpers/formatNewReview';
 import { selectReviews } from '../models/reviews.models';
@@ -19,20 +20,21 @@ export const getReviews = async (req: Request, res: Response, next: NextFunction
   try {
     const { limit = 25, page = 1, orderBy = 'createdAt' } = req.query;
 
-    let where: { productId?: number, customerId?: number };
+    let where: { productId?: number, customerId?: number } = {};
     if (req.originalUrl.includes('products')) {
-      where = { productId: req.productDetails.id }
+      where = { productId: req.productDetails.id };
     } else if (req.originalUrl.includes('customers')) {
-      where = { customerId: req.customerDetails.id }
+      where = { customerId: req.customerDetails.id };
     }
 
-    const [ totalResults, reviews ] = 
-      await selectReviews(where!, Number(page), Number(limit), orderBy as string);
+    const [ totalResults, reviews, customer ] = 
+      await selectReviews(where, Number(page), Number(limit), orderBy as string);
 
     res.status(200).send({
       page: Number(page),
-      count: reviews.length,
+      count: (reviews as Prisma.ReviewGetPayload<{}>[]).length,
       totalResults,
+      customer,
       reviews
     });
   } catch (err) {

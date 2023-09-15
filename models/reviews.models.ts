@@ -22,7 +22,7 @@ export const selectReviews = async (
 
   const columnToOrderBy = ["createdAt", "rating"].includes(orderBy) ? orderBy : "createdAt";
 
-  return await prisma.$transaction([
+  const transaction = [
     prisma.review.count({ where }),
     prisma.review.findMany({
       ...queryOptions,
@@ -30,5 +30,12 @@ export const selectReviews = async (
       skip: (page - 1) * limit,
       take: limit
     })
-  ]);
+  ];
+
+  if (where?.customerId) {
+    const customer = prisma.customer.findUnique({ where: { id: where.customerId } });
+    return await prisma.$transaction([...transaction, customer])
+  } else {
+    return await prisma.$transaction(transaction);
+  }
 }
