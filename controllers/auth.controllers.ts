@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
 import bcrypt from 'bcrypt';
 import hidePassword from '../helpers/hidePassword';
+import createError from '../helpers/createError';
+import { Prisma } from '@prisma/client';
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -9,14 +11,50 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const data = (({ username, name, email }) => 
       ({ username, name, email, password: hashedPassword }))(req.body);
-    await prisma.customer.create({ data });
-    const newCustomer = await prisma.customer.findUnique({
-      where: { username: req.body.username }
-    });
-    res.status(201).send({
-      customer: hidePassword(newCustomer as User)
+    const newCustomer = await prisma.customer.create({ data });
+    req.login(newCustomer, err => {
+      if (err) return next(err);
+      res.status(201).send({
+        customer: hidePassword(newCustomer as User)
+      });
     });
   } catch (err) {
+    next(err);
+  }
+}
+
+export const authenticateWithSSO = async (req: Request<{}, {}, SSORequestFields>, res: Response, next: NextFunction) => {
+  try {
+    const { name, email, authId, thumbnail, provider } = req.body;
+
+    for (const field of ["name", "email", "authId", "provider"]) {
+      if (!req.body[field as keyof SSORequestFields]) {
+        return next(createError('Request body is missing required field(s).', 400));
+      }
+    }
+
+    const data = { name, username: email, email, thumbnail };
+    let customer: Prisma.CustomerGetPayload<{}>;
+    const oAuthProfileOrNull = await prisma.oAuthProfile.findFirst({ where: { authId, provider } });
+ 
+    if (oAuthProfileOrNull) {
+      customer = await prisma.customer.upsert({
+        where: { id: oAuthProfileOrNull.customerId },
+        update: data,
+        create: data
+      });
+    } else {
+      customer = await prisma.customer.create({ data });
+      await prisma.oAuthProfile.create({
+        data: { authId, customerId: customer.id, provider } 
+      });
+    }
+
+    req.login(customer, err => {
+      if (err) return next(err);
+      res.status(201).send({ customer });
+    });
+  } catch(err) {
     next(err);
   }
 }

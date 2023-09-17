@@ -28,6 +28,9 @@ const formatModelData = async <ModelType>(
           return { error: 'Rating must be a whole number between 0 and 5.'};
         }
       }
+      if (field === 'username' && !/^[A-Za-z0-9_-]+$/.test(field)) {
+        return { error: 'Username can only contain letters, numbers, dashes and underscores.' };
+      }
     }
     return updatedModelData;
 }

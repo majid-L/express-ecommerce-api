@@ -18,6 +18,10 @@ export const validateAuthInput = (req: Request, res: Response, next: NextFunctio
     }
   }
 
+  if (!/^[A-Za-z0-9_-]+$/.test(req.body.username)) {
+    return next(createError('Username can only contain letters, numbers, dashes and underscores.', 400));
+  }
+
   next();
 }
 

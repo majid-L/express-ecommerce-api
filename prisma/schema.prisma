@@ -54,8 +54,8 @@ model Customer {
   id                Int        @id @default(autoincrement())
   name              String     @db.VarChar(50)
   username          String     @unique @db.VarChar(50)
-  password          String
-  email             String     @unique @db.VarChar(50)
+  password          String?
+  email             String     @db.VarChar(50)
   joinDate          DateTime?  @default(now()) @db.Timestamp(6)
   phone             String?
   billingAddressId  Int?
@@ -67,6 +67,16 @@ model Customer {
   reviews           Review[]
   billingAddress    Address?   @relation("billingAddress", fields: [billingAddressId], references: [id])
   shippingAddress   Address?   @relation("shippingAddress", fields: [shippingAddressId], references: [id])
+  oAuth             OAuthProfile?
+}
+
+model OAuthProfile {
+  authId      String
+  customerId  Int       @unique
+  provider    String
+  customer    Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([authId, provider])
 }
 
 model OrderItem {

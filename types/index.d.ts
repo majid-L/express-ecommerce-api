@@ -58,11 +58,25 @@ declare global {
     joinDate?: Date | string
   }
 
+  type OAuthProfile = {
+    authId: string
+    customerId: number
+    provider: string
+  }
+
   type Customer = User & {
     phone?: string,
     billingAddressId?: number,
     shippingAddressId?: number,
     avatar?: string
+  }
+
+  type SSORequestFields = {
+    name: string
+    email: string
+    authId: string
+    thumbnail: string
+    provider: string
   }
 
   type Address = {

@@ -24,7 +24,8 @@ const getModelData = async (url: string, id: number) => {
       ...options, 
       include: { 
         billingAddress: {},
-        shippingAddress: {}
+        shippingAddress: {},
+        oAuth: {}
       }
     });
   } else if (url.includes('products')) {

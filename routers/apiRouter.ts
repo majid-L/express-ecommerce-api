@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { Request, Response } from 'express';
 import { userIsAuthenticated, validateUniqueCredentials, validateAuthInput } from '../middleware/validateAuth';
 import idParamHandler from '../middleware/idParamHandler';
-import { signup, login, logout } from '../controllers/auth.controllers';
+import { signup, login, logout, authenticateWithSSO } from '../controllers/auth.controllers';
 import productRouter from './productsRouter';
 import customerRouter from './customerRouter';
 import reviewsRouter from './reviewsRouter';
@@ -33,5 +33,6 @@ apiRouter.post('/login', passport.authenticate('local', { failWithError: true, f
 
 apiRouter.post('/logout', userIsAuthenticated, logout);
 apiRouter.post('/signup', validateAuthInput, validateUniqueCredentials, signup);
+apiRouter.post('/sso', authenticateWithSSO);
 
 export default apiRouter;
