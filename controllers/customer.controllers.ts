@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../prisma/prisma';
 
 export const getCustomerById = (req: Request, res: Response) => {
-  req.customerDetails.password = '**********';
+  if (req.customerDetails.password) {
+    req.customerDetails.password = '**********';
+  }
   res.status(200).send(req.customerDetails);
 }
 

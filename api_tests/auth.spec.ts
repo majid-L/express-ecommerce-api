@@ -2,8 +2,7 @@ import request from "supertest";
 import app from '../index';
 import { expect } from "chai";
 import bcrypt from 'bcrypt';
-import { cookie } from "./index.spec";
-import { setupFunction } from "./index.spec";
+import { cookie, setupFunction } from "./index.spec";
 import prisma from "../prisma/prisma";
 
 const authTests = () => {
@@ -90,6 +89,53 @@ const authTests = () => {
         const matchedPassword = await bcrypt.compare('89hgfb73jf', newCustomer!.password!);
         expect(matchedPassword).to.be.true;
       });
+
+      it("Signing up also automatically logs in the new user.", async () => {
+        const signupResponse = await request(app)
+        .post('/api/signup')
+        .send({
+          name: "Kal Varrick",
+          email: "kvarrick@taliphus.ga",
+          username: 'kvarrick3000',
+          password: '89hgfb73jf'
+        })
+        .expect(201);
+
+        const { body: customer }: { body: Customer } = await request(app)
+          .get("/api/customers/7")
+          .set("Cookie", signupResponse.headers['set-cookie'])
+          .expect(200);
+          
+        expect(customer).to.have.property("id").that.is.equal(7);
+        expect(customer).to.have.property("name").that.is.equal("Kal Varrick");
+        expect(customer).to.have.property("username").that.is.equal("kvarrick3000");
+      });
+
+      it("SSO enables user to create and sign in to new account.", async () => {
+        const ssoResponse = await request(app)
+        .post('/api/sso')
+        .send({
+          name: "Kal Varrick",
+          email: "kvarrick@gmail.com",
+          authId: '9872360182323',
+          provider: "Google"
+        })
+        .expect(201);
+
+        const { body: customer }: { body: Customer } = await request(app)
+          .get("/api/customers/7")
+          .set("Cookie", ssoResponse.headers['set-cookie'])
+          .expect(200);
+          
+        expect(customer).to.have.property("id").that.is.equal(7);
+        expect(customer).to.have.property("name").that.is.equal("Kal Varrick");
+        expect(customer).to.have.property("username").that.is.equal("kvarrick@gmail.com");
+        expect(customer).to.have.property("oAuth").that.is.deep.equal({
+          "authId": "9872360182323",
+          "customerId": 7,
+          "provider": "Google"
+        });
+      });
   
       it('Rejects attempts to sign up using an existing username or email.', async () => {
         const { body: firstErrorResponse }: ApiErrorResponse = await request(app)
@@ -117,13 +163,28 @@ const authTests = () => {
         expect(secondErrorResponse.error.info).to.equal('Email already in use.');
       });
 
-      it('Rejects request body if it is missing a required field.', async () => {
+      it('Signup rejects request body if it is missing a required field.', async () => {
         const { body: errorResponse }: ApiErrorResponse = await request(app)
         .post('/api/signup')
         .send({
           name: "Marcus Boone",
           username: "marcus_boone433",
           password: "password"
+        })
+        .expect(400);
+
+      expect(errorResponse.error.info).to.equal('Request body is missing required field(s).');
+      });
+
+      it('SSO rejects request body if it is missing a required field.', async () => {
+        const { body: errorResponse }: ApiErrorResponse = await request(app)
+        .post('/api/sso')
+        .send({
+          name: "Marcus Boone",
+          username: "marcus_boone433",
+          email: "123@gmail.com",
+          authId: "1234",
+          providers: "Google"
         })
         .expect(400);
 
