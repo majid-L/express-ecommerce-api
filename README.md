@@ -14,17 +14,17 @@ This project features a **[RESTful CRUD API](https://taliphus.vercel.app/api)** 
 - Programmatic [database reseeding](/prisma/seed.ts) using [dummy data](/prisma/dev_data.ts).
 
 <p float="left">
-  <img src="./icons/node.svg" width="60" />
+  <img src="./images/node.svg" width="60" />
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./icons/ts.svg" width="60" />
+  <img src="./images/ts.svg" width="60" />
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./icons/prisma.svg" width="140" />
+  <img src="./images/prisma.svg" width="140" />
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./icons/psql.svg" width="60" /> 
+  <img src="./images/psql.svg" width="60" /> 
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./icons/mocha.svg" width="60" /> 
+  <img src="./images/mocha.svg" width="60" /> 
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./icons/chai.svg" width="60" />
+  <img src="./images/chai.svg" width="60" />
 </p>
 
 ---
@@ -76,7 +76,7 @@ GET, PUT, DELETE | /api/reviews/:id
 ## Data model
 This is a simplified view of the entity relationships that exist within the database. For a more complete picture, consult the **[schema configuration](/prisma/schema.prisma)** and **[migration](/prisma//migrations/20230728105408_/migration.sql)** files.
 
-<img src="./icons/erd-dark.svg" width="900" /> 
+<img src="./images/erd-dark.svg" width="900" /> 
 
 ---
 ## Main project dependencies
