@@ -33,7 +33,7 @@ export const authenticateWithSSO = async (req: Request<{}, {}, SSORequestFields>
       }
     }
 
-    const data = { name, username: email, email, thumbnail };
+    const data = { name, username: email, email, avatar: thumbnail };
     let customer: Prisma.CustomerGetPayload<{}>;
     const oAuthProfileOrNull = await prisma.oAuthProfile.findFirst({ where: { authId, provider } });
  
