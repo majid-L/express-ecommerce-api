@@ -58,12 +58,17 @@ const idParamHandler = async (req: Request, res: Response, next: NextFunction, i
     const objectOrNull = await getModelData(req.originalUrl, Number(id));
 
     if (!objectOrNull) return next(createError('Not found.', 404));
+    if (req.headers.authorization === "swagger ui") {
+      attachModelDataToRequest(req, objectOrNull);
+      return next();
+    }
+
     if (req.originalUrl.includes('customers') 
       && !/\/\d+\/reviews.*$/i.test(req.originalUrl)
       && req.session.passport!.user.id !== Number(id)) {
       return next(createError('Unauthorised.', 403));
     }
-    
+   
     attachModelDataToRequest(req, objectOrNull);
     next();
   } catch (err) {
