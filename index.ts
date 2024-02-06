@@ -13,8 +13,8 @@ const app: express.Application = express();
 app.set('trust proxy', 1);
 app.use(flash());
 app.use(cors({
-    //origin: ['http://localhost:4200', 'https://localhost:4200', 'https://xpulse.vercel.app'],
-    origin: "*",
+    origin: ['http://localhost:4200', 'https://localhost:4200', 'http://127.0.0.1:5501/', 'https://xpulse.vercel.app'],
+    //origin: "*",
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
