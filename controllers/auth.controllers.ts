@@ -66,9 +66,13 @@ export const login = (req: Request, res: Response) => {
 }
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {
+  if (req.headers.authorization === "swagger ui") {
+    return res.send({ msg: 'Successfully logged out.' });
+  }
+
   const username = (req.user as User).username;
   req.logout((err: Error) => {
     if (err) return next(err);
-    res.send({msg: username + ' is now logged out.'});
+    res.send({ msg: username + ' is now logged out.' });
   });
 }
