@@ -47,9 +47,9 @@ export const validateUniqueCredentials = async (req: Request, res: Response, nex
 // Protect routes from unauthenticated users
 export const userIsAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   if (req.headers.authorization === "swagger ui") {
-    next();
-    return;
+    return next();
   }
+
   if (!req.session.passport && !/\/customers\/\d+\/reviews.*$/i.test(req.originalUrl)) {
     next(createError('Unauthenticated.', 401));
   } else {
@@ -59,6 +59,10 @@ export const userIsAuthenticated = (req: Request, res: Response, next: NextFunct
 
 // Protect PUT/DELETE /api/reviews/:reviewId routes from unauthorised users
 export const userIsAuthorised = (req: Request, res: Response, next: NextFunction) => {
+  if (req.headers.authorization === "swagger ui") {
+    return next();
+  }
+  
   if (req.session.passport!.user.id !== req.reviewDetails.customerId) {
     next(createError('Unauthorised.', 403));
   } else {
