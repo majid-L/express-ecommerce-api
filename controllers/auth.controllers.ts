@@ -26,6 +26,7 @@ export const signup = async (
       // set cookie
       res.cookie("xpulse.userid", newCustomer.id, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: false,
       });
 
       res.status(201).send({
@@ -75,6 +76,7 @@ export const authenticateWithSSO = async (
     // set cookie
     res.cookie("xpulse.userid", customer.id, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: false,
     });
 
     req.login(customer, (err) => {
@@ -90,6 +92,7 @@ export const login = (req: Request, res: Response) => {
   // set cookie
   res.cookie("xpulse.userid", (req.user as User).id, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    httpOnly: false,
   });
 
   res.status(200).send({
