@@ -7,6 +7,7 @@ import { Prisma } from "@prisma/client";
 
 const useridCookieOptions: CookieOptions = {
   maxAge: 30 * 24 * 60 * 60 * 1000,
+  sameSite: false,
 };
 
 export const signup = async (
