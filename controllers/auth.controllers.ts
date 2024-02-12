@@ -1,9 +1,16 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, CookieOptions } from "express";
 import prisma from "../prisma/prisma";
 import bcrypt from "bcrypt";
 import hidePassword from "../helpers/hidePassword";
 import createError from "../helpers/createError";
 import { Prisma } from "@prisma/client";
+
+const useridCookieOptions: CookieOptions = {
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+  httpOnly: false,
+  secure: false,
+  sameSite: "none",
+};
 
 export const signup = async (
   req: Request,
@@ -24,11 +31,7 @@ export const signup = async (
       if (err) return next(err);
 
       // set cookie
-      res.cookie("xpulse.userid", newCustomer.id, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: false,
-        sameSite: "none",
-      });
+      res.cookie("xpulse.userid", newCustomer.id, useridCookieOptions);
 
       res.status(201).send({
         customer: hidePassword(newCustomer as User),
@@ -75,11 +78,7 @@ export const authenticateWithSSO = async (
     }
 
     // set cookie
-    res.cookie("xpulse.userid", customer.id, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: false,
-      sameSite: "none",
-    });
+    res.cookie("xpulse.userid", customer.id, useridCookieOptions);
 
     req.login(customer, (err) => {
       if (err) return next(err);
@@ -92,11 +91,7 @@ export const authenticateWithSSO = async (
 
 export const login = (req: Request, res: Response) => {
   // set cookie
-  res.cookie("xpulse.userid", (req.user as User).id, {
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    httpOnly: false,
-    sameSite: "none",
-  });
+  res.cookie("xpulse.userid", (req.user as User).id, useridCookieOptions);
 
   res.status(200).send({
     customer: hidePassword(req.user as User),
