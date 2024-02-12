@@ -8,11 +8,9 @@ import generateSession from "./auth/session";
 import _404Handler from "./middleware/404Handler";
 import validateRequestMethod from "./middleware/validateRequestMethod";
 import flash from "express-flash";
-import cookieParser from "cookie-parser";
 
 const app: express.Application = express();
 app.set("trust proxy", 1);
-app.use(cookieParser());
 app.use(flash());
 app.use(
   cors({
