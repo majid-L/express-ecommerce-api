@@ -83,7 +83,12 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     // Subtract order quantities from product stock, clear the cart and return the new order
     await updateStockAmounts(orderItems);
-    await emptyCart(req.customerDetails.id, 'cartItem');
+
+    if (!req.body.item) {
+      // only empty the cart if it's a cart order, not an express checkout order
+      await emptyCart(req.customerDetails.id, 'cartItem');
+    }
+    
     const completedOrder = await selectOrderById(newOrder.id);
     res.status(201).send(completedOrder);
   } catch (err) {
