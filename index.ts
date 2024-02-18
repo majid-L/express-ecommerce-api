@@ -14,12 +14,12 @@ app.set("trust proxy", 1);
 app.use(flash());
 app.use(
   cors({
-    origin: [
-      "http://localhost:4200",
-      "https://localhost:4200",
-      "http://127.0.0.1:5501",
-      "https://xpulse.vercel.app",
-      "https://majid-l.github.io",
+    origin: ["*"
+      // "http://localhost:4200",
+      // "https://localhost:4200",
+      // "http://127.0.0.1:5501",
+      // "https://xpulse.vercel.app",
+      // "https://majid-l.github.io",
     ],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
